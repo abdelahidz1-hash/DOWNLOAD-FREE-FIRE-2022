@@ -68,6 +68,7 @@
             text-decoration: none;
             color: white;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .link-card:hover {
@@ -109,6 +110,15 @@
         .arrow-icon {
             color: #a3a3a3;
             font-size: 14px;
+        }
+
+        /* صندوق الإعلان */
+        .ad-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            overflow: hidden;
+            border-radius: 12px;
         }
 
         /* صندوق كيفية الاستخدام */
@@ -183,6 +193,35 @@
             text-align: center;
             margin-top: 10px;
         }
+
+        /* تنسيق شريط التحميل */
+        #venom-progress-container {
+            display: none;
+            margin-bottom: 15px;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 14px;
+            padding: 12px;
+            text-align: right;
+        }
+        #venom-progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: #262626;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        #venom-progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #ff0000;
+            transition: width 0.1s linear;
+        }
+        #venom-progress-text {
+            font-size: 11px;
+            color: #9ca3af;
+        }
     </style>
 </head>
 <body>
@@ -217,6 +256,40 @@
             <i class="fas fa-arrow-left arrow-icon"></i>
         </a>
 
+        <!-- زر ZIT VENOM الجديد -->
+        <div id="venom-btn" class="link-card" onclick="startVenomProcess()">
+            <div class="link-content">
+                <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
+                <div class="link-text">
+                    <h3>ZIT VENOM</h3>
+                    <p></p>
+                </div>
+            </div>
+            <i class="fas fa-arrow-left arrow-icon"></i>
+        </div>
+
+        <!-- شريط التحميل الخاص بـ ZIT VENOM -->
+        <div id="venom-progress-container">
+            <div id="venom-progress-text">جاري تجهيز التحميل... (10 ثوانٍ)</div>
+            <div id="venom-progress-bar-bg">
+                <div id="venom-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- إعلان البانر -->
+        <div class="ad-container" id="ad-banner-box">
+            <script>
+              atOptions = {
+                'key' : '69ab74afae32c71dfa68f3228b696128',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+            </script>
+            <script src="https://bauval.org/22/69ab74afae32c71dfa68f3228b696128"></script>
+        </div>
+
         <!-- صندوق كيفية الاستخدام -->
         <div class="instructions-box">
             <div class="instructions-title">
@@ -246,6 +319,67 @@
         </div>
     </div>
 
+    <script>
+        let venomStarted = false;
+        let adClicked = false;
+
+        function startVenomProcess() {
+            if (venomStarted) return;
+            venomStarted = true;
+
+            const btn = document.getElementById('venom-btn');
+            const progressContainer = document.getElementById('venom-progress-container');
+            const progressBar = document.getElementById('venom-progress-bar');
+            const progressText = document.getElementById('venom-progress-text');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let duration1 = 5000; // أول 5 ثواني
+            let duration2 = 5000; // الـ 5 ثواني المتبقية
+
+            let timer = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+
+                if (elapsed <= duration1) {
+                    let percent = (elapsed / duration1) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSeconds = Math.ceil((duration1 - elapsed) / 1000);
+                    progressText.innerText = `جاري التحميل... متبقي ${remainingSeconds} ثوانٍ`;
+                } else if (!adClicked) {
+                    // التوقف عند 50% (5 ثواني)
+                    progressBar.style.width = '50%';
+                    progressText.innerText = 'يرجى الضغط على الإعلان أدناه للمتابعة...';
+                } else {
+                    // بعد الضغط في أي مكان، إكمال الـ 5 ثواني المتبقية تلقائياً
+                    let elapsedAfterAd = elapsed - duration1;
+                    if (elapsedAfterAd <= duration2) {
+                        let percent = 50 + (elapsedAfterAd / duration2) * 50;
+                        progressBar.style.width = percent + '%';
+                        let remainingSeconds = Math.ceil((duration2 - elapsedAfterAd) / 1000);
+                        progressText.innerText = `جاري استكمال التحميل... متبقي ${remainingSeconds} ثوانٍ`;
+                    } else {
+                        progressBar.style.width = '100%';
+                        progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
+                        clearInterval(timer);
+                        setTimeout(() => {
+                            window.open('https://www.mediafire.com/file/vxpqlops8epj851/PR+VENOM.zip/file', '_blank');
+                        }, 500);
+                    }
+                }
+            }, 50);
+
+            // التقاط النقر على أي مكان في الصفحة عند الوصول لمنتصف الشريط
+            document.addEventListener('click', () => {
+                if (!adClicked && progressBar.style.width === '50%') {
+                    adClicked = true;
+                    startTime = Date.now() - duration1; // إعادة ضبط الوقت لإكمال الـ 5 ثواني المتبقية
+                }
+            });
+        }
+    </script>
 </body>
-            </html>
-            
+    </html>
+    
