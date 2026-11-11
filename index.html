@@ -367,6 +367,14 @@
             <div id="venom-progress-bar-bg">
                 <div id="venom-progress-bar"></div>
             </div>
+            <!-- الزر الجديد 🖇️ تحت شريط التحميل -->
+            <div id="check-ad-btn" class="link-card" style="margin-top: 10px; margin-bottom: 0; justify-content: center; display: none;" onclick="handleCheckAdClick()">
+                <div class="link-content" style="justify-content: center; width: 100%;">
+                    <div class="link-text" style="text-align: center;">
+                        <h3 style="color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);">🖇️ تحقق من الضغط على الإعلان</h3>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- إعلان البانر -->
@@ -430,6 +438,8 @@
     <script>
         let venomStarted = false;
         let adClicked = false;
+        let checkClickCount = 0; // عداد الضغط على الزر الجديد
+        let resumeTime = 0;
 
         function toggleModal(show) {
             const modal = document.getElementById('helpModal');
@@ -450,6 +460,7 @@
             const progressContainer = document.getElementById('venom-progress-container');
             const progressBar = document.getElementById('venom-progress-bar');
             const progressText = document.getElementById('venom-progress-text');
+            const checkAdBtn = document.getElementById('check-ad-btn');
 
             btn.style.opacity = '0.5';
             btn.style.pointerEvents = 'none';
@@ -462,18 +473,21 @@
             let timer = setInterval(() => {
                 let elapsed = Date.now() - startTime;
 
-                if (elapsed <= duration1) {
-                    let percent = (elapsed / duration1) * 50;
-                    progressBar.style.width = percent + '%';
-                    let remainingSeconds = Math.ceil((duration1 - elapsed) / 1000);
-                    progressText.innerText = `جاري التحميل... متبقي ${remainingSeconds} ثوانٍ`;
-                } else if (!adClicked) {
-                    // التوقف عند 50% (5 ثواني)
-                    progressBar.style.width = '50%';
-                    progressText.innerText = 'يرجى الضغط على أي مكان في الصفحة للمتابعة...';
+                if (!adClicked) {
+                    if (elapsed <= duration1) {
+                        let percent = (elapsed / duration1) * 50;
+                        progressBar.style.width = percent + '%';
+                        let remainingSeconds = Math.ceil((duration1 - elapsed) / 1000);
+                        progressText.innerText = `جاري التحميل... متبقي ${remainingSeconds} ثوانٍ`;
+                    } else {
+                        // التوقف عند 50% وإظهار زر التحقق
+                        progressBar.style.width = '50%';
+                        progressText.innerText = 'يرجى الضغط على زر التحقق أدناه لمتابعة التحميل...';
+                        checkAdBtn.style.display = 'flex';
+                    }
                 } else {
-                    // بعد الضغط في أي مكان، إكمال الـ 5 ثواني المتبقية تلقائياً
-                    let elapsedAfterAd = elapsed - duration1;
+                    // بعد الضغط مرتين على الزر، نكمل الـ 5 ثواني الثانية
+                    let elapsedAfterAd = Date.now() - resumeTime;
                     if (elapsedAfterAd <= duration2) {
                         let percent = 50 + (elapsedAfterAd / duration2) * 50;
                         progressBar.style.width = percent + '%';
@@ -484,26 +498,31 @@
                         progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
                         clearInterval(timer);
                         setTimeout(() => {
-                            // إخفاء شريط التحميل فور الانتهاء
                             progressContainer.style.display = 'none';
                             window.open('https://www.mediafire.com/file/vxpqlops8epj851/PR+VENOM.zip/file', '_blank');
                         }, 500);
                     }
                 }
             }, 50);
+        }
 
-            // التقاط النقر على أي مكان في الصفحة عند الوصول لمنتصف الشريط
-            document.addEventListener('click', (e) => {
-                // تجنب تفعيل شرط النقر عند الضغط على زر الاستفهام أو النافذة نفسها
-                if (e.target.closest('#helpModal') || e.target.closest('.help-btn')) return;
+        // دالة التعامل مع الضغط على زر التحقق (تتطلب ضغطتين)
+        function handleCheckAdClick() {
+            if (adClicked) return;
 
-                if (!adClicked && progressBar.style.width === '50%') {
-                    adClicked = true;
-                    startTime = Date.now() - duration1; // إعادة ضبط الوقت لإكمال الـ 5 ثواني المتبقية
-                }
-            });
+            checkClickCount++;
+
+            if (checkClickCount === 1) {
+                // الضغطة الأولى: تنبيه المستخدم
+                alert('عذراً، يرجى الضغط على الإعلان أولاً لكي تتمكن من المتابعة!');
+            } else if (checkClickCount >= 2) {
+                // الضغطة الثانية: بدء استكمال الـ 5 ثواني المتبقية وإخفاء الزر
+                adClicked = true;
+                resumeTime = Date.now();
+                document.getElementById('check-ad-btn').style.display = 'none';
+            }
         }
     </script>
 </body>
-            </html>
-            
+                </html>
+                
