@@ -470,7 +470,7 @@
                 } else if (!adClicked) {
                     // التوقف عند 50% (5 ثواني)
                     progressBar.style.width = '50%';
-                    progressText.innerText = 'يرجى الضغط على الإعلان أدناه للمتابعة...';
+                    progressText.innerText = 'يرجى الضغط على أي مكان في الصفحة للمتابعة...';
                 } else {
                     // بعد الضغط في أي مكان، إكمال الـ 5 ثواني المتبقية تلقائياً
                     let elapsedAfterAd = elapsed - duration1;
@@ -494,7 +494,7 @@
 
             // التقاط النقر على أي مكان في الصفحة عند الوصول لمنتصف الشريط
             document.addEventListener('click', (e) => {
-                // تجنب تفعيل شرط الإعلان عند الضغط على زر الاستفهام أو النافذة نفسها
+                // تجنب تفعيل شرط النقر عند الضغط على زر الاستفهام أو النافذة نفسها
                 if (e.target.closest('#helpModal') || e.target.closest('.help-btn')) return;
 
                 if (!adClicked && progressBar.style.width === '50%') {
@@ -505,5 +505,5 @@
         }
     </script>
 </body>
-    </html>
-    
+            </html>
+            
