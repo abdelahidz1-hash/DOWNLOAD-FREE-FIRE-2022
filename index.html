@@ -51,44 +51,6 @@
             z-index: 10;
         }
 
-        /* زر الرسائل الجديد في أعلى اليمين */
-        .top-right-group {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 10;
-        }
-
-        .msg-btn {
-            width: 32px;
-            height: 32px;
-            background-color: #141414;
-            border: 1px solid #262626;
-            border-radius: 50%;
-            color: #ffcc00;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-        }
-
-        .msg-btn:hover {
-            border-color: #737373;
-            background-color: #1c1c1c;
-        }
-
-        .msg-btn img {
-            width: 16px;
-            height: 16px;
-            object-fit: contain;
-            filter: invert(1) sepia(1) saturate(5) hue-rotate(5deg);
-        }
-
         .points-badge {
             background-color: #141414;
             border: 1px solid #262626;
@@ -109,7 +71,7 @@
             background-color: #1c1c1c;
         }
 
-        .help-btn {
+        .help-btn, .msg-top-btn {
             width: 28px;
             height: 28px;
             background-color: #141414;
@@ -124,9 +86,26 @@
             transition: all 0.3s ease;
         }
 
-        .help-btn:hover {
+        .help-btn:hover, .msg-top-btn:hover {
             border-color: #737373;
             background-color: #1c1c1c;
+        }
+
+        /* زر الرسائل المطلوب بدون خلفية وراء الأيقونة وزر في جهة اليمين */
+        .msg-top-btn {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .msg-top-btn img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            filter: invert(1);
+            transition: transform 0.3s ease;
+        }
+        .msg-top-btn:hover img {
+            transform: scale(1.1);
         }
 
         .modal-overlay {
@@ -422,6 +401,49 @@
             visibility: visible;
             opacity: 1;
         }
+
+        /* تنسيقات لافتة الرسائل الاحترافية الجديدة */
+        .msg-items-container {
+            max-height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+            padding-left: 4px;
+        }
+        .msg-item-row {
+            background-color: #181818;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .msg-text-val {
+            color: #ffffff;
+            font-size: 12px;
+            word-break: break-all;
+            text-align: right;
+            flex-grow: 1;
+        }
+        .msg-copy-btn {
+            background-color: #262626;
+            color: #00ff66;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .msg-copy-btn:hover {
+            background-color: #00ff66;
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -429,14 +451,11 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- زر الرسائل في أعلى اليمين -->
-        <div class="top-right-group">
-            <div class="msg-btn" onclick="toggleMessageModal(true)" title="عرض الرسالة والكود">
-                <img src="https://images.icon-icons.com/1769/PNG/96/4092561-email-envelope-mail-message-mobile-ui-ui-website_114031.png" alt="Message Icon">
-            </div>
-        </div>
-
         <div class="top-left-group">
+            <!-- زر الرسائل الجديد بدون خلفية وراء الأيقونة وزر في جهة اليمين -->
+            <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الرسائل">
+                <img src="https://images.icon-icons.com/1744/PNG/96/3643728-balloon-chat-conversation-speak-word_113413.png" alt="Messages">
+            </div>
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
                 <span id="points-num" style="font-weight: bold;">0</span>
@@ -528,26 +547,19 @@
         </div>
     </div>
 
-    <!-- نافذة الرسالة والكود -->
-    <div id="messageModal" class="modal-overlay" onclick="handleModalClick(event, 'messageModal')">
+    <!-- لافتة الرسائل الجديدة -->
+    <div id="msgModal" class="modal-overlay" onclick="handleModalClick(event, 'msgModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
-                <div class="close-modal" onclick="toggleMessageModal(false)">
+                <div class="close-modal" onclick="toggleMsgModal(false)">
                     <i class="fas fa-times"></i>
                 </div>
-                <div class="instructions-title">
-                    <i class="fas fa-envelope-open-text"></i>
-                    <span>رسالة الكود الخاصة</span>
+                <div class="instructions-title" style="font-weight: 900; justify-content: flex-end;">
+                    <span>الأكواد المستخرجة</span>
                 </div>
-                <div style="font-size: 12px; color: #9ca3af; margin-bottom: 10px;">
-                    الكود المستخرج من الملف:
+                <div id="msg-content-box" class="msg-items-container">
+                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px;">جاري جلب الأكواد...</div>
                 </div>
-                <div id="extracted-code-box" style="background: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; color: #00ff66; font-size: 13px; text-align: center; margin-bottom: 12px; font-weight: bold; word-break: break-all;">
-                    جاري التحميل...
-                </div>
-                <button class="promo-submit-btn" onclick="copyExtractedCode()" style="background-color: #00ff66; color: #000; font-weight: bold;">
-                    <i class="fas fa-copy"></i> نسخ الكود
-                </button>
             </div>
         </div>
     </div>
@@ -631,7 +643,6 @@
             }
             await loadPointsFromDatabase();
             checkDownloadUnlockStatus();
-            loadMessageCode();
         };
 
         async function getPoints() {
@@ -741,39 +752,69 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
-        function toggleMessageModal(show) {
-            const modal = document.getElementById('messageModal');
+        // دالة التحكم بلافته الرسائل لجلب البيانات من cod.1.message
+        async function toggleMsgModal(show) {
+            const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
+            if (show) {
+                await fetchAndDisplayMessages();
+            }
+        }
+
+        async function fetchAndDisplayMessages() {
+            const container = document.getElementById('msg-content-box');
+            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px;">جاري جلب الأكواد...</div>';
+            
+            try {
+                const response = await fetch('cod.1.message?' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error('فشل جلب الملف');
+                }
+                const text = await response.text();
+                const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+                if (lines.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px;">لا توجد أكواد حالياً.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                lines.forEach((line) => {
+                    // استخراج الكود فقط إذا كان بصيغة كود:قيمة أو نص عادي
+                    let codeVal = line.split(':')[0].trim();
+
+                    const row = document.createElement('div');
+                    row.className = 'msg-item-row';
+
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'msg-text-val';
+                    textSpan.innerText = line;
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'msg-copy-btn';
+                    copyBtn.innerText = 'نسخ';
+                    copyBtn.onclick = () => {
+                        navigator.clipboard.writeText(codeVal);
+                        showToast('تم نسخ الكود بنجاح!');
+                    };
+
+                    row.appendChild(textSpan);
+                    row.appendChild(copyBtn);
+                    container.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px;">عذراً، تعذر العثور على ملف cod.1.message</div>';
+            }
         }
 
         function handleModalClick(event, modalId) {
             if (event.target.id === modalId) {
                 if (modalId === 'helpModal') toggleModal(false);
                 if (modalId === 'pointsModal') togglePointsModal(false);
-                if (modalId === 'messageModal') toggleMessageModal(false);
+                if (modalId === 'msgModal') toggleMsgModal(false);
             }
-        }
-
-        async function loadMessageCode() {
-            try {
-                const response = await fetch('cod.1.message?' + new Date().getTime());
-                if (!response.ok) throw new Error('فشل تحميل الملف');
-                const text = await response.text();
-                document.getElementById('extracted-code-box').innerText = text.trim() || 'الملف فارغ';
-            } catch (err) {
-                console.error(err);
-                document.getElementById('extracted-code-box').innerText = 'تعذر قراءة ملف cod.1.message';
-            }
-        }
-
-        function copyExtractedCode() {
-            const codeText = document.getElementById('extracted-code-box').innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                showToast('تم نسخ الكود بنجاح!');
-            }).catch(err => {
-                console.error(err);
-                alert('فشل نسخ الكود');
-            });
         }
 
         async function claimFreePoints() {
