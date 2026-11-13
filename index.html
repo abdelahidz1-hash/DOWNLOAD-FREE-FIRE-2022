@@ -96,7 +96,7 @@
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
-            position: relative; /* أُضيفَت لتموضع النقطة الحمراء بدقة */
+            position: relative;
         }
         .msg-top-btn img {
             width: 24px;
@@ -118,7 +118,7 @@
             height: 8px;
             background-color: #ff0000;
             border-radius: 50%;
-            display: none; /* مخفية افتراضياً حتى يتم التحقق من وجود رسائل */
+            display: none;
             box-shadow: 0 0 4px #ff0000;
         }
 
@@ -397,45 +397,43 @@
             opacity: 1;
         }
 
-        /* تعديل حجم لافتة الرسائل لتستوعب أكثر من 10 أسطر (ارتفاع أكبر) ومسح الفواصل */
+        /* تعديل حاوية الرسائل لتتسع لأكثر من 10 أسطر بدون خطوط فاصلة */
         .msg-items-container {
-            max-height: 380px;
+            max-height: 400px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 10px;
+            gap: 10px;
+            margin-top: 5px;
             padding-left: 4px;
         }
         .msg-item-row {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            border-bottom: none; /* إزالة الخطوط السفلية */
-            padding-bottom: 2px;
+            padding-bottom: 4px;
+            border-bottom: none; /* إزالة الخطوط الفاصلة */
         }
         .msg-text-val {
-            color: #d1d5db;
-            font-size: 12px;
-            text-align: right;
+            display: none; /* إخفاء النصوص العلوية بناءً على طلبك */
         }
         .msg-code-row {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 10px;
+            justify-content: flex-start;
         }
+        /* جعل الأكواد باللون الأخضر وعدم وجود خطوط تحتها أو فوقها */
         .msg-code-val {
-            color: #00ff66; /* جعل كود الهدايا بلون الأخضر بناءً على الطلب */
+            color: #00ff66 !important;
             font-size: 13px;
             font-weight: bold;
             word-break: break-all;
             text-align: right;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: opacity 0.3s ease;
         }
         .msg-code-val:hover {
-            color: #ffcc00;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -445,7 +443,6 @@
 
     <div class="container">
         <div class="top-left-group">
-            <!-- زر الرسائل الجديد بدون خلفية وراء الأيقونة وزر في جهة اليمين مع النقطة الحمراء -->
             <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الرسائل">
                 <img src="https://images.icon-icons.com/1744/PNG/96/3643728-balloon-chat-conversation-speak-word_113413.png" alt="Messages">
                 <div id="msgNotificationDot" class="msg-dot"></div>
@@ -541,7 +538,7 @@
         </div>
     </div>
 
-    <!-- لافتة الرسائل الجديدة -->
+    <!-- لافتة الرسائل الجديدة المحدثة -->
     <div id="msgModal" class="modal-overlay" onclick="handleModalClick(event, 'msgModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -632,7 +629,7 @@
             }
             await loadPointsFromDatabase();
             checkDownloadUnlockStatus();
-            checkMessagesNotification(); // التحقق تلقائياً من وجود رسائل لإظهار النقطة الحمراء
+            checkMessagesNotification();
         };
 
         async function getPoints() {
@@ -750,7 +747,6 @@
             }
         }
 
-        // دالة للتحقق من وجود نصوص في ملف الرسائل وإظهار/إخفاء النقطة الحمراء
         async function checkMessagesNotification() {
             const dot = document.getElementById('msgNotificationDot');
             try {
@@ -789,15 +785,11 @@
                 container.innerHTML = '';
                 lines.forEach((line) => {
                     let parts = line.split(':');
-                    let msgText = parts.length > 1 ? parts[0].trim() : '';
+                    // استخراج الكود فقط (الجزء الذي بعد الفاصلة أو السطر كاملاً إذا لم يوجد فاصل)
                     let codeVal = parts.length > 1 ? parts[1].trim() : line;
 
                     const row = document.createElement('div');
                     row.className = 'msg-item-row';
-
-                    const textSpan = document.createElement('div');
-                    textSpan.className = 'msg-text-val';
-                    textSpan.innerText = msgText;
 
                     const codeRow = document.createElement('div');
                     codeRow.className = 'msg-code-row';
@@ -815,10 +807,6 @@
                     };
 
                     codeRow.appendChild(codeSpan);
-
-                    if (msgText) {
-                        row.appendChild(textSpan);
-                    }
                     row.appendChild(codeRow);
                     container.appendChild(row);
                 });
