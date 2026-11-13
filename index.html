@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <!-- استدعاء FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- استدعاء مكتبة Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -36,23 +38,43 @@
             padding: 25px 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             text-align: center;
-            position: relative; /* لجعل العداد يتمركز بالنسبة للحاوية */
+            position: relative; /* لجعل الزر يتمركز بالنسبة للحاوية */
         }
 
-        /* تنسيق عداد الزيارات في أعلى اليسار */
-        .statcounter-wrapper {
+        /* حاوية تضم عداد النقاط وزر الاستفهام في أعلى اليسار */
+        .top-left-group {
             position: absolute;
             top: 15px;
             left: 15px;
-            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             z-index: 10;
         }
 
-        /* تنسيق زر الاستفهام الجديد في أعلى اليسار بجوار العداد */
+        /* تنسيق عنصر عداد النقاط بجانب زر الاستفهام */
+        .points-badge {
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 14px;
+            padding: 4px 10px;
+            color: #ffcc00;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+            cursor: pointer; /* جعل المؤشر يشير إلى أنه قابل للضغط */
+            transition: all 0.3s ease;
+        }
+
+        .points-badge:hover {
+            border-color: #737373;
+            background-color: #1c1c1c;
+        }
+
+        /* تنسيق زر الاستفهام الجديد في أعلى اليسار */
         .help-btn {
-            position: absolute;
-            top: 15px;
-            left: 65px; /* بجوار العداد */
             width: 28px;
             height: 28px;
             background-color: #141414;
@@ -64,7 +86,6 @@
             justify-content: center;
             font-size: 14px;
             cursor: pointer;
-            z-index: 10;
             transition: all 0.3s ease;
         }
 
@@ -102,6 +123,7 @@
             font-size: 18px;
             cursor: pointer;
             transition: color 0.3s ease;
+            z-index: 5;
         }
 
         .close-modal:hover {
@@ -184,6 +206,15 @@
         .link-text p {
             font-size: 10px;
             color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .link-text p img.inline-point-icon {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
         }
 
         .arrow-icon {
@@ -200,7 +231,7 @@
             border-radius: 12px;
         }
 
-        /* صندوق كيفية الاستخدام */
+        /* صندوق كيفية الاستخدام وصندوق إدخال الكود */
         .instructions-box {
             background-color: #111111;
             border: 1px solid #1f1f1f;
@@ -275,33 +306,85 @@
             font-size: 11px;
             color: #9ca3af;
         }
+
+        /* تصميم حقل ادخال الكود وزر الإرسال داخل النافذة */
+        .promo-input {
+            width: 100%;
+            background-color: #181818;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #ffffff;
+            font-size: 12px;
+            margin-bottom: 10px;
+            outline: none;
+            text-align: right;
+        }
+        .promo-input:focus {
+            border-color: #ffcc00;
+        }
+        .promo-submit-btn {
+            width: 100%;
+            background-color: #ffcc00;
+            color: #000000;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .promo-submit-btn:hover {
+            background-color: #e6b800;
+        }
+        #promo-msg {
+            font-size: 11px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* تنسيق الإشعار المؤقت (Toast) */
+        #custom-toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #141414;
+            color: #00ff66;
+            text-align: center;
+            border: 1px solid #262626;
+            border-radius: 12px;
+            padding: 12px;
+            position: fixed;
+            z-index: 2000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+            transition: visibility 0.3s, opacity 0.3s ease;
+            opacity: 0;
+        }
+        #custom-toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- عداد Statcounter في أعلى اليسار (أرقام بدون تعديل الكود) -->
-        <div class="statcounter-wrapper">
-            <!-- Default Statcounter code for DOWNLOAD FF
-            https://download-ff-2022.vercel.app/ -->
-            <script type="text/javascript">
-            var sc_project=13365650; 
-            var sc_invisible=0; 
-            var sc_security="b6f3d26b"; 
-            var scJsHost = "https://";
-            document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-            "statcounter.com/counter/counter.js'></"+"script>");
-            </script>
-            <noscript><div class="statcounter"><a title="Web Analytics"
-            href="https://statcounter.com/" target="_blank"><img class="statcounter"
-            src="https://c.statcounter.com/13365650/0/b6f3d26b/0/" alt="Web Analytics"
-            referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-            <!-- End of Statcounter Code -->
-        </div>
+    <!-- عنصر الإشعار المؤقت -->
+    <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
-        <!-- زر الاستفهام الجديد في أعلى اليسار -->
-        <div class="help-btn" onclick="toggleModal(true)" title="كيفية الاستخدام">
-            <i class="fas fa-question"></i>
+    <div class="container">
+        <!-- مجموعة أعلى اليسار: عداد النقاط بجانب زر الاستفهام -->
+        <div class="top-left-group">
+            <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
+                <span id="points-num" style="font-weight: bold;">0</span>
+            </div>
+            <div class="help-btn" onclick="toggleModal(true)" title="كيفية الاستخدام">
+                <i class="fas fa-question"></i>
+            </div>
         </div>
 
         <!-- الصورة الشخصية -->
@@ -309,17 +392,20 @@
             <img src="https://i.ibb.co/6R2C1JTt/Picsart-26-11-11-08-32-29-608.png" alt="Profile Picture" class="profile-pic">
         </div>
 
-        <!-- الزر الأول (رابط تحميل فري فاير) -->
-        <a href="https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772" target="_blank" class="link-card">
+        <!-- الزر الأول (رابط تحميل فري فاير - مقفل مقابل 3 نقاط) -->
+        <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn">
             <div class="link-content">
                 <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
-                    <h3>DOWNLOAD FF 2022</h3>
-                    <p></p>
+                    <h3 id="download-title">DOWNLOAD FF 2022</h3>
+                    <p id="download-sub">
+                        <span>3</span>
+                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
+                    </p>
                 </div>
             </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
-        </a>
+            <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
+        </div>
 
         <!-- الزر الثاني (رابط ربط الحساب) -->
         <a href="https://register.samosasmobiles.dpdns.org/" target="_blank" class="link-card">
@@ -363,17 +449,9 @@
             <div style="text-align: center; margin-bottom: 6px;">
                 <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
             </div>
-            <div id="venom-progress-text">جاري تجهيز التحميل... (10 ثوانٍ)</div>
+            <div id="venom-progress-text">جاري تجهيز التحميل...</div>
             <div id="venom-progress-bar-bg">
                 <div id="venom-progress-bar"></div>
-            </div>
-            <!-- الزر الجديد 🖇️ تحت شريط التحميل -->
-            <div id="check-ad-btn" class="link-card" style="margin-top: 10px; margin-bottom: 0; justify-content: center; display: none;" onclick="handleCheckAdClick()">
-                <div class="link-content" style="justify-content: center; width: 100%;">
-                    <div class="link-text" style="text-align: center;">
-                        <h3 style="color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);">🖇️ تحقق من الضغط على الإعلان</h3>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -390,10 +468,15 @@
             </script>
             <script src="https://bauval.org/22/69ab74afae32c71dfa68f3228b696128"></script>
         </div>
+        
+        <!-- النص المضاف بوزن 900 تحت إعلان البانر -->
+        <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
+            اضغط على اعلان لمساعدة ولن تخسر شيئا
+        </div>
     </div>
 
     <!-- نافذة منبثقة (Modal) لافتة كيفية الاستخدام -->
-    <div id="helpModal" class="modal-overlay" onclick="handleModalClick(event)">
+    <div id="helpModal" class="modal-overlay" onclick="handleModalClick(event, 'helpModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
                 <div class="close-modal" onclick="toggleModal(false)">
@@ -427,6 +510,27 @@
         </div>
     </div>
 
+    <!-- نافذة منبثقة لإدخال الكود والحصول على النقاط -->
+    <div id="pointsModal" class="modal-overlay" onclick="handleModalClick(event, 'pointsModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="togglePointsModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Coin" style="width: 18px; height: 18px; object-fit: contain;">
+                    <span>شحن النقاط بالكود</span>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; margin-bottom: 12px; font-weight: 900;">
+                    أدخل كود الهدية للحصول على النقاط:
+                </div>
+                <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا..." style="font-weight: 900;">
+                <button class="promo-submit-btn" onclick="submitPromoCode()" style="font-weight: 900;">إرسال</button>
+                <div id="promo-msg"></div>
+            </div>
+        </div>
+    </div>
+
     <style>
         /* إضافة حركة دوران للساعة الرملية */
         @keyframes spinHourglass {
@@ -436,19 +540,209 @@
     </style>
 
     <script>
+        // إعدادات اتصال Supabase باستخدام البيانات المعطاة
+        const SUPABASE_URL = 'https://s0nhasCNn0HyjGUMcztiTg.supabase.co';
+        const SUPABASE_ANON_KEY = 'Sb_publishable_s0nhasCNn0HyjGUMcztiTg_LqUARhSd';
+        
+        // تهيئة عميل Supabase
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let venomStarted = false;
-        let adClicked = false;
-        let checkClickCount = 0; // عداد الضغط على الزر الجديد
-        let resumeTime = 0;
+
+        // دالة تحديث وعرض النقاط عند فتح الصفحة
+        window.onload = async function() {
+            await loadPointsFromDatabase();
+            checkDownloadUnlockStatus();
+        };
+
+        // جلب النقاط من التخزين المحلي
+        async function getPoints() {
+            return parseInt(localStorage.getItem('user_points')) || 0;
+        }
+
+        async function loadPointsFromDatabase() {
+            try {
+                let localPts = parseInt(localStorage.getItem('user_points')) || 0;
+                setPoints(localPts);
+            } catch (err) {
+                console.error("خطأ في الاتصال بقاعدة البيانات:", err);
+            }
+        }
+
+        function setPoints(pts) {
+            localStorage.setItem('user_points', pts);
+            updatePointsDisplay();
+            checkDownloadUnlockStatus();
+        }
+
+        function updatePointsDisplay() {
+            document.getElementById('points-num').innerText = parseInt(localStorage.getItem('user_points')) || 0;
+        }
+
+        // إظهار الإشعار المؤقت (Toast)
+        function showToast(message) {
+            const toast = document.getElementById('custom-toast');
+            toast.innerText = message;
+            toast.className = 'show';
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000); // يختفي بعد 3 ثوانٍ
+        }
+
+        // التحقق مما إذا كان الزر مفتوحاً مسبقاً (صالح لمدة يوم واحد فقط)
+        function checkDownloadUnlockStatus() {
+            const unlockTime = parseInt(localStorage.getItem('download_ff_unlock_time')) || 0;
+            const oneDayInMillis = 24 * 60 * 60 * 1000;
+            const currentTime = Date.now();
+
+            const titleEl = document.getElementById('download-title');
+            const subEl = document.getElementById('download-sub');
+            const iconEl = document.getElementById('download-icon-status');
+
+            if (unlockTime && (currentTime - unlockTime > oneDayInMillis)) {
+                localStorage.removeItem('download_ff_unlocked');
+                localStorage.removeItem('download_ff_unlock_time');
+            }
+
+            const isUnlocked = localStorage.getItem('download_ff_unlocked') === 'true';
+
+            if (isUnlocked) {
+                titleEl.innerText = 'DOWNLOAD FF 2022';
+                titleEl.style.color = '#00ff66';
+                subEl.innerHTML = '<span>3</span> <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">';
+                iconEl.className = 'fas fa-arrow-left arrow-icon';
+                iconEl.style.color = '#a3a3a3';
+            } else {
+                titleEl.innerText = 'DOWNLOAD FF 2022';
+                titleEl.style.color = '#00ff66';
+                subEl.innerHTML = '<span>3</span> <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">';
+                iconEl.className = 'fas fa-lock arrow-icon';
+                iconEl.style.color = '#ff4444';
+            }
+        }
+
+        // التعامل مع النقر على زر التحميل المقفل
+        async function handleDownloadClick(event) {
+            checkDownloadUnlockStatus();
+            const isUnlocked = localStorage.getItem('download_ff_unlocked') === 'true';
+            
+            if (isUnlocked) {
+                window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
+            } else {
+                let currentPts = await getPoints();
+                if (currentPts >= 3) {
+                    if (confirm('هل تريد خصم 3 نقاط لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
+                        setPoints(currentPts - 3);
+                        localStorage.setItem('download_ff_unlocked', 'true');
+                        localStorage.setItem('download_ff_unlock_time', Date.now());
+                        checkDownloadUnlockStatus();
+                        showToast('تم فتح قفل زر صالح لمدة يوم');
+                        window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
+                    }
+                } else {
+                    alert('رصيدك غير كافٍ! تحتاج إلى 3 نقاط على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في أعلى الصفحة.');
+                }
+            }
+        }
 
         function toggleModal(show) {
             const modal = document.getElementById('helpModal');
             modal.style.display = show ? 'flex' : 'none';
         }
 
-        function handleModalClick(event) {
-            if (event.target.id === 'helpModal') {
-                toggleModal(false);
+        function togglePointsModal(show) {
+            const modal = document.getElementById('pointsModal');
+            modal.style.display = show ? 'flex' : 'none';
+            document.getElementById('promoCodeInput').value = '';
+            document.getElementById('promo-msg').innerText = '';
+        }
+
+        function handleModalClick(event, modalId) {
+            if (event.target.id === modalId) {
+                if (modalId === 'helpModal') toggleModal(false);
+                if (modalId === 'pointsModal') togglePointsModal(false);
+            }
+        }
+
+        // دالة جلب الأكواد من ملف cod.gift والتحقق منها
+        async function submitPromoCode() {
+            const codeInput = document.getElementById('promoCodeInput').value.trim();
+            const msgDiv = document.getElementById('promo-msg');
+
+            if (!codeInput) {
+                msgDiv.style.color = '#ff4444';
+                msgDiv.innerText = 'الرجاء إدخال الكود أولاً.';
+                return;
+            }
+
+            msgDiv.style.color = '#ffcc00';
+            msgDiv.innerText = 'جاري التحقق من الكود...';
+
+            try {
+                // جلب محتوى ملف cod.gift من مستودع GitHub الخاص بك مباشرة
+                // ملاحظة: استبدل رابط الـ raw أدناه برابط ملف cod.gift الفعلي إذا لزم الأمر، أو استخدم مساره النسبي
+                const response = await fetch('cod.gift?' + new Date().getTime()); // منع التخزين المؤقت
+                
+                if (!response.ok) {
+                    throw new Error('فشل في جلب ملف الأكواد');
+                }
+
+                const fileText = await response.text();
+                
+                // قراءة الأكواد سطراً بسطر أو البحث داخل الملف
+                // نفترض أن كل سطر يحتوي على كود وقيمة النقاط هكذا: KOD:25 أو مجرد الأكواد يفصل بينها أسطر
+                const lines = fileText.split(/\r?\n/);
+                let foundPoints = 0;
+                let isValid = false;
+
+                for (let line of lines) {
+                    let parts = line.trim().split(':'); // الصيغة المفترضة: الكود:النقاط (مثل: 100K:25 أو VIP50:50)
+                    let fileCode = parts[0].trim();
+                    let ptsToAdd = parts[1] ? parseInt(parts[1]) : 25; // افتراض 25 نقطة إذا لم تُحدد القيمة
+
+                    if (fileCode === codeInput) {
+                        isValid = true;
+                        foundPoints = ptsToAdd;
+                        break;
+                    }
+                }
+
+                if (!isValid) {
+                    // تجربة البحث المباشر إذا كان الملف يحتوي على الأكواد فقط بدون نقاط (كل كود في سطر)
+                    const cleanCodes = lines.map(l => l.trim()).filter(l => l.length > 0);
+                    if (cleanCodes.includes(codeInput)) {
+                        isValid = true;
+                        foundPoints = 25; // القيمة الافتراضية المانحة للنقاط
+                    }
+                }
+
+                if (isValid) {
+                    // التحقق مما إذا كان هذا الكود قد استخدم مسبقاً من طرف هذا المستخدم
+                    const redeemedKey = 'redeemed_code_' + codeInput;
+                    if (localStorage.getItem(redeemedKey) === 'true') {
+                        msgDiv.style.color = '#ff4444';
+                        msgDiv.innerText = 'لقد استخدمت هذا الكود مسبقاً!';
+                        return;
+                    }
+
+                    let currentPts = await getPoints();
+                    setPoints(currentPts + foundPoints);
+                    localStorage.setItem(redeemedKey, 'true');
+                    
+                    msgDiv.style.color = '#00ff66';
+                    msgDiv.innerText = `تم إضافة ${foundPoints} نقطة بنجاح!`;
+                    setTimeout(() => {
+                        togglePointsModal(false);
+                    }, 1500);
+                } else {
+                    msgDiv.style.color = '#ff4444';
+                    msgDiv.innerText = 'الكود غير صحيح أو انتهت صلاحيته.';
+                }
+
+            } catch (err) {
+                console.error(err);
+                msgDiv.style.color = '#ff4444';
+                msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف cod.gift.';
             }
         }
 
@@ -460,69 +754,48 @@
             const progressContainer = document.getElementById('venom-progress-container');
             const progressBar = document.getElementById('venom-progress-bar');
             const progressText = document.getElementById('venom-progress-text');
-            const checkAdBtn = document.getElementById('check-ad-btn');
 
             btn.style.opacity = '0.5';
             btn.style.pointerEvents = 'none';
             progressContainer.style.display = 'block';
 
             let startTime = Date.now();
-            let duration1 = 5000; // أول 5 ثواني
-            let duration2 = 5000; // الـ 5 ثواني المتبقية
+            let phase1Duration = 10000; 
+            let pauseDuration = 5000;  
+            let phase2Duration = 10000; 
+            let totalActiveTime = phase1Duration + phase2Duration;
 
             let timer = setInterval(() => {
                 let elapsed = Date.now() - startTime;
 
-                if (!adClicked) {
-                    if (elapsed <= duration1) {
-                        let percent = (elapsed / duration1) * 50;
-                        progressBar.style.width = percent + '%';
-                        let remainingSeconds = Math.ceil((duration1 - elapsed) / 1000);
-                        progressText.innerText = `جاري التحميل... متبقي ${remainingSeconds} ثوانٍ`;
-                    } else {
-                        // التوقف عند 50% وإظهار زر التحقق
-                        progressBar.style.width = '50%';
-                        progressText.innerText = 'يرجى الضغط على زر التحقق أدناه لمتابعة التحميل...';
-                        checkAdBtn.style.display = 'flex';
-                    }
-                } else {
-                    // بعد الضغط مرتين على الزر، نكمل الـ 5 ثواني الثانية
-                    let elapsedAfterAd = Date.now() - resumeTime;
-                    if (elapsedAfterAd <= duration2) {
-                        let percent = 50 + (elapsedAfterAd / duration2) * 50;
-                        progressBar.style.width = percent + '%';
-                        let remainingSeconds = Math.ceil((duration2 - elapsedAfterAd) / 1000);
-                        progressText.innerText = `جاري استكمال التحميل... متبقي ${remainingSeconds} ثوانٍ`;
-                    } else {
-                        progressBar.style.width = '100%';
-                        progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
-                        clearInterval(timer);
-                        setTimeout(() => {
-                            progressContainer.style.display = 'none';
-                            window.open('https://www.mediafire.com/file/vxpqlops8epj851/PR+VENOM.zip/file', '_blank');
-                        }, 500);
-                    }
+                if (elapsed <= phase1Duration) {
+                    let percent = (elapsed / phase1Duration) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((phase1Duration - elapsed) / 1000);
+                    progressText.innerText = `جاري التحميل... متبقي ${remainingSecs} ثوانٍ`;
+                } 
+                else if (elapsed <= phase1Duration + pauseDuration) {
+                    progressBar.style.width = '50%';
+                    progressText.innerText = 'يرجى الضغط على الإعلان للمتابعة...';
+                } 
+                else if (elapsed <= totalActiveTime + pauseDuration) {
+                    let elapsedAfterPause = elapsed - (phase1Duration + pauseDuration);
+                    let percent = 50 + (elapsedAfterPause / phase2Duration) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((phase2Duration - elapsedAfterPause) / 1000);
+                    progressText.innerText = `جاري استكمال التحميل... متبقي ${remainingSecs} ثوانٍ`;
+                } 
+                else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        window.open('https://www.mediafire.com/file/vxpqlops8epj851/PR+VENOM.zip/file', '_blank');
+                    }, 500);
                 }
             }, 50);
         }
-
-        // دالة التعامل مع الضغط على زر التحقق (تتطلب ضغطتين)
-        function handleCheckAdClick() {
-            if (adClicked) return;
-
-            checkClickCount++;
-
-            if (checkClickCount === 1) {
-                // الضغطة الأولى: تنبيه المستخدم
-                alert('عذراً، يرجى الضغط على الإعلان أولاً لكي تتمكن من المتابعة!');
-            } else if (checkClickCount >= 2) {
-                // الضغطة الثانية: بدء استكمال الـ 5 ثواني المتبقية وإخفاء الزر
-                adClicked = true;
-                resumeTime = Date.now();
-                document.getElementById('check-ad-btn').style.display = 'none';
-            }
-        }
     </script>
 </body>
-                </html>
-                
+</html>
