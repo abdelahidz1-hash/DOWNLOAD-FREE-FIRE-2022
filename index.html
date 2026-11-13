@@ -522,7 +522,7 @@
         let venomStarted = false;
 
         window.onload = async function() {
-            // جعل عدد نقاط كل مستخدم يبدأ من 0 إذا لم تقم بتعيينها مسبقاً
+            // جعل نقاط كل متصفح جديد تبدأ من 0 تلقائياً
             if (localStorage.getItem('user_points') === null) {
                 localStorage.setItem('user_points', '0');
             }
@@ -549,7 +549,7 @@
             checkDownloadUnlockStatus();
         }
 
-        // دالة تحويل الأرقام الكبيرة إلى اختصارات (مثال: 1000000 -> 1M)
+        // دالة تحويل الأرقام الكبيرة إلى اختصارات (مثال: 1000 -> 1K, 1000000 -> 1M)
         function formatLargeNumber(num) {
             if (num >= 1e9) {
                 return (num / 1e9).toFixed(num % 1e9 === 0 ? 0 : 1) + 'B';
