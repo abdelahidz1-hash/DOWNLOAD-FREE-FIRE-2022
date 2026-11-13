@@ -344,33 +344,6 @@
         .promo-submit-btn:hover {
             background-color: #e6b800;
         }
-        
-        .claim-free-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #141414 0%, #1c1c1c 100%);
-            color: #00ff66;
-            border: 1px solid #00ff66;
-            border-radius: 12px;
-            padding: 11px;
-            font-size: 12px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 0 12px rgba(0, 255, 102, 0.25);
-            text-shadow: 0 0 6px rgba(0, 255, 102, 0.4);
-            letter-spacing: 0.5px;
-        }
-        .claim-free-btn:hover {
-            background: linear-gradient(135deg, #1c1c1c 0%, #262626 100%);
-            border-color: #00ff88;
-            box-shadow: 0 0 18px rgba(0, 255, 102, 0.45);
-            transform: translateY(-1px);
-        }
 
         #promo-msg {
             font-size: 11px;
@@ -423,7 +396,6 @@
             color: #d1d5db;
             font-size: 12px;
             text-align: right;
-            display: none; /* إخفاء النص وتمكين عرض الكود فقط */
         }
         .msg-code-row {
             display: flex;
@@ -608,18 +580,14 @@
                     <i class="fas fa-times"></i>
                 </div>
                 <div class="instructions-title" style="font-weight: 900;">
-                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Coin" style="width: 18px; height: 18px; object-fit: contain;">
-                    <span>شحن النقاط بالكود</span>
+                    <img src="https://images.icon-icons.com/964/PNG/96/gift_icon-icons.com_74639.png" alt="Gift Icon" style="width: 18px; height: 18px; object-fit: contain;">
+                    <span>GIFT CODES</span>
                 </div>
                 <div style="font-size: 12px; color: #9ca3af; margin-bottom: 12px; font-weight: 900;">
                     أدخل كود الهدية للحصول على النقاط:
                 </div>
                 <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا..." style="font-weight: 900;">
                 <button class="promo-submit-btn" onclick="submitPromoCode()" style="font-weight: 900;">إرسال</button>
-                <button class="claim-free-btn" onclick="claimFreePoints()">
-                    <img src="https://images.icon-icons.com/1875/PNG/96/point_120426.png" alt="Coin" style="width: 16px; height: 16px; object-fit: contain;">
-                    اضغط على زر لحصول على 5 نقاط مجانا
-                </button>
                 <div id="promo-msg"></div>
             </div>
         </div>
@@ -738,7 +706,7 @@
                         window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
                     }
                 } else {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 20 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود أو المطالبة المجانية في أعلى الصفحة.');
+                    alert('رصيدك غير كافٍ! تحتاج إلى 20 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
                 }
             }
         }
@@ -755,7 +723,6 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
-        // دالة التحكم بلافته الرسائل لعرض الكود فقط مع أيقونة النسخ
         async function toggleMsgModal(show) {
             const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -784,10 +751,15 @@
                 container.innerHTML = '';
                 lines.forEach((line) => {
                     let parts = line.split(':');
+                    let msgText = parts.length > 1 ? parts[0].trim() : '';
                     let codeVal = parts.length > 1 ? parts[1].trim() : line;
 
                     const row = document.createElement('div');
                     row.className = 'msg-item-row';
+
+                    const textSpan = document.createElement('div');
+                    textSpan.className = 'msg-text-val';
+                    textSpan.innerText = msgText;
 
                     const codeRow = document.createElement('div');
                     codeRow.className = 'msg-code-row';
@@ -808,6 +780,9 @@
                     codeRow.appendChild(codeSpan);
                     codeRow.appendChild(copyBtn);
 
+                    if (msgText) {
+                        row.appendChild(textSpan);
+                    }
                     row.appendChild(codeRow);
                     container.appendChild(row);
                 });
@@ -824,27 +799,6 @@
                 if (modalId === 'pointsModal') togglePointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
             }
-        }
-
-        async function claimFreePoints() {
-            const msgDiv = document.getElementById('promo-msg');
-            const claimKey = 'claimed_free_5_points';
-            
-            if (localStorage.getItem(claimKey) === 'true') {
-                msgDiv.style.color = '#ff4444';
-                msgDiv.innerText = 'لقد قمت بمطالبة النقاط المجانية مسبقاً!';
-                return;
-            }
-
-            let currentPts = await getPoints();
-            setPoints(currentPts + 5);
-            localStorage.setItem(claimKey, 'true');
-
-            msgDiv.style.color = '#00ff66';
-            msgDiv.innerText = 'تمت إضافة 5 نقاط بنجاح!';
-            setTimeout(() => {
-                togglePointsModal(false);
-            }, 1500);
         }
 
         async function submitPromoCode() {
