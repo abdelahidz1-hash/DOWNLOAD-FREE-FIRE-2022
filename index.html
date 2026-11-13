@@ -96,7 +96,7 @@
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
-            position: relative;
+            position: relative; /* أُضيفَت لتموضع النقطة الحمراء بدقة */
         }
         .msg-top-btn img {
             width: 24px;
@@ -118,7 +118,7 @@
             height: 8px;
             background-color: #ff0000;
             border-radius: 50%;
-            display: none;
+            display: none; /* مخفية افتراضياً حتى يتم التحقق من وجود رسائل */
             box-shadow: 0 0 4px #ff0000;
         }
 
@@ -138,7 +138,7 @@
 
         .modal-content {
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             position: relative;
         }
 
@@ -397,43 +397,51 @@
             opacity: 1;
         }
 
-        /* تعديل حاوية الرسائل لتتسع لأكثر من 10 أسطر بدون خطوط فاصلة */
+        /* تعديلات لافتة الرسائل الجديدة: زيادة الحجم وإزالة الخطوط الفاصلة */
         .msg-items-container {
-            max-height: 400px;
+            max-height: 380px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 5px;
-            padding-left: 4px;
+            gap: 14px;
+            margin-top: 10px;
+            padding: 4px;
         }
         .msg-item-row {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
+            border-bottom: none !important; /* إزالة الخطوط الفاصلة تماماً */
             padding-bottom: 4px;
-            border-bottom: none; /* إزالة الخطوط الفاصلة */
         }
         .msg-text-val {
-            display: none; /* إخفاء النصوص العلوية بناءً على طلبك */
+            color: #ffffff; /* النصوص العادية بلون الأبيض */
+            font-size: 13px;
+            text-align: right;
+            line-height: 1.6;
         }
         .msg-code-row {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: start;
+            gap: 10px;
         }
-        /* جعل الأكواد باللون الأخضر وعدم وجود خطوط تحتها أو فوقها */
+        /* كود الهدايا بلون الأخضر والنصوص العادية أو الروابط بالألوان المحددة */
         .msg-code-val {
-            color: #00ff66 !important;
+            color: #00ff66; /* كود الهدايا بلون الأخضر */
             font-size: 13px;
             font-weight: bold;
             word-break: break-all;
             text-align: right;
             cursor: pointer;
-            transition: opacity 0.3s ease;
+            transition: color 0.3s ease;
         }
         .msg-code-val:hover {
-            opacity: 0.8;
+            color: #00cc52;
+        }
+        .msg-link-val {
+            color: #ff0000 !important; /* الروابط بلون الاحمر */
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -538,7 +546,7 @@
         </div>
     </div>
 
-    <!-- لافتة الرسائل الجديدة المحدثة -->
+    <!-- لافتة الرسائل الجديدة -->
     <div id="msgModal" class="modal-overlay" onclick="handleModalClick(event, 'msgModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -629,7 +637,7 @@
             }
             await loadPointsFromDatabase();
             checkDownloadUnlockStatus();
-            checkMessagesNotification();
+            checkMessagesNotification(); 
         };
 
         async function getPoints() {
@@ -785,28 +793,49 @@
                 container.innerHTML = '';
                 lines.forEach((line) => {
                     let parts = line.split(':');
-                    // استخراج الكود فقط (الجزء الذي بعد الفاصلة أو السطر كاملاً إذا لم يوجد فاصل)
+                    let msgText = parts.length > 1 ? parts[0].trim() : '';
                     let codeVal = parts.length > 1 ? parts[1].trim() : line;
 
                     const row = document.createElement('div');
                     row.className = 'msg-item-row';
+
+                    const textSpan = document.createElement('div');
+                    textSpan.className = 'msg-text-val';
+                    
+                    // تحليل النص للتحقق من وجود روابط لتلوينها بالأحمر
+                    if (msgText.startsWith('http://') || msgText.startsWith('https://')) {
+                        textSpan.innerHTML = `<a href="${msgText}" target="_blank" class="msg-link-val">${msgText}</a>`;
+                    } else {
+                        textSpan.innerText = msgText;
+                    }
 
                     const codeRow = document.createElement('div');
                     codeRow.className = 'msg-code-row';
 
                     const codeSpan = document.createElement('span');
                     codeSpan.className = 'msg-code-val';
-                    codeSpan.innerText = codeVal;
-                    codeSpan.title = 'انقر لنسخ الكود';
-                    codeSpan.onclick = function() {
-                        navigator.clipboard.writeText(codeVal).then(() => {
-                            showToast('تم نسخ الكود: ' + codeVal);
-                        }).catch(err => {
-                            console.error('فشل النسخ', err);
-                        });
-                    };
+                    
+                    // إذا كان الكود رابطاً، يلون بالأحمر، وإذا كان كود هدايا يلون بالأخضر
+                    if (codeVal.startsWith('http://') || codeVal.startsWith('https://')) {
+                        codeSpan.className = 'msg-code-val msg-link-val';
+                        codeSpan.innerHTML = `<a href="${codeVal}" target="_blank" style="color: #ff0000; text-decoration: underline;">${codeVal}</a>`;
+                    } else {
+                        codeSpan.innerText = codeVal;
+                        codeSpan.title = 'انقر لنسخ الكود';
+                        codeSpan.onclick = function() {
+                            navigator.clipboard.writeText(codeVal).then(() => {
+                                showToast('تم نسخ الكود: ' + codeVal);
+                            }).catch(err => {
+                                console.error('فشل النسخ', err);
+                            });
+                        };
+                    }
 
                     codeRow.appendChild(codeSpan);
+
+                    if (msgText) {
+                        row.appendChild(textSpan);
+                    }
                     row.appendChild(codeRow);
                     container.appendChild(row);
                 });
