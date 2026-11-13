@@ -397,9 +397,9 @@
             opacity: 1;
         }
 
-        /* تنسيقات لافتة الرسائل الجديدة بدون إطار وبدون خلفيات مربعة للعناصر */
+        /* تعديل حجم لافتة الرسائل لتستوعب أكثر من 10 أسطر (ارتفاع أكبر) ومسح الفواصل */
         .msg-items-container {
-            max-height: 220px;
+            max-height: 380px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -410,9 +410,9 @@
         .msg-item-row {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            border-bottom: 1px solid #1f1f1f;
-            padding-bottom: 8px;
+            gap: 2px;
+            border-bottom: none; /* إزالة الخطوط السفلية */
+            padding-bottom: 2px;
         }
         .msg-text-val {
             color: #d1d5db;
@@ -426,7 +426,7 @@
             gap: 10px;
         }
         .msg-code-val {
-            color: #ffffff;
+            color: #00ff66; /* جعل كود الهدايا بلون الأخضر بناءً على الطلب */
             font-size: 13px;
             font-weight: bold;
             word-break: break-all;
