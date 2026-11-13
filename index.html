@@ -423,6 +423,7 @@
             color: #d1d5db;
             font-size: 12px;
             text-align: right;
+            display: none; /* إخفاء النص وتمكين عرض الكود فقط */
         }
         .msg-code-row {
             display: flex;
@@ -616,8 +617,8 @@
                 <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا..." style="font-weight: 900;">
                 <button class="promo-submit-btn" onclick="submitPromoCode()" style="font-weight: 900;">إرسال</button>
                 <button class="claim-free-btn" onclick="claimFreePoints()">
-                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Coin" style="width: 16px; height: 16px; object-fit: contain;">
-                    FREE 5 POINTS
+                    <img src="https://images.icon-icons.com/1875/PNG/96/point_120426.png" alt="Coin" style="width: 16px; height: 16px; object-fit: contain;">
+                    اضغط على زر لحصول على 5 نقاط مجانا
                 </button>
                 <div id="promo-msg"></div>
             </div>
@@ -754,7 +755,7 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
-        // دالة التحكم بلافته الرسائل لعرض النص وتحته الكود مع أيقونة النسخ المخصصة للكود فقط
+        // دالة التحكم بلافته الرسائل لعرض الكود فقط مع أيقونة النسخ
         async function toggleMsgModal(show) {
             const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -783,15 +784,10 @@
                 container.innerHTML = '';
                 lines.forEach((line) => {
                     let parts = line.split(':');
-                    let msgText = parts.length > 1 ? parts[0].trim() : 'رسالة';
                     let codeVal = parts.length > 1 ? parts[1].trim() : line;
 
                     const row = document.createElement('div');
                     row.className = 'msg-item-row';
-
-                    const textSpan = document.createElement('div');
-                    textSpan.className = 'msg-text-val';
-                    textSpan.innerText = msgText;
 
                     const codeRow = document.createElement('div');
                     codeRow.className = 'msg-code-row';
@@ -812,7 +808,6 @@
                     codeRow.appendChild(codeSpan);
                     codeRow.appendChild(copyBtn);
 
-                    row.appendChild(textSpan);
                     row.appendChild(codeRow);
                     container.appendChild(row);
                 });
