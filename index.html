@@ -51,6 +51,44 @@
             z-index: 10;
         }
 
+        /* زر الرسائل الجديد في أعلى اليمين */
+        .top-right-group {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .msg-btn {
+            width: 32px;
+            height: 32px;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 50%;
+            color: #ffcc00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .msg-btn:hover {
+            border-color: #737373;
+            background-color: #1c1c1c;
+        }
+
+        .msg-btn img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(5deg);
+        }
+
         .points-badge {
             background-color: #141414;
             border: 1px solid #262626;
@@ -194,20 +232,20 @@
             color: #00ff66;
             text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
             margin-bottom: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .link-text p {
-            font-size: 10px;
-            color: #9ca3af;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            display: none; 
         }
 
-        .link-text p img.inline-point-icon {
+        .link-text h3 img.inline-point-icon {
             width: 14px;
             height: 14px;
             object-fit: contain;
+            vertical-align: middle;
         }
 
         .arrow-icon {
@@ -327,6 +365,34 @@
         .promo-submit-btn:hover {
             background-color: #e6b800;
         }
+        
+        .claim-free-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #141414 0%, #1c1c1c 100%);
+            color: #00ff66;
+            border: 1px solid #00ff66;
+            border-radius: 12px;
+            padding: 11px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.25);
+            text-shadow: 0 0 6px rgba(0, 255, 102, 0.4);
+            letter-spacing: 0.5px;
+        }
+        .claim-free-btn:hover {
+            background: linear-gradient(135deg, #1c1c1c 0%, #262626 100%);
+            border-color: #00ff88;
+            box-shadow: 0 0 18px rgba(0, 255, 102, 0.45);
+            transform: translateY(-1px);
+        }
+
         #promo-msg {
             font-size: 11px;
             margin-top: 8px;
@@ -363,6 +429,13 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
+        <!-- زر الرسائل في أعلى اليمين -->
+        <div class="top-right-group">
+            <div class="msg-btn" onclick="toggleMessageModal(true)" title="عرض الرسالة والكود">
+                <img src="https://images.icon-icons.com/1769/PNG/96/4092561-email-envelope-mail-message-mobile-ui-ui-website_114031.png" alt="Message Icon">
+            </div>
+        </div>
+
         <div class="top-left-group">
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
@@ -381,11 +454,14 @@
             <div class="link-content">
                 <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
-                    <h3 id="download-title">DOWNLOAD FF 2022</h3>
-                    <p id="download-sub">
-                        <span>3</span>
-                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
-                    </p>
+                    <h3 id="download-title">
+                        DOWNLOAD FF 2022 
+                        <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px;">
+                            <span>20</span>
+                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
+                        </span>
+                    </h3>
+                    <p id="download-sub"></p>
                 </div>
             </div>
             <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
@@ -452,6 +528,30 @@
         </div>
     </div>
 
+    <!-- نافذة الرسالة والكود -->
+    <div id="messageModal" class="modal-overlay" onclick="handleModalClick(event, 'messageModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="toggleMessageModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title">
+                    <i class="fas fa-envelope-open-text"></i>
+                    <span>رسالة الكود الخاصة</span>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; margin-bottom: 10px;">
+                    الكود المستخرج من الملف:
+                </div>
+                <div id="extracted-code-box" style="background: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; color: #00ff66; font-size: 13px; text-align: center; margin-bottom: 12px; font-weight: bold; word-break: break-all;">
+                    جاري التحميل...
+                </div>
+                <button class="promo-submit-btn" onclick="copyExtractedCode()" style="background-color: #00ff66; color: #000; font-weight: bold;">
+                    <i class="fas fa-copy"></i> نسخ الكود
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="helpModal" class="modal-overlay" onclick="handleModalClick(event, 'helpModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -501,6 +601,10 @@
                 </div>
                 <input type="text" id="promoCodeInput" class="promo-input" placeholder="أدخل الكود هنا..." style="font-weight: 900;">
                 <button class="promo-submit-btn" onclick="submitPromoCode()" style="font-weight: 900;">إرسال</button>
+                <button class="claim-free-btn" onclick="claimFreePoints()">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Coin" style="width: 16px; height: 16px; object-fit: contain;">
+                    FREE 5 POINTS
+                </button>
                 <div id="promo-msg"></div>
             </div>
         </div>
@@ -522,12 +626,12 @@
         let venomStarted = false;
 
         window.onload = async function() {
-            // جعل نقاط كل متصفح جديد تبدأ من 0 تلقائياً
             if (localStorage.getItem('user_points') === null) {
                 localStorage.setItem('user_points', '0');
             }
             await loadPointsFromDatabase();
             checkDownloadUnlockStatus();
+            loadMessageCode();
         };
 
         async function getPoints() {
@@ -549,7 +653,6 @@
             checkDownloadUnlockStatus();
         }
 
-        // دالة تحويل الأرقام الكبيرة إلى اختصارات (مثال: 1000 -> 1K, 1000000 -> 1M)
         function formatLargeNumber(num) {
             if (num >= 1e9) {
                 return (num / 1e9).toFixed(num % 1e9 === 0 ? 0 : 1) + 'B';
@@ -583,7 +686,6 @@
             const currentTime = Date.now();
 
             const titleEl = document.getElementById('download-title');
-            const subEl = document.getElementById('download-sub');
             const iconEl = document.getElementById('download-icon-status');
 
             if (unlockTime && (currentTime - unlockTime > oneDayInMillis)) {
@@ -594,15 +696,11 @@
             const isUnlocked = localStorage.getItem('download_ff_unlocked') === 'true';
 
             if (isUnlocked) {
-                titleEl.innerText = 'DOWNLOAD FF 2022';
                 titleEl.style.color = '#00ff66';
-                subEl.innerHTML = '<span>3</span> <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">';
                 iconEl.className = 'fas fa-arrow-left arrow-icon';
                 iconEl.style.color = '#a3a3a3';
             } else {
-                titleEl.innerText = 'DOWNLOAD FF 2022';
                 titleEl.style.color = '#00ff66';
-                subEl.innerHTML = '<span>3</span> <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">';
                 iconEl.className = 'fas fa-lock arrow-icon';
                 iconEl.style.color = '#ff4444';
             }
@@ -616,9 +714,9 @@
                 window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
             } else {
                 let currentPts = await getPoints();
-                if (currentPts >= 3) {
-                    if (confirm('هل تريد خصم 3 نقاط لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
-                        setPoints(currentPts - 3);
+                if (currentPts >= 20) {
+                    if (confirm('هل تريد خصم 20 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
+                        setPoints(currentPts - 20);
                         localStorage.setItem('download_ff_unlocked', 'true');
                         localStorage.setItem('download_ff_unlock_time', Date.now());
                         checkDownloadUnlockStatus();
@@ -626,7 +724,7 @@
                         window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
                     }
                 } else {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 3 نقاط على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في أعلى الصفحة.');
+                    alert('رصيدك غير كافٍ! تحتاج إلى 20 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود أو المطالبة المجانية في أعلى الصفحة.');
                 }
             }
         }
@@ -643,11 +741,60 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
+        function toggleMessageModal(show) {
+            const modal = document.getElementById('messageModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
         function handleModalClick(event, modalId) {
             if (event.target.id === modalId) {
                 if (modalId === 'helpModal') toggleModal(false);
                 if (modalId === 'pointsModal') togglePointsModal(false);
+                if (modalId === 'messageModal') toggleMessageModal(false);
             }
+        }
+
+        async function loadMessageCode() {
+            try {
+                const response = await fetch('cod.1.message?' + new Date().getTime());
+                if (!response.ok) throw new Error('فشل تحميل الملف');
+                const text = await response.text();
+                document.getElementById('extracted-code-box').innerText = text.trim() || 'الملف فارغ';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('extracted-code-box').innerText = 'تعذر قراءة ملف cod.1.message';
+            }
+        }
+
+        function copyExtractedCode() {
+            const codeText = document.getElementById('extracted-code-box').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                showToast('تم نسخ الكود بنجاح!');
+            }).catch(err => {
+                console.error(err);
+                alert('فشل نسخ الكود');
+            });
+        }
+
+        async function claimFreePoints() {
+            const msgDiv = document.getElementById('promo-msg');
+            const claimKey = 'claimed_free_5_points';
+            
+            if (localStorage.getItem(claimKey) === 'true') {
+                msgDiv.style.color = '#ff4444';
+                msgDiv.innerText = 'لقد قمت بمطالبة النقاط المجانية مسبقاً!';
+                return;
+            }
+
+            let currentPts = await getPoints();
+            setPoints(currentPts + 5);
+            localStorage.setItem(claimKey, 'true');
+
+            msgDiv.style.color = '#00ff66';
+            msgDiv.innerText = 'تمت إضافة 5 نقاط بنجاح!';
+            setTimeout(() => {
+                togglePointsModal(false);
+            }, 1500);
         }
 
         async function submitPromoCode() {
@@ -769,7 +916,7 @@
                     clearInterval(timer);
                     setTimeout(() => {
                         progressContainer.style.display = 'none';
-                        window.open('https://www.mediafire.com/file/zuaiunm506aa94p/ꜱᴄʀɪᴘᴛ+ʜᴇᴀᴅꜱʜᴏᴛ+.zip/file', '_blank');
+                        window.open('https://www.mediafire.com/file/zuaiunm506aa94p/ꜱᴄʀɪpt+ʜᴇᴀᴅꜱʜᴏᴛ+.zip/file', '_blank');
                     }, 500);
                 }
             }, 50);
