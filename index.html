@@ -402,47 +402,52 @@
             opacity: 1;
         }
 
-        /* تنسيقات لافتة الرسائل الاحترافية الجديدة */
+        /* تنسيقات لافتة الرسائل الجديدة بدون إطار وبدون خلفيات مربعة للعناصر */
         .msg-items-container {
             max-height: 220px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
             margin-top: 10px;
             padding-left: 4px;
         }
         .msg-item-row {
-            background-color: #181818;
-            border: 1px solid #262626;
-            border-radius: 10px;
-            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-bottom: 1px solid #1f1f1f;
+            padding-bottom: 8px;
+        }
+        .msg-text-val {
+            color: #d1d5db;
+            font-size: 12px;
+            text-align: right;
+        }
+        .msg-code-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
         }
-        .msg-text-val {
+        .msg-code-val {
             color: #ffffff;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: bold;
             word-break: break-all;
             text-align: right;
-            flex-grow: 1;
         }
         .msg-copy-btn {
-            background-color: #262626;
+            background: transparent;
             color: #00ff66;
-            border: 1px solid #333;
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 11px;
+            border: none;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            transition: transform 0.2s ease;
+            padding: 2px;
         }
         .msg-copy-btn:hover {
-            background-color: #00ff66;
-            color: #000;
+            transform: scale(1.2);
         }
     </style>
 </head>
@@ -553,9 +558,6 @@
             <div class="instructions-box" style="margin-top: 0; position: relative;">
                 <div class="close-modal" onclick="toggleMsgModal(false)">
                     <i class="fas fa-times"></i>
-                </div>
-                <div class="instructions-title" style="font-weight: 900; justify-content: flex-end;">
-                    <span>الأكواد المستخرجة</span>
                 </div>
                 <div id="msg-content-box" class="msg-items-container">
                     <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px;">جاري جلب الأكواد...</div>
@@ -752,7 +754,7 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
-        // دالة التحكم بلافته الرسائل لجلب البيانات من cod.1.message
+        // دالة التحكم بلافته الرسائل لعرض النص وتحته الكود مع أيقونة النسخ المخصصة للكود فقط
         async function toggleMsgModal(show) {
             const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -780,26 +782,38 @@
 
                 container.innerHTML = '';
                 lines.forEach((line) => {
-                    // استخراج الكود فقط إذا كان بصيغة كود:قيمة أو نص عادي
-                    let codeVal = line.split(':')[0].trim();
+                    let parts = line.split(':');
+                    let msgText = parts.length > 1 ? parts[0].trim() : 'رسالة';
+                    let codeVal = parts.length > 1 ? parts[1].trim() : line;
 
                     const row = document.createElement('div');
                     row.className = 'msg-item-row';
 
-                    const textSpan = document.createElement('span');
+                    const textSpan = document.createElement('div');
                     textSpan.className = 'msg-text-val';
-                    textSpan.innerText = line;
+                    textSpan.innerText = msgText;
+
+                    const codeRow = document.createElement('div');
+                    codeRow.className = 'msg-code-row';
+
+                    const codeSpan = document.createElement('span');
+                    codeSpan.className = 'msg-code-val';
+                    codeSpan.innerText = codeVal;
 
                     const copyBtn = document.createElement('button');
                     copyBtn.className = 'msg-copy-btn';
-                    copyBtn.innerText = 'نسخ';
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    copyBtn.title = 'نسخ الكود';
                     copyBtn.onclick = () => {
                         navigator.clipboard.writeText(codeVal);
                         showToast('تم نسخ الكود بنجاح!');
                     };
 
+                    codeRow.appendChild(codeSpan);
+                    codeRow.appendChild(copyBtn);
+
                     row.appendChild(textSpan);
-                    row.appendChild(copyBtn);
+                    row.appendChild(codeRow);
                     container.appendChild(row);
                 });
 
