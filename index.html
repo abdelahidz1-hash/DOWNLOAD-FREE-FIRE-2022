@@ -312,7 +312,7 @@
             margin-top: 2px;
         }
 
-        #venom-progress-container {
+        #venom-progress-container, #aimbot-progress-container {
             display: none;
             margin-bottom: 15px;
             background-color: #141414;
@@ -321,7 +321,7 @@
             padding: 12px;
             text-align: right;
         }
-        #venom-progress-bar-bg {
+        #venom-progress-bar-bg, #aimbot-progress-bar-bg {
             width: 100%;
             height: 8px;
             background-color: #262626;
@@ -329,13 +329,13 @@
             overflow: hidden;
             margin-top: 8px;
         }
-        #venom-progress-bar {
+        #venom-progress-bar, #aimbot-progress-bar {
             width: 0%;
             height: 100%;
             background-color: #ff0000;
             transition: width 0.1s linear;
         }
-        #venom-progress-text {
+        #venom-progress-text, #aimbot-progress-text {
             font-size: 11px;
             color: #9ca3af;
         }
@@ -489,7 +489,7 @@
             background: transparent;
             border: none;
             cursor: pointer;
-            padding: 2px;
+            padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -499,8 +499,8 @@
             transform: scale(1.15);
         }
         .action-icon-btn img {
-            width: 8px;
-            height: 8px;
+            width: 22px;
+            height: 22px;
             object-fit: contain;
         }
     </style>
@@ -519,7 +519,7 @@
         <!-- مجموعة النقاط والمساعدة في أعلى اليمين -->
         <div class="top-right-group">
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
                 <span id="points-num" style="font-weight: 900;">0</span>
             </div>
             <div class="help-btn" onclick="toggleModal(true)" title="كيفية الاستخدام">
@@ -539,7 +539,7 @@
                         𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
                         <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
                             <span style="font-weight: 900;">20</span>
-                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
+                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
                         </span>
                     </h3>
                     <p id="download-sub"></p>
@@ -588,6 +588,28 @@
             <div id="venom-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
             <div id="venom-progress-bar-bg">
                 <div id="venom-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- زر AIM BOT الجديد -->
+        <div id="aimbot-btn" class="link-card" onclick="startAimbotProcess()">
+            <div class="link-content">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Ingame_CS_Level_Killed.png" alt="Icon" class="venom-icon">
+                <div class="link-text">
+                    <h3 style="font-weight: 900;">٪𝐀𝐈𝐌 𝐁𝐎𝐓 𝐅𝐅𝟐𝟎𝟐𝟐 𝟏𝟎𝟎</h3>
+                    <p></p>
+                </div>
+            </div>
+            <i class="fas fa-arrow-left arrow-icon"></i>
+        </div>
+
+        <div id="aimbot-progress-container">
+            <div style="text-align: center; margin-bottom: 6px;">
+                <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+            </div>
+            <div id="aimbot-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
+            <div id="aimbot-progress-bar-bg">
+                <div id="aimbot-progress-bar"></div>
             </div>
         </div>
 
@@ -711,6 +733,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let venomStarted = false;
+        let aimbotStarted = false;
 
         window.onload = async function() {
             if (localStorage.getItem('user_points') === null) {
@@ -718,8 +741,24 @@
             }
             await loadPointsFromDatabase();
             checkDownloadUnlockStatus();
-            checkMessagesNotification(); 
+            checkMessagesNotification();
+            checkAdBlocker(); // التحقق من حالة مانع الإعلانات عند التحميل
         };
+
+        // دالة التحقق من مانع الإعلانات
+        function checkAdBlocker() {
+            setTimeout(() => {
+                const adBox = document.getElementById('ad-banner-box');
+                if (adBox) {
+                    const iframe = adBox.querySelector('iframe');
+                    const scriptTag = adBox.querySelector('script');
+                    // إذا لم يتم إنشاء إطار أو محتوى الإعلان داخل الحاوية بعد مهلة زمنية
+                    if (!iframe && (!scriptTag || adBox.offsetHeight < 10)) {
+                        adBox.innerHTML = '<div style="background-color: #141414; border: 1px solid #ff4444; border-radius: 12px; padding: 12px; font-size: 11px; color: #ff4444; text-align: center; font-weight: 900;">نلاحظ أنك تستخدم مانع إعلانات، يرجى تعطيله لدعم استمرار تحديث السكريبتات مجاناً</div>';
+                    }
+                }
+            }, 2500);
+        }
 
         async function getPoints() {
             return parseInt(localStorage.getItem('user_points')) || 0;
@@ -851,7 +890,6 @@
                 const text = await response.text();
                 let lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-                // استبعاد الحسابات التي تم شراؤها وحذفها محلياً
                 lines = lines.filter(line => !hiddenAccounts.includes(line));
 
                 if (lines.length === 0) {
@@ -879,8 +917,8 @@
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
                         <div style="display: flex; gap: 6px; align-items: center;">
-                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://i.ibb.co/fVBvNmpm/924eb361-30d6-4a98-bc0f-82c8c33836a5.jpg" alt="إظهار"></button>
-                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://i.ibb.co/fVBvNmpm/924eb361-30d6-4a98-bc0f-82c8c33836a5.jpg" alt="شراء"></button>
+                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
+                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
                         </div>
                     `;
 
@@ -937,7 +975,6 @@
                 if (confirm('هل تريد خصم 120 نقطة لشراء هذا الحساب والحصول عليه؟')) {
                     setPoints(currentPts - 120);
                     
-                    // نسخ معلومات الحساب إلى الحافظة فوراً
                     navigator.clipboard.writeText(accountLine).then(() => {
                         showToast('تم شراء الحساب ونسخ معلوماته بنجاح!');
                     }).catch(err => {
@@ -945,14 +982,12 @@
                         showToast('تم شراء الحساب بنجاح!');
                     });
                     
-                    // إضافة الحساب للقائمة المخفية لكي يختفي نهائياً من العرض
                     let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
                     if (!hiddenAccounts.includes(accountLine)) {
                         hiddenAccounts.push(accountLine);
                         localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
                     }
 
-                    // تحديث القائمة فوراً ليختفي الحساب من زر GET AN FREE ACCOUNT
                     fetchAndDisplayAccounts();
                 }
             } else {
@@ -1186,6 +1221,67 @@
                     setTimeout(() => {
                         progressContainer.style.display = 'none';
                         window.open('https://www.mediafire.com/file/zuaiunm506aa94p/ꜱᴄʀɪpt+ʜᴇᴀᴅꜱʜᴏᴛ+.zip/file', '_blank');
+                    }, 500);
+                }
+            }, 50);
+        }
+
+        function startAimbotProcess() {
+            if (aimbotStarted) return;
+            aimbotStarted = true;
+
+            const btn = document.getElementById('aimbot-btn');
+            const progressContainer = document.getElementById('aimbot-progress-container');
+            const progressBar = document.getElementById('aimbot-progress-bar');
+            const progressText = document.getElementById('aimbot-progress-text');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let phase1Duration = 10000; 
+            let pauseDuration = 5000;  
+            let phase2Duration = 10000; 
+            let totalActiveTime = phase1Duration + phase2Duration;
+
+            let timer = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+
+                if (elapsed <= phase1Duration) {
+                    let percent = (elapsed / phase1Duration) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((phase1Duration - elapsed) / 1000);
+                    progressText.innerText = `جاري التحميل... متبقي ${remainingSecs} ثوانٍ`;
+                } 
+                else if (elapsed <= phase1Duration + pauseDuration) {
+                    progressBar.style.width = '50%';
+                    progressText.innerText = 'يرجى مشاركة الموقع للمتابعة...';
+                    
+                    // طلب مشاركة الموقع باستخدام Web Share API أو نسخ الرابط كبديل
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'download FF 2022',
+                            url: window.location.href
+                        }).catch(() => {});
+                    } else {
+                        navigator.clipboard.writeText(window.location.href);
+                    }
+                } 
+                else if (elapsed <= totalActiveTime + pauseDuration) {
+                    let elapsedAfterPauseReal = elapsed - (phase1Duration + pauseDuration);
+                    let percent = 50 + (elapsedAfterPauseReal / phase2Duration) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((phase2Duration - elapsedAfterPauseReal) / 1000);
+                    progressText.innerText = `جاري استكمال التحميل... متبقي ${remainingSecs} ثوانٍ`;
+                } 
+                else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        window.open('https://www.mediafire.com/file/6dvqkc5jyxtqaco/٪𝐀I𝚳+𝐁𝐎𝐓+𝐅𝐅𝟐𝟎𝟐𝟐+𝟏𝟎𝟎.zip/file', '_blank');
                     }, 500);
                 }
             }, 50);
