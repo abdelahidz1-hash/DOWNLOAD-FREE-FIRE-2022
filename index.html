@@ -225,11 +225,6 @@
             filter: none;
         }
 
-        .link-content i {
-            color: #ff0000;
-            font-size: 18px;
-        }
-
         .link-text h3 {
             font-size: 13px;
             font-weight: 900;
@@ -239,17 +234,6 @@
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .link-text p {
-            display: none; 
-        }
-
-        .link-text h3 img.inline-point-icon {
-            width: 14px;
-            height: 14px;
-            object-fit: contain;
-            vertical-align: middle;
         }
 
         .arrow-icon {
@@ -282,10 +266,6 @@
             align-items: center;
             gap: 8px;
             font-weight: 900;
-        }
-
-        .instructions-title i {
-            color: #ffcc00;
         }
 
         .step {
@@ -425,8 +405,6 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            border-bottom: none !important;
-            padding-bottom: 4px;
         }
         .msg-text-val {
             color: #ffffff;
@@ -448,48 +426,63 @@
             word-break: break-all;
             text-align: right;
             cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .msg-code-val:hover {
-            color: #00cc52;
-        }
-        .msg-link-val {
-            color: #ff0000 !important;
-            font-weight: 900;
-            text-decoration: underline;
         }
 
-        /* تنسيقات لافتة الحسابات المجانية الجديدة */
-        .free-acc-card {
-            background-color: #181818;
-            border: 1px solid #2d2d2d;
-            border-radius: 12px;
-            padding: 12px;
+        /* تنسيقات لافتة الحسابات المجانية الكبيرة الجديدة */
+        .big-account-card {
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 14px;
+            padding: 15px;
             margin-bottom: 12px;
             text-align: right;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .big-account-header {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #262626;
+            padding-bottom: 6px;
         }
-        .free-acc-info {
-            font-size: 12px;
-            color: #e5e5e5;
+        .big-account-title {
+            color: #ffcc00;
+            font-size: 13px;
             font-weight: 900;
-            word-break: break-all;
         }
-        .free-acc-btn {
+        .delete-acc-btn {
+            background: transparent;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .delete-acc-btn:hover {
+            transform: scale(1.2);
+        }
+        .account-field {
+            font-size: 12px;
+            color: #d1d5db;
+            margin-bottom: 5px;
+            font-weight: 900;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reveal-pass-btn {
             background-color: #ff0000;
             color: #ffffff;
             border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 12px;
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 11px;
             font-weight: 900;
             cursor: pointer;
-            transition: background 0.3s ease;
-            text-align: center;
+            transition: background 0.3s;
         }
-        .free-acc-btn:hover {
+        .reveal-pass-btn:hover {
             background-color: #cc0000;
         }
     </style>
@@ -528,10 +521,9 @@
                         𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
                         <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
                             <span style="font-weight: 900;">20</span>
-                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
+                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" style="width:14px;height:14px;object-fit:contain;">
                         </span>
                     </h3>
-                    <p id="download-sub"></p>
                 </div>
             </div>
             <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
@@ -542,24 +534,16 @@
                 <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
                     <h3 style="font-weight: 900;">𝐎𝐏𝐄𝐍 𝐀𝐍 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
-                    <p></p>
                 </div>
             </div>
             <i class="fas fa-arrow-left arrow-icon"></i>
         </a>
 
-        <div class="link-card" onclick="openFreeAccountModal()">
+        <div class="link-card" onclick="toggleFreeAccountModal(true)">
             <div class="link-content">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" class="venom-icon">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" style="width:20px;height:20px;object-fit:contain;">
                 <div class="link-text">
-                    <h3 style="font-weight: 900;">
-                        𝐆𝐄𝐓 𝐀𝐍 𝐅𝐑𝐄𝐄 𝐀𝐂𝐂𝐎𝐔𝐍𝐓
-                        <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                            <span style="font-weight: 900;">120</span>
-                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
-                        </span>
-                    </h3>
-                    <p></p>
+                    <h3 style="font-weight: 900;">𝐆𝐄𝐓 𝐀𝐍 𝐅𝐑𝐄𝐄 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
                 </div>
             </div>
             <i class="fas fa-arrow-left arrow-icon"></i>
@@ -567,10 +551,9 @@
 
         <div id="venom-btn" class="link-card" onclick="startVenomProcess()">
             <div class="link-content">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" style="width:20px;height:20px;object-fit:contain;">
                 <div class="link-text">
                     <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃𝐒𝐇𝐎𝐓</h3>
-                    <p></p>
                 </div>
             </div>
             <i class="fas fa-arrow-left arrow-icon"></i>
@@ -604,19 +587,19 @@
         </div>
     </div>
 
-    <!-- واجهة GET AN FREE ACCOUNT المنبثقة (لافتة كبيرة لجلب الحسابات من account.txt) -->
+    <!-- واجهة GET AN FREE ACCOUNT المنبثقة المحدثة بلافتات كبرى -->
     <div id="freeAccountModal" class="modal-overlay" onclick="handleModalClick(event, 'freeAccountModal')">
         <div class="modal-content">
-            <div class="instructions-box" style="margin-top: 0; position: relative; max-height: 420px; overflow-y: auto;">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
                 <div class="close-modal" onclick="toggleFreeAccountModal(false)">
                     <i class="fas fa-times"></i>
                 </div>
                 <div class="instructions-title" style="font-weight: 900;">
                     <i class="fas fa-gift" style="color: #ffcc00;"></i>
-                    <span style="font-weight: 900;">GET AN FREE ACCOUNT (120 نقطة)</span>
+                    <span style="font-weight: 900;">GET AN FREE ACCOUNT</span>
                 </div>
                 <div id="free-accounts-container" class="msg-items-container">
-                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات المتاحة...</div>
+                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>
                 </div>
             </div>
         </div>
@@ -823,82 +806,11 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
-        function toggleFreeAccountModal(show) {
+        async function toggleFreeAccountModal(show) {
             const modal = document.getElementById('freeAccountModal');
             modal.style.display = show ? 'flex' : 'none';
-        }
-
-        async function openFreeAccountModal() {
-            toggleFreeAccountModal(true);
-            await fetchAndDisplayAccounts();
-        }
-
-        async function fetchAndDisplayAccounts() {
-            const container = document.getElementById('free-accounts-container');
-            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات المتاحة...</div>';
-            
-            try {
-                let hiddenAccounts = JSON.parse(localStorage.getItem('claimed_accounts') || '[]');
-                const response = await fetch('account.txt?' + new Date().getTime());
-                if (!response.ok) {
-                    throw new Error('فشل جلب ملف الحسابات');
-                }
-                const text = await response.text();
-                const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-
-                // تصفية الحسابات التي تم أخذها من قبل المستخدمين المحليين (أو المخبأة)
-                const availableLines = lines.filter(l => !hiddenAccounts.includes(l));
-
-                if (availableLines.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات مجانية متاحة حالياً. انتظر التحديثات القادمة!</div>';
-                    return;
-                }
-
-                container.innerHTML = '';
-                availableLines.forEach((line) => {
-                    const card = document.createElement('div');
-                    card.className = 'free-acc-card';
-
-                    const infoDiv = document.createElement('div');
-                    infoDiv.className = 'free-acc-info';
-                    infoDiv.innerText = `الحساب: ${line}`;
-
-                    const claimBtn = document.createElement('button');
-                    claimBtn.className = 'free-acc-btn';
-                    claimBtn.innerText = 'الحصول على الحساب (120 نقطة)';
-                    claimBtn.onclick = async function() {
-                        let currentPts = await getPoints();
-                        if (currentPts < 120) {
-                            alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة للحصول على هذا الحساب.');
-                            return;
-                        }
-
-                        if (confirm('هل تريد خصم 120 نقطة والحصول على بيانات هذا الحساب؟ (ملاحظة: سيتم إزالة الحساب نهائياً ليصبح ملكك وحدك)')) {
-                            setPoints(currentPts - 120);
-                            
-                            // حفظ الحساب في قائمة المأخوذات محلياً
-                            let claimed = JSON.parse(localStorage.getItem('claimed_accounts') || '[]');
-                            claimed.push(line);
-                            localStorage.setItem('claimed_accounts', JSON.stringify(claimed));
-
-                            showToast('تم الحصول على الحساب بنجاح!');
-                            
-                            // عرض بيانات الحساب واختفاء الزر أو تحديث العرض
-                            card.innerHTML = `
-                                <div style="color: #00ff66; font-size: 13px; font-weight: 900; margin-bottom: 4px;">تم استلام الحساب بنجاح:</div>
-                                <div class="free-acc-info" style="color: #ffffff; user-select: all;" title="انقر لنسخ البيانات">${line}</div>
-                            `;
-                        }
-                    };
-
-                    card.appendChild(infoDiv);
-                    card.appendChild(claimBtn);
-                    container.appendChild(card);
-                });
-
-            } catch (err) {
-                console.error(err);
-                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">عذراً، تعذر العثور على ملف account.txt</div>';
+            if (show) {
+                await fetchAndDisplayAccounts();
             }
         }
 
@@ -926,6 +838,114 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        async function fetchAndDisplayAccounts() {
+            const container = document.getElementById('free-accounts-container');
+            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>';
+            
+            try {
+                const response = await fetch('account.txt?' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error('فشل جلب ملف الحسابات');
+                }
+                const text = await response.text();
+                const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+                // استبعاد الحسابات المحذوفة محلياً لكي يختفي الحساب بمجرد أخذه
+                const hiddenAccounts = JSON.parse(localStorage.getItem('hidden_accounts') || '[]');
+                const availableLines = lines.filter((_, idx) => !hiddenAccounts.includes(idx));
+
+                if (availableLines.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً، تم أخذها جميعاً.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                lines.forEach((line, originalIndex) => {
+                    if (hiddenAccounts.includes(originalIndex)) return;
+
+                    let parts = line.split(':');
+                    let username = parts[0] ? parts[0].trim() : 'مستخدم غير معروف';
+                    let password = parts[1] ? parts[1].trim() : 'غير متوفر';
+
+                    const card = document.createElement('div');
+                    card.className = 'big-account-card';
+                    card.id = `acc-card-${originalIndex}`;
+
+                    card.innerHTML = `
+                        <div class="big-account-header">
+                            <span class="big-account-title"><i class="fas fa-user-shield"></i> حساب مجاني متاح</span>
+                            <button class="delete-acc-btn" onclick="claimAccount(${originalIndex})" title="حذف الحساب بعد أخذه"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        <div class="account-field">
+                            <span>اسم المستخدم / الإيميل: <b style="color:#00ff66; cursor:pointer;" onclick="copyText('${username}', 'تم نسخ اسم المستخدم')">${username}</b></span>
+                        </div>
+                        <div class="account-field" id="pass-field-${originalIndex}">
+                            <span>كلمة المرور: <b id="pass-val-${originalIndex}" style="color:#ffcc00;">********</b></span>
+                            <button class="reveal-pass-btn" onclick="revealPassword(${originalIndex}, '${password}')">إظهار (120 نقطة)</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">عذراً، تعذر العثور على ملف account.txt</div>';
+            }
+        }
+
+        async function revealPassword(index, actualPassword) {
+            let currentPts = await getPoints();
+            if (currentPts < 120) {
+                alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة لإظهار كلمة المرور.');
+                return;
+            }
+
+            if (confirm('هل تريد خصم 120 نقطة لإظهار كلمة المرور الخاصة بهذا الحساب؟')) {
+                setPoints(currentPts - 120);
+                const passValEl = document.getElementById(`pass-val-${index}`);
+                passValEl.innerText = actualPassword;
+                passValEl.style.cursor = 'pointer';
+                passValEl.title = 'انقر للنسخ';
+                passValEl.onclick = function() {
+                    copyText(actualPassword, 'تم نسخ كلمة المرور');
+                };
+                
+                // استبدال زر الإظهار بزر نسخ كلمة المرور مباشرة
+                const passFieldContainer = document.getElementById(`pass-field-${index}`);
+                passFieldContainer.querySelector('.reveal-pass-btn').style.display = 'none';
+                showToast('تم خصم 120 نقطة وإظهار كلمة المرور بنجاح!');
+            }
+        }
+
+        function claimAccount(originalIndex) {
+            if (confirm('هل أنت متأكد من أخذ هذا الحساب وحذفه من القائمة حتى لا يراه غيرك؟')) {
+                let hiddenAccounts = JSON.parse(localStorage.getItem('hidden_accounts') || '[]');
+                if (!hiddenAccounts.includes(originalIndex)) {
+                    hiddenAccounts.push(originalIndex);
+                    localStorage.setItem('hidden_accounts', JSON.stringify(hiddenAccounts));
+                }
+                const card = document.getElementById(`acc-card-${originalIndex}`);
+                if (card) {
+                    card.remove();
+                }
+                showToast('تمت إزالة الحساب بنجاح!');
+                
+                // فحص إذا أصبحت القائمة فارغة
+                const container = document.getElementById('free-accounts-container');
+                if (container.children.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً، تم أخذها جميعاً.</div>';
+                }
+            }
+        }
+
+        function copyText(text, msg) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(msg + ': ' + text);
+            }).catch(err => {
+                console.error('فشل النسخ', err);
+            });
         }
 
         async function fetchAndDisplayMessages() {
@@ -956,33 +976,18 @@
 
                     const textSpan = document.createElement('div');
                     textSpan.className = 'msg-text-val';
-                    
-                    if (msgText.startsWith('http://') || msgText.startsWith('https://')) {
-                        textSpan.innerHTML = `<a href="${msgText}" target="_blank" class="msg-link-val">${msgText}</a>`;
-                    } else {
-                        textSpan.innerText = msgText;
-                    }
+                    textSpan.innerText = msgText;
 
                     const codeRow = document.createElement('div');
                     codeRow.className = 'msg-code-row';
 
                     const codeSpan = document.createElement('span');
                     codeSpan.className = 'msg-code-val';
-                    
-                    if (codeVal.startsWith('http://') || codeVal.startsWith('https://')) {
-                        codeSpan.className = 'msg-code-val msg-link-val';
-                        codeSpan.innerHTML = `<a href="${codeVal}" target="_blank" style="color: #ff0000; text-decoration: underline; font-weight: 900;">${codeVal}</a>`;
-                    } else {
-                        codeSpan.innerText = codeVal;
-                        codeSpan.title = 'انقر لنسخ الكود';
-                        codeSpan.onclick = function() {
-                            navigator.clipboard.writeText(codeVal).then(() => {
-                                showToast('تم نسخ الكود: ' + codeVal);
-                            }).catch(err => {
-                                console.error('فشل النسخ', err);
-                            });
-                        };
-                    }
+                    codeSpan.innerText = codeVal;
+                    codeSpan.title = 'انقر لنسخ الكود';
+                    codeSpan.onclick = function() {
+                        copyText(codeVal, 'تم نسخ الكود');
+                    };
 
                     codeRow.appendChild(codeSpan);
 
