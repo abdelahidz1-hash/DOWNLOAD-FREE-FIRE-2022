@@ -424,9 +424,11 @@
         .msg-item-row {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            border-bottom: none !important;
-            padding-bottom: 4px;
+            gap: 6px;
+            background-color: #181818;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            padding: 10px;
         }
         .msg-text-val {
             color: #ffffff;
@@ -438,8 +440,9 @@
         .msg-code-row {
             display: flex;
             align-items: center;
-            justify-content: start;
+            justify-content: space-between;
             gap: 10px;
+            margin-top: 4px;
         }
         .msg-code-val {
             color: #00ff66;
@@ -447,16 +450,34 @@
             font-weight: 900;
             word-break: break-all;
             text-align: right;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .msg-code-val:hover {
-            color: #00cc52;
         }
         .msg-link-val {
             color: #ff0000 !important;
             font-weight: 900;
             text-decoration: underline;
+        }
+        .msg-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .msg-action-btn {
+            background-color: #262626;
+            border: 1px solid #383838;
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .msg-action-btn.copy-btn:hover {
+            background-color: #00ff66;
+            color: #000000;
+        }
+        .msg-action-btn.delete-btn:hover {
+            background-color: #ff0000;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -648,6 +669,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let venomStarted = false;
+        let msgCloseTimer = null;
 
         window.onload = async function() {
             if (localStorage.getItem('user_points') === null) {
@@ -768,14 +790,30 @@
         async function toggleMsgModal(show) {
             const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
+            
             if (show) {
+                if (msgCloseTimer) clearTimeout(msgCloseTimer);
                 await fetchAndDisplayMessages();
+            } else {
+                // بمجرد الخروج من نافذة الرسائل، يبدأ عداد لمدة 3 دقائق (180000 ميللي ثانية) لمسحها تلقائياً
+                msgCloseTimer = setTimeout(() => {
+                    localStorage.setItem('messages_cleared_timestamp', Date.now());
+                    checkMessagesNotification();
+                }, 3 * 60 * 1000);
             }
         }
 
         async function checkMessagesNotification() {
             const dot = document.getElementById('msgNotificationDot');
             try {
+                const clearedTime = parseInt(localStorage.getItem('messages_cleared_timestamp')) || 0;
+                const threeMinsPassed = (Date.now() - clearedTime) < (3 * 60 * 1000);
+
+                if (threeMinsPassed) {
+                    dot.style.display = 'none';
+                    return;
+                }
+
                 const response = await fetch('cod.1.message?' + new Date().getTime());
                 if (!response.ok) return;
                 const text = await response.text();
@@ -796,6 +834,12 @@
             container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الأكواد...</div>';
             
             try {
+                const clearedTime = parseInt(localStorage.getItem('messages_cleared_timestamp')) || 0;
+                if ((Date.now() - clearedTime) < (3 * 60 * 1000)) {
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد رسائل حالياً (تم المسح المؤقت).</div>';
+                    return;
+                }
+
                 const response = await fetch('cod.1.message?' + new Date().getTime());
                 if (!response.ok) {
                     throw new Error('فشل جلب الملف');
@@ -809,13 +853,14 @@
                 }
 
                 container.innerHTML = '';
-                lines.forEach((line) => {
+                lines.forEach((line, index) => {
                     let parts = line.split(':');
                     let msgText = parts.length > 1 ? parts[0].trim() : '';
                     let codeVal = parts.length > 1 ? parts[1].trim() : line;
 
                     const row = document.createElement('div');
                     row.className = 'msg-item-row';
+                    row.id = 'msg-row-' + index;
 
                     const textSpan = document.createElement('div');
                     textSpan.className = 'msg-text-val';
@@ -837,17 +882,38 @@
                         codeSpan.innerHTML = `<a href="${codeVal}" target="_blank" style="color: #ff0000; text-decoration: underline; font-weight: 900;">${codeVal}</a>`;
                     } else {
                         codeSpan.innerText = codeVal;
-                        codeSpan.title = 'انقر لنسخ الكود';
-                        codeSpan.onclick = function() {
-                            navigator.clipboard.writeText(codeVal).then(() => {
-                                showToast('تم نسخ الكود: ' + codeVal);
-                            }).catch(err => {
-                                console.error('فشل النسخ', err);
-                            });
-                        };
                     }
 
+                    // أزرار النسخ والمسح لكل سطر
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'msg-actions';
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'msg-action-btn copy-btn';
+                    copyBtn.innerText = 'نسخ';
+                    copyBtn.onclick = function() {
+                        navigator.clipboard.writeText(codeVal).then(() => {
+                            showToast('تم نسخ كود التفعيل: ' + codeVal);
+                        }).catch(err => {
+                            console.error('فشل النسخ', err);
+                        });
+                    };
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'msg-action-btn delete-btn';
+                    deleteBtn.innerText = 'مسح';
+                    deleteBtn.onclick = function() {
+                        row.remove();
+                        if (container.children.length === 0) {
+                            container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد أكواد حالياً.</div>';
+                        }
+                    };
+
+                    actionsDiv.appendChild(copyBtn);
+                    actionsDiv.appendChild(deleteBtn);
+
                     codeRow.appendChild(codeSpan);
+                    codeRow.appendChild(actionsDiv);
 
                     if (msgText) {
                         row.appendChild(textSpan);
