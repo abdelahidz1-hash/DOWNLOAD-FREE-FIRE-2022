@@ -570,7 +570,7 @@
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
                 <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃𝐒𝐇𝐎𝐓</h3>
+                    <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃𝐒𝐇𝐎Տ</h3>
                     <p></p>
                 </div>
             </div>
@@ -863,7 +863,6 @@
 
                     const card = document.createElement('div');
                     card.className = 'account-card';
-                    card.id = 'acc_card_' + index;
 
                     const infoRow = document.createElement('div');
                     infoRow.className = 'account-info';
@@ -876,7 +875,7 @@
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
                         <div style="display: flex; gap: 5px; align-items: center;">
-                            <button class="buy-acc-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')">إظهار</button>
+                            <button class="buy-acc-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')">إظهار (120)</button>
                             <button class="buy-acc-btn" style="background-color: #00ff66;" onclick="buyAccount('${line}')">شراء (120)</button>
                         </div>
                     `;
@@ -894,36 +893,40 @@
 
         async function togglePasswordVisibility(passId, btn, accountLine) {
             let span = document.getElementById(passId);
-            if (span.style.filter === 'blur(5px)') {
+            
+            // إذا كانت كلمة المرور مخفية، نتأكد من خصم النقاط وتفعيل مؤقت الحذف
+            if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
                 let currentPts = await getPoints();
-                if (currentPts >= 120) {
-                    if (confirm('هل تريد خصم 120 نقطة لإظهار كلمة المرور وحذف الحساب من القائمة؟')) {
-                        setPoints(currentPts - 120);
-                        
-                        // إظهار كلمة المرور
-                        span.style.filter = 'none';
-                        btn.innerText = 'إخفاء';
-                        
-                        // حذف الحساب وتخزينه في قائمة الحسابات المحذوفة/المشتراة
-                        let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
-                        if (!hiddenAccounts.includes(accountLine)) {
-                            hiddenAccounts.push(accountLine);
-                            localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
-                        }
-                        
-                        showToast('تم خصم 120 نقطة وإظهار كلمة المرور بنجاح!');
-                        
-                        // إعادة تحميل القائمة لتحديث الحسابات المتاحة
-                        setTimeout(() => {
-                            fetchAndDisplayAccounts();
-                        }, 1500);
-                    }
-                } else {
+                if (currentPts < 120) {
                     alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة لإظهار كلمة المرور.');
+                    return;
                 }
+                
+                if (!confirm('هل تريد خصم 120 نقطة لإظهار كلمة المرور؟ سيتم حذف هذا الحساب نهائياً بعد 30 ثانية.')) {
+                    return;
+                }
+
+                // خصم 120 نقطة
+                setPoints(currentPts - 120);
+                showToast('تم خصم 120 نقطة وإظهار كلمة المرور');
+
+                span.style.filter = 'none';
+                btn.innerText = 'إخفاء';
+
+                // ميزة حذف الحساب بعد 30 ثانية وتحديث القائمة
+                setTimeout(() => {
+                    let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
+                    if (!hiddenAccounts.includes(accountLine)) {
+                        hiddenAccounts.push(accountLine);
+                        localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
+                    }
+                    showToast('انقضت 30 ثانية، تم حذف الحساب!');
+                    fetchAndDisplayAccounts();
+                }, 30000);
+
             } else {
                 span.style.filter = 'blur(5px)';
-                btn.innerText = 'إظهار';
+                btn.innerText = 'إظهار (120)';
             }
         }
 
@@ -1158,10 +1161,10 @@
                     progressText.innerText = 'يرجى الضغط على الإعلان للمتابعة...';
                 } 
                 else if (elapsed <= totalActiveTime + pauseDuration) {
-                    let elapsedAfterPause = elapsed - (phase1Duration + pauseDuration);
-                    let percent = 50 + (elapsedAfterPause / phase2Duration) * 50;
+                    let elapsedAfterPauseReal = elapsed - (phase1Duration + pauseDuration);
+                    let percent = 50 + (elapsedAfterPauseReal / phase2Duration) * 50;
                     progressBar.style.width = percent + '%';
-                    let remainingSecs = Math.ceil((phase2Duration - elapsedAfterPause) / 1000);
+                    let remainingSecs = Math.ceil((phase2Duration - elapsedAfterPauseReal) / 1000);
                     progressText.innerText = `جاري استكمال التحميل... متبقي ${remainingSecs} ثوانٍ`;
                 } 
                 else {
