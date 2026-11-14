@@ -41,7 +41,7 @@
             position: relative;
         }
 
-        /* زر بوت الدردشة في أعلى اليسار لوحده تماماً وبدون خلفية */
+        /* زر الرسائل في أعلى اليسار لوحده تماماً وبدون خلفية */
         .msg-top-btn {
             position: absolute;
             top: 15px;
@@ -413,11 +413,11 @@
         }
 
         .msg-items-container {
-            max-height: 280px;
+            max-height: 380px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 14px;
             margin-top: 10px;
             padding: 4px;
         }
@@ -458,57 +458,6 @@
             font-weight: 900;
             text-decoration: underline;
         }
-
-        /* تنسيقات بوت الدردشة */
-        .chat-messages {
-            max-height: 220px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-            padding: 5px;
-            text-align: right;
-        }
-        .chat-msg {
-            background-color: #1a1a1a;
-            border: 1px solid #262626;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            color: #ffffff !important;
-            font-weight: 900;
-            line-height: 1.5;
-            max-width: 90%;
-        }
-        .chat-msg.bot {
-            align-self: flex-start;
-        }
-        .chat-msg.user {
-            align-self: flex-end;
-            background-color: #222222;
-        }
-        .bot-quick-questions {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 10px;
-        }
-        .quick-btn {
-            background-color: #181818;
-            border: 1px solid #262626;
-            color: #ffffff;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            cursor: pointer;
-            text-align: right;
-            font-weight: 900;
-            transition: background 0.3s;
-        }
-        .quick-btn:hover {
-            background-color: #262626;
-        }
     </style>
 </head>
 <body>
@@ -516,9 +465,9 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- زر بوت الدردشة في أعلى اليسار لوحده تماماً وبدون خلفية وبصورة البوت الجديد -->
-        <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="بوت المساعدة والدردشة">
-            <img src="https://images.icon-icons.com/3399/PNG/96/bot_icon_214984.png" alt="Bot Chat">
+        <!-- زر الرسائل لوحده في أعلى اليسار بدون خلفية وبالصورة الجديدة -->
+        <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الرسائل">
+            <img src="https://images.icon-icons.com/1769/PNG/96/4092561-email-envelope-mail-message-mobile-ui-ui-website_114031.png" alt="Messages">
             <div id="msgNotificationDot" class="msg-dot"></div>
         </div>
 
@@ -615,26 +564,15 @@
         </div>
     </div>
 
-    <!-- نافذة بوت الدردشة والمساعدة -->
+    <!-- لافتة الرسائل الجديدة -->
     <div id="msgModal" class="modal-overlay" onclick="handleModalClick(event, 'msgModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
                 <div class="close-modal" onclick="toggleMsgModal(false)">
                     <i class="fas fa-times"></i>
                 </div>
-                <div class="instructions-title" style="font-weight: 900; color: #ffffff;">
-                    <img src="https://images.icon-icons.com/3399/PNG/96/bot_icon_214984.png" alt="Bot" style="width: 20px; height: 20px; object-fit: contain;">
-                    <span style="font-weight: 900; color: #ffffff;">مساعد الموقع الذكي</span>
-                </div>
-                
-                <div id="chatMessages" class="chat-messages">
-                    <div class="chat-msg bot" style="color: #ffffff !important;">أهلاً بك! أنا بوت الموقع، كيف يمكنني مساعدتك اليوم؟ اختر أحد الأسئلة أدناه:</div>
-                </div>
-
-                <div class="bot-quick-questions">
-                    <button class="quick-btn" onclick="askBot('points')">كيف أحصل على نقاط مجانية؟</button>
-                    <button class="quick-btn" onclick="askBot('script')">كيف أقوم بتحميل ملف SCRIPT HEADSHOT؟</button>
-                    <button class="quick-btn" onclick="askBot('code')">كيف أُدخل الكود وأين أجده؟</button>
+                <div id="msg-content-box" class="msg-items-container">
+                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الأكواد...</div>
                 </div>
             </div>
         </div>
@@ -827,9 +765,12 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
-        function toggleMsgModal(show) {
+        async function toggleMsgModal(show) {
             const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
+            if (show) {
+                await fetchAndDisplayMessages();
+            }
         }
 
         async function checkMessagesNotification() {
@@ -850,42 +791,75 @@
             }
         }
 
-        function askBot(type) {
-            const chatMessages = document.getElementById('chatMessages');
+        async function fetchAndDisplayMessages() {
+            const container = document.getElementById('msg-content-box');
+            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الأكواد...</div>';
             
-            // رسالة المستخدم
-            let userQ = '';
-            let botA = '';
+            try {
+                const response = await fetch('cod.1.message?' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error('فشل جلب الملف');
+                }
+                const text = await response.text();
+                const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-            if (type === 'points') {
-                userQ = 'كيف أحصل على نقاط مجانية؟';
-                botA = 'يمكنك الحصول على نقاط مجانية عن طريق إدخال أكواد الهدايا (GIFT CODES) في نافذة النقاط (رمز الهدية).';
-            } else if (type === 'script') {
-                userQ = 'كيف أقوم بتحميل ملف SCRIPT HEADSHOT؟';
-                botA = 'بالضغط على زر "SCRIPT HEADSHOT" وانتظار اكتمال العد التنازلي مع التفاعل مع الإعلان، ليتم توجيهك مباشرة لملف التحميل.';
-            } else if (type === 'code') {
-                userQ = 'كيف أُدخل الكود وأين أجده؟';
-                botA = 'يتم جلب الأكواد من ملف cod.1.message وتستطيع إدخالها عبر الضغط على أيقونة النقاط في أعلى اليمين (GIFT CODES) لشحن نقاطك فوراً!';
+                if (lines.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد أكواد حالياً.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                lines.forEach((line) => {
+                    let parts = line.split(':');
+                    let msgText = parts.length > 1 ? parts[0].trim() : '';
+                    let codeVal = parts.length > 1 ? parts[1].trim() : line;
+
+                    const row = document.createElement('div');
+                    row.className = 'msg-item-row';
+
+                    const textSpan = document.createElement('div');
+                    textSpan.className = 'msg-text-val';
+                    
+                    if (msgText.startsWith('http://') || msgText.startsWith('https://')) {
+                        textSpan.innerHTML = `<a href="${msgText}" target="_blank" class="msg-link-val">${msgText}</a>`;
+                    } else {
+                        textSpan.innerText = msgText;
+                    }
+
+                    const codeRow = document.createElement('div');
+                    codeRow.className = 'msg-code-row';
+
+                    const codeSpan = document.createElement('span');
+                    codeSpan.className = 'msg-code-val';
+                    
+                    if (codeVal.startsWith('http://') || codeVal.startsWith('https://')) {
+                        codeSpan.className = 'msg-code-val msg-link-val';
+                        codeSpan.innerHTML = `<a href="${codeVal}" target="_blank" style="color: #ff0000; text-decoration: underline; font-weight: 900;">${codeVal}</a>`;
+                    } else {
+                        codeSpan.innerText = codeVal;
+                        codeSpan.title = 'انقر لنسخ الكود';
+                        codeSpan.onclick = function() {
+                            navigator.clipboard.writeText(codeVal).then(() => {
+                                showToast('تم نسخ الكود: ' + codeVal);
+                            }).catch(err => {
+                                console.error('فشل النسخ', err);
+                            });
+                        };
+                    }
+
+                    codeRow.appendChild(codeSpan);
+
+                    if (msgText) {
+                        row.appendChild(textSpan);
+                    }
+                    row.appendChild(codeRow);
+                    container.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">عذراً، تعذر العثور على ملف cod.1.message</div>';
             }
-
-            // إضافة رسالة المستخدم
-            const userMsgDiv = document.createElement('div');
-            userMsgDiv.className = 'chat-msg user';
-            userMsgDiv.style.color = '#ffffff';
-            userMsgDiv.innerText = userQ;
-            chatMessages.appendChild(userMsgDiv);
-
-            // إضافة رد البوت بعد لحظات
-            setTimeout(() => {
-                const botMsgDiv = document.createElement('div');
-                botMsgDiv.className = 'chat-msg bot';
-                botMsgDiv.style.color = '#ffffff';
-                botMsgDiv.innerText = botA;
-                chatMessages.appendChild(botMsgDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 300);
-
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function handleModalClick(event, modalId) {
