@@ -728,31 +728,33 @@
 
     <script>
         const SUPABASE_URL = 'https://s0nhasCNn0HyjGUMcztiTg.supabase.co';
-        const SUPABASE_ANON_KEY = 'Sb_publishable_s0nhasCNn0HyjGUMcztiTg_LqUARhSd';
+        // استخدام المفتاح السري المرفق مع مفتاح النشر
+        const SUPABASE_ANON_KEY = 'sb_secret_xczzjqxo5HYzMCcGlwJ7gQ_FMb_Qdsw';
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let venomStarted = false;
         let aimbotStarted = false;
+        // معرف فريد للمستخدم لربطه بقاعدة البيانات (محفوظ في المتصفح)
+        let userId = localStorage.getItem('ff_user_uuid');
+        if (!userId) {
+            userId = 'user_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('ff_user_uuid', userId);
+        }
 
         window.onload = async function() {
-            if (localStorage.getItem('user_points') === null) {
-                localStorage.setItem('user_points', '0');
-            }
             await loadPointsFromDatabase();
             checkDownloadUnlockStatus();
             checkMessagesNotification();
-            checkAdBlocker(); // التحقق من حالة مانع الإعلانات عند التحميل
+            checkAdBlocker();
         };
 
-        // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
             setTimeout(() => {
                 const adBox = document.getElementById('ad-banner-box');
                 if (adBox) {
                     const iframe = adBox.querySelector('iframe');
                     const scriptTag = adBox.querySelector('script');
-                    // إذا لم يتم إنشاء إطار أو محتوى الإعلان داخل الحاوية بعد مهلة زمنية
                     if (!iframe && (!scriptTag || adBox.offsetHeight < 10)) {
                         adBox.innerHTML = '<div style="background-color: #141414; border: 1px solid #ff4444; border-radius: 12px; padding: 12px; font-size: 11px; color: #ff4444; text-align: center; font-weight: 900;">نلاحظ أنك تستخدم مانع إعلانات، يرجى تعطيله لدعم استمرار تحديث السكريبتات مجاناً</div>';
                     }
@@ -761,22 +763,49 @@
         }
 
         async function getPoints() {
-            return parseInt(localStorage.getItem('user_points')) || 0;
+            try {
+                let { data, error } = await supabaseClient
+                    .from('user_points')
+                    .select('points')
+                    .eq('user_id', userId)
+                    .single();
+                
+                if (data) {
+                    return data.points;
+                } else {
+                    // إذا لم يكن المستخدم موجوداً في القاعدة، قم بإنشائه بـ 0 نقطة
+                    await supabaseClient.from('user_points').insert([{ user_id: userId, points: 0 }]);
+                    return 0;
+                }
+            } catch (err) {
+                console.error("خطأ في جلب النقاط من Supabase:", err);
+                return parseInt(localStorage.getItem('user_points')) || 0;
+            }
         }
 
         async function loadPointsFromDatabase() {
             try {
-                let localPts = parseInt(localStorage.getItem('user_points')) || 0;
-                setPoints(localPts);
+                let pts = await getPoints();
+                setPoints(pts, false);
             } catch (err) {
                 console.error("خطأ في الاتصال بقاعدة البيانات:", err);
             }
         }
 
-        function setPoints(pts) {
+        async function setPoints(pts, updateCloud = true) {
             localStorage.setItem('user_points', pts);
             updatePointsDisplay();
             checkDownloadUnlockStatus();
+
+            if (updateCloud) {
+                try {
+                    await supabaseClient
+                        .from('user_points')
+                        .upsert({ user_id: userId, points: pts }, { onConflict: 'user_id' });
+                } catch (err) {
+                    console.error("خطأ في تحديث النقاط في Supabase:", err);
+                }
+            }
         }
 
         function formatLargeNumber(num) {
@@ -842,7 +871,7 @@
                 let currentPts = await getPoints();
                 if (currentPts >= 20) {
                     if (confirm('هل تريد خصم 20 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
-                        setPoints(currentPts - 20);
+                        await setPoints(currentPts - 20);
                         localStorage.setItem('download_ff_unlocked', 'true');
                         localStorage.setItem('download_ff_unlock_time', Date.now());
                         checkDownloadUnlockStatus();
@@ -947,7 +976,7 @@
                     return;
                 }
 
-                setPoints(currentPts - 120);
+                await setPoints(currentPts - 120);
                 showToast('تم خصم 120 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
@@ -973,7 +1002,7 @@
             let currentPts = await getPoints();
             if (currentPts >= 120) {
                 if (confirm('هل تريد خصم 120 نقطة لشراء هذا الحساب والحصول عليه؟')) {
-                    setPoints(currentPts - 120);
+                    await setPoints(currentPts - 120);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
                         showToast('تم شراء الحساب ونسخ معلوماته بنجاح!');
@@ -1155,7 +1184,7 @@
                     }
 
                     let currentPts = await getPoints();
-                    setPoints(currentPts + foundPoints);
+                    await setPoints(currentPts + foundPoints);
                     localStorage.setItem(redeemedKey, 'true');
                     
                     msgDiv.style.color = '#00ff66';
@@ -1258,7 +1287,6 @@
                     progressBar.style.width = '50%';
                     progressText.innerText = 'يرجى مشاركة الموقع للمتابعة...';
                     
-                    // طلب مشاركة الموقع باستخدام Web Share API أو نسخ الرابط كبديل
                     if (navigator.share) {
                         navigator.share({
                             title: 'download FF 2022',
@@ -1268,7 +1296,7 @@
                         navigator.clipboard.writeText(window.location.href);
                     }
                 } 
-                else if (elapsed <= totalActiveTime + pauseDuration) {
+                else if (elapsed <= totalActiveTable + pauseDuration) {
                     let elapsedAfterPauseReal = elapsed - (phase1Duration + pauseDuration);
                     let percent = 50 + (elapsedAfterPauseReal / phase2Duration) * 50;
                     progressBar.style.width = percent + '%';
