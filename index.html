@@ -312,7 +312,7 @@
             margin-top: 2px;
         }
 
-        #venom-progress-container, #account-progress-container {
+        #venom-progress-container {
             display: none;
             margin-bottom: 15px;
             background-color: #141414;
@@ -321,7 +321,7 @@
             padding: 12px;
             text-align: right;
         }
-        #venom-progress-bar-bg, #account-progress-bar-bg {
+        #venom-progress-bar-bg {
             width: 100%;
             height: 8px;
             background-color: #262626;
@@ -329,13 +329,13 @@
             overflow: hidden;
             margin-top: 8px;
         }
-        #venom-progress-bar, #account-progress-bar {
+        #venom-progress-bar {
             width: 0%;
             height: 100%;
             background-color: #ff0000;
             transition: width 0.1s linear;
         }
-        #venom-progress-text, #account-progress-text {
+        #venom-progress-text {
             font-size: 11px;
             color: #9ca3af;
         }
@@ -620,18 +620,6 @@
                     <i class="fas fa-gift" style="color: #ffcc00;"></i>
                     <span style="font-weight: 900;">GET AN FREE ACCOUNT (120 نقطة)</span>
                 </div>
-                
-                <!-- شريط التحميل الخاص بالحسابات -->
-                <div id="account-progress-container">
-                    <div style="text-align: center; margin-bottom: 6px;">
-                        <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
-                    </div>
-                    <div id="account-progress-text" style="font-weight: 900;">جاري تجهيز الحساب...</div>
-                    <div id="account-progress-bar-bg">
-                        <div id="account-progress-bar"></div>
-                    </div>
-                </div>
-
                 <div id="free-accounts-container" class="msg-items-container">
                     <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>
                 </div>
@@ -723,7 +711,6 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let venomStarted = false;
-        let isAccountProcessRunning = false;
 
         window.onload = async function() {
             if (localStorage.getItem('user_points') === null) {
@@ -844,7 +831,6 @@
         function toggleFreeAccountModal(show) {
             const modal = document.getElementById('freeAccountModal');
             modal.style.display = show ? 'flex' : 'none';
-            document.getElementById('account-progress-container').style.display = 'none';
         }
 
         async function openFreeAccountModal() {
@@ -892,8 +878,8 @@
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
                         <div style="display: flex; gap: 6px; align-items: center;">
-                            <button class="action-icon-btn" onclick="startAccountProcessWithAction('reveal', '${passId}', this, '${line}', '${username}', '${password}')" title="إظهار كلمة المرور (120 نقطة)"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
-                            <button class="action-icon-btn" onclick="startAccountProcessWithAction('buy', null, null, '${line}', '${username}', '${password}')" title="شراء الحساب (120 نقطة)"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
+                            <button class="action-icon-btn" onclick="startAccountProcess('${line}', '${passId}', this, 'show')" title="إظهار كلمة المرور (120 نقطة)"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
+                            <button class="action-icon-btn" onclick="startAccountProcess('${line}', '${passId}', this, 'buy')" title="شراء الحساب (120 نقطة)"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
                         </div>
                     `;
 
@@ -908,106 +894,93 @@
             }
         }
 
-        // دالة شريط التحميل (10 ثوانٍ) المماثلة لـ SCRIPT HEADSHOT لإظهار/شراء الحساب
-        function startAccountProcessWithAction(actionType, passId, btn, accountLine, username, password) {
-            if (isAccountProcessRunning) return;
-
-            // التحقق من النقاط مسبقاً قبل بدء العداد
-            getPoints().then(currentPts => {
-                let requiredPts = 120;
-                if (currentPts < requiredPts) {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة.');
-                    return;
-                }
-
-                let confirmMsg = actionType === 'reveal' ? 'هل تريد خصم 120 نقطة لإظهار كلمة المرور ونسخ معلومات الحساب؟' : 'هل تريد خصم 120 نقطة لشراء الحساب ونسخ معلوماته؟';
-                if (!confirm(confirmMsg)) return;
-
-                isAccountProcessRunning = true;
-                const progressContainer = document.getElementById('account-progress-container');
-                const progressBar = document.getElementById('account-progress-bar');
-                const progressText = document.getElementById('account-progress-text');
-
-                progressContainer.style.display = 'block';
-
-                let startTime = Date.now();
-                let phase1Duration = 4000; 
-                let pauseDuration = 3000;  
-                let phase2Duration = 3000; 
-                let totalActiveTime = phase1Duration + phase2Duration;
-
-                let timer = setInterval(() => {
-                    let elapsed = Date.now() - startTime;
-
-                    if (elapsed <= phase1Duration) {
-                        let percent = (elapsed / phase1Duration) * 50;
-                        progressBar.style.width = percent + '%';
-                        let remainingSecs = Math.ceil((phase1Duration - elapsed) / 1000);
-                        progressText.innerText = `جاري التجهيز... متبقي ${remainingSecs} ثوانٍ`;
-                    } 
-                    else if (elapsed <= phase1Duration + pauseDuration) {
-                        progressBar.style.width = '50%';
-                        progressText.innerText = 'يرجى الضغط على الإعلان للمتابعة...';
-                    } 
-                    else if (elapsed <= totalActiveTime + pauseDuration) {
-                        let elapsedAfterPauseReal = elapsed - (phase1Duration + pauseDuration);
-                        let percent = 50 + (elapsedAfterPauseReal / phase2Duration) * 50;
-                        progressBar.style.width = percent + '%';
-                        let remainingSecs = Math.ceil((phase2Duration - elapsedAfterPauseReal) / 1000);
-                        progressText.innerText = `جاري استكمال التجهيز... متبقي ${remainingSecs} ثوانٍ`;
-                    } 
-                    else {
-                        progressBar.style.width = '100%';
-                        progressText.innerText = 'تم التجهيز بنجاح!';
-                        clearInterval(timer);
-                        isAccountProcessRunning = false;
-                        progressContainer.style.display = 'none';
-
-                        // نسخ اسم المستخدم وكلمة المرور تلقائياً
-                        let fullInfo = `اسم المستخدم: ${username} | كلمة المرور: ${password}`;
-                        navigator.clipboard.writeText(fullInfo).then(() => {
-                            showToast('تم نسخ اسم المستخدم وكلمة المرور بنجاح!');
-                        }).catch(err => {
-                            console.error('فشل النسخ', err);
-                        });
-
-                        // تنفيذ العملية (خصم النقاط وإظهار/حذف الحساب)
-                        executeAccountAction(actionType, passId, btn, accountLine);
-                    }
-                }, 50);
-            });
-        }
-
-        async function executeAccountAction(actionType, passId, btn, accountLine) {
+        // دالة موحدة لشريط التحميل عند إظهار أو شراء الحساب
+        async function startAccountProcess(accountLine, passId, btn, actionType) {
             let currentPts = await getPoints();
+            if (currentPts < 120) {
+                alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة.');
+                return;
+            }
+
+            let confirmMsg = actionType === 'show' 
+                ? 'هل تريد خصم 120 نقطة لإظهار كلمة المرور ونسخ معلومات الحساب؟' 
+                : 'هل تريد خصم 120 نقطة لشراء هذا الحساب ونسخ معلوماته؟';
+
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            // خصم النقاط مباشرة
             setPoints(currentPts - 120);
 
-            if (actionType === 'reveal') {
-                let span = document.getElementById(passId);
-                if (span) {
-                    span.style.filter = 'none';
-                    if (btn) btn.title = 'إخفاء كلمة المرور';
+            // نسخ معلومات الحساب إلى الحافظة
+            navigator.clipboard.writeText(accountLine).then(() => {
+                showToast('تم نسخ معلومات الحساب! سيتم حذفه بعد 30 ثانية');
+            }).catch(err => {
+                console.error('فشل النسخ', err);
+            });
+
+            // إظهار شريط التحميل (نفس تصميم سكريبت الهيدشوت 10 ثواني)
+            const progressContainer = document.getElementById('venom-progress-container');
+            const progressBar = document.getElementById('venom-progress-bar');
+            const progressText = document.getElementById('venom-progress-text');
+
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let phase1Duration = 4000; 
+            let pauseDuration = 3000;  
+            let phase2Duration = 3000; 
+            let totalActiveTime = phase1Duration + phase2Duration;
+
+            let timer = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+
+                if (elapsed <= phase1Duration) {
+                    let percent = (elapsed / phase1Duration) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((phase1Duration - elapsed) / 1000);
+                    progressText.innerText = `جاري تجهيز البيانات... متبقي ${remainingSecs} ثوانٍ`;
+                } 
+                else if (elapsed <= phase1Duration + pauseDuration) {
+                    progressBar.style.width = '50%';
+                    progressText.innerText = 'يرجى الضغط على الإعلان للمتابعة...';
+                } 
+                else if (elapsed <= totalActiveTime + pauseDuration) {
+                    let elapsedAfterPauseReal = elapsed - (phase1Duration + pauseDuration);
+                    let percent = 50 + (elapsedAfterPauseReal / phase2Duration) * 50;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((phase2Duration - elapsedAfterPauseReal) / 1000);
+                    progressText.innerText = `جاري استكمال التجهيز... متبقي ${remainingSecs} ثوانٍ`;
+                } 
+                else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التجهيز بنجاح!';
+                    clearInterval(timer);
+                    
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        
+                        // إظهار كلمة المرور وإخفاء الكارد بعد 30 ثانية
+                        let span = document.getElementById(passId);
+                        if (span) {
+                            span.style.filter = 'none';
+                        }
+
+                        let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
+                        if (!hiddenAccounts.includes(accountLine)) {
+                            hiddenAccounts.push(accountLine);
+                            localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
+                        }
+
+                        setTimeout(() => {
+                            showToast('انقضت 30 ثانية، تم حذف الحساب!');
+                            fetchAndDisplayAccounts();
+                        }, 30000);
+
+                    }, 500);
                 }
-                showToast('تم خصم 120 نقطة وإظهار كلمة المرور');
-
-                setTimeout(() => {
-                    let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
-                    if (!hiddenAccounts.includes(accountLine)) {
-                        hiddenAccounts.push(accountLine);
-                        localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
-                    }
-                    showToast('انقضت 30 ثانية، تم حذف الحساب!');
-                    fetchAndDisplayAccounts();
-                }, 30000);
-
-            } else if (actionType === 'buy') {
-                let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
-                hiddenAccounts.push(accountLine);
-                localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
-
-                showToast('تم شراء الحساب بنجاح!');
-                await fetchAndDisplayAccounts();
-            }
+            }, 50);
         }
 
         async function toggleMsgModal(show) {
