@@ -485,19 +485,23 @@
             justify-content: space-between;
             font-size: 12px;
         }
-        .buy-acc-btn {
-            background-color: #ffcc00;
-            color: #000;
+        .action-icon-btn {
+            background: transparent;
             border: none;
-            border-radius: 6px;
-            padding: 5px 10px;
-            font-size: 11px;
-            font-weight: 900;
             cursor: pointer;
-            transition: background 0.3s ease;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
         }
-        .buy-acc-btn:hover {
-            background-color: #e6b800;
+        .action-icon-btn:hover {
+            transform: scale(1.15);
+        }
+        .action-icon-btn img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -570,7 +574,7 @@
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
                 <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃𝐒𝐇𝐎Տ</h3>
+                    <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃SH𝐎Տ</h3>
                     <p></p>
                 </div>
             </div>
@@ -874,9 +878,9 @@
                     let passId = 'pass_' + index;
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
-                        <div style="display: flex; gap: 5px; align-items: center;">
-                            <button class="buy-acc-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')">إظهار (120)</button>
-                            <button class="buy-acc-btn" style="background-color: #00ff66;" onclick="buyAccount('${line}')">شراء (120)</button>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور (120 نقطة)"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
+                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب (120 نقطة)"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
                         </div>
                     `;
 
@@ -911,7 +915,7 @@
                 showToast('تم خصم 120 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
-                btn.innerText = 'إخفاء';
+                btn.title = 'إخفاء كلمة المرور';
 
                 // ميزة حذف الحساب بعد 30 ثانية وتحديث القائمة
                 setTimeout(() => {
@@ -926,7 +930,7 @@
 
             } else {
                 span.style.filter = 'blur(5px)';
-                btn.innerText = 'إظهار (120)';
+                btn.title = 'إظهار كلمة المرور (120 نقطة)';
             }
         }
 
