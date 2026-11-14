@@ -458,6 +458,40 @@
             font-weight: 900;
             text-decoration: underline;
         }
+
+        /* تنسيقات لافتة الحسابات المجانية الجديدة */
+        .free-acc-card {
+            background-color: #181818;
+            border: 1px solid #2d2d2d;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .free-acc-info {
+            font-size: 12px;
+            color: #e5e5e5;
+            font-weight: 900;
+            word-break: break-all;
+        }
+        .free-acc-btn {
+            background-color: #ff0000;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+        }
+        .free-acc-btn:hover {
+            background-color: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -505,7 +539,7 @@
 
         <a href="https://register.samosasmobiles.dpdns.org/" target="_blank" class="link-card">
             <div class="link-content">
-                <img src="https://images.icon-icons.com/1769/PNG/96/4092559-magnifier-mobile-ui-search-ui-website-zoom_114034.png" alt="Icon" class="custom-icon">
+                <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
                     <h3 style="font-weight: 900;">𝐎𝐏𝐄𝐍 𝐀𝐍 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
                     <p></p>
@@ -514,11 +548,17 @@
             <i class="fas fa-arrow-left arrow-icon"></i>
         </a>
 
-        <div class="link-card" onclick="alert('عذراً، هذا الزر قيد التطوير حالياً!')">
+        <div class="link-card" onclick="openFreeAccountModal()">
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" class="venom-icon">
                 <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐆𝐄𝐓 𝐀𝐍 𝐅𝐑𝐄𝐄 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
+                    <h3 style="font-weight: 900;">
+                        𝐆𝐄𝐓 𝐀𝐍 𝐅𝐑𝐄𝐄 𝐀𝐂𝐂𝐎𝐔𝐍𝐓
+                        <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                            <span style="font-weight: 900;">120</span>
+                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_SOT_br_48.png" alt="Point" class="inline-point-icon">
+                        </span>
+                    </h3>
                     <p></p>
                 </div>
             </div>
@@ -561,6 +601,24 @@
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
             اضغط على إعلان لتطوير الموقع الرسمي الخاص بنا ولن تخسر شيئاً
+        </div>
+    </div>
+
+    <!-- واجهة GET AN FREE ACCOUNT المنبثقة (لافتة كبيرة لجلب الحسابات من account.txt) -->
+    <div id="freeAccountModal" class="modal-overlay" onclick="handleModalClick(event, 'freeAccountModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative; max-height: 420px; overflow-y: auto;">
+                <div class="close-modal" onclick="toggleFreeAccountModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <i class="fas fa-gift" style="color: #ffcc00;"></i>
+                    <span style="font-weight: 900;">GET AN FREE ACCOUNT (120 نقطة)</span>
+                </div>
+                <div id="free-accounts-container" class="msg-items-container">
+                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات المتاحة...</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -765,6 +823,85 @@
             document.getElementById('promo-msg').innerText = '';
         }
 
+        function toggleFreeAccountModal(show) {
+            const modal = document.getElementById('freeAccountModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        async function openFreeAccountModal() {
+            toggleFreeAccountModal(true);
+            await fetchAndDisplayAccounts();
+        }
+
+        async function fetchAndDisplayAccounts() {
+            const container = document.getElementById('free-accounts-container');
+            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات المتاحة...</div>';
+            
+            try {
+                let hiddenAccounts = JSON.parse(localStorage.getItem('claimed_accounts') || '[]');
+                const response = await fetch('account.txt?' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error('فشل جلب ملف الحسابات');
+                }
+                const text = await response.text();
+                const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+                // تصفية الحسابات التي تم أخذها من قبل المستخدمين المحليين (أو المخبأة)
+                const availableLines = lines.filter(l => !hiddenAccounts.includes(l));
+
+                if (availableLines.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات مجانية متاحة حالياً. انتظر التحديثات القادمة!</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                availableLines.forEach((line) => {
+                    const card = document.createElement('div');
+                    card.className = 'free-acc-card';
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.className = 'free-acc-info';
+                    infoDiv.innerText = `الحساب: ${line}`;
+
+                    const claimBtn = document.createElement('button');
+                    claimBtn.className = 'free-acc-btn';
+                    claimBtn.innerText = 'الحصول على الحساب (120 نقطة)';
+                    claimBtn.onclick = async function() {
+                        let currentPts = await getPoints();
+                        if (currentPts < 120) {
+                            alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة للحصول على هذا الحساب.');
+                            return;
+                        }
+
+                        if (confirm('هل تريد خصم 120 نقطة والحصول على بيانات هذا الحساب؟ (ملاحظة: سيتم إزالة الحساب نهائياً ليصبح ملكك وحدك)')) {
+                            setPoints(currentPts - 120);
+                            
+                            // حفظ الحساب في قائمة المأخوذات محلياً
+                            let claimed = JSON.parse(localStorage.getItem('claimed_accounts') || '[]');
+                            claimed.push(line);
+                            localStorage.setItem('claimed_accounts', JSON.stringify(claimed));
+
+                            showToast('تم الحصول على الحساب بنجاح!');
+                            
+                            // عرض بيانات الحساب واختفاء الزر أو تحديث العرض
+                            card.innerHTML = `
+                                <div style="color: #00ff66; font-size: 13px; font-weight: 900; margin-bottom: 4px;">تم استلام الحساب بنجاح:</div>
+                                <div class="free-acc-info" style="color: #ffffff; user-select: all;" title="انقر لنسخ البيانات">${line}</div>
+                            `;
+                        }
+                    };
+
+                    card.appendChild(infoDiv);
+                    card.appendChild(claimBtn);
+                    container.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">عذراً، تعذر العثور على ملف account.txt</div>';
+            }
+        }
+
         async function toggleMsgModal(show) {
             const modal = document.getElementById('msgModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -867,6 +1004,7 @@
                 if (modalId === 'helpModal') toggleModal(false);
                 if (modalId === 'pointsModal') togglePointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
+                if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
             }
         }
 
