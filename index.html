@@ -312,7 +312,7 @@
             margin-top: 2px;
         }
 
-        #venom-progress-container, #aimbot-progress-container {
+        #venom-progress-container, #aimbot-progress-container, #help-progress-container-1, #help-progress-container-2 {
             display: none;
             margin-bottom: 15px;
             background-color: #141414;
@@ -321,7 +321,7 @@
             padding: 12px;
             text-align: right;
         }
-        #venom-progress-bar-bg, #aimbot-progress-bar-bg {
+        #venom-progress-bar-bg, #aimbot-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
             width: 100%;
             height: 8px;
             background-color: #262626;
@@ -329,13 +329,13 @@
             overflow: hidden;
             margin-top: 8px;
         }
-        #venom-progress-bar, #aimbot-progress-bar {
+        #venom-progress-bar, #aimbot-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
             width: 0%;
             height: 100%;
             background-color: #ff0000;
             transition: width 0.1s linear;
         }
-        #venom-progress-text, #aimbot-progress-text {
+        #venom-progress-text, #aimbot-progress-text, #help-progress-text-1, #help-progress-text-2 {
             font-size: 11px;
             color: #9ca3af;
         }
@@ -522,8 +522,8 @@
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
                 <span id="points-num" style="font-weight: 900;">0</span>
             </div>
-            <div class="help-btn" onclick="toggleModal(true)" title="كيفية الاستخدام">
-                <i class="fas fa-question"></i>
+            <div class="help-btn" onclick="toggleModal(true)" title="الإعدادات">
+                <img src="https://images.icon-icons.com/1558/PNG/96/353407-cog-settings_107485.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain; filter: invert(1);">
             </div>
         </div>
 
@@ -669,30 +669,61 @@
                 <div class="close-modal" onclick="toggleModal(false)">
                     <i class="fas fa-times"></i>
                 </div>
-                <div class="instructions-title" style="font-weight: 900;">
-                    <i class="fas fa-book-open"></i>
-                    <span style="font-weight: 900;">كيفية الاستخدام</span>
+                <div class="instructions-title" style="font-weight: 900; margin-bottom: 15px;">
+                    <i class="fas fa-info-circle" style="color: #ffcc00;"></i>
+                    <span style="font-weight: 900;">الإعدادات والمساعدة</span>
                 </div>
 
-                <div class="step" style="font-weight: 900;">
-                    <div class="step-num">1</div>
-                    <div style="font-weight: 900;">امسح لعبة فري فاير 2026، إذا كانت لديك MAX لا تحذفها</div>
+                <!-- زر طريقة تركيب سكريبت هيدشوت -->
+                <div id="help-btn-1" class="link-card" onclick="startHelpProcess1()" style="margin-bottom: 10px;">
+                    <div class="link-content">
+                        <i class="fas fa-video" style="color: #ffcc00; font-size: 18px;"></i>
+                        <div class="link-text">
+                            <h3 style="font-weight: 900; color: #ffcc00;">طريقة تركيب سكريبت هيدشوت</h3>
+                        </div>
+                    </div>
+                    <i class="fas fa-arrow-left arrow-icon"></i>
                 </div>
 
-                <div class="step" style="font-weight: 900;">
-                    <div class="step-num">2</div>
-                    <div style="font-weight: 900;">حمل ملف فري فاير النسخة القديمة من هنا</div>
+                <div id="help-progress-container-1">
+                    <div style="text-align: center; margin-bottom: 6px;">
+                        <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                    </div>
+                    <div id="help-progress-text-1" style="font-weight: 900;">جاري تحميل الشرح...</div>
+                    <div id="help-progress-bar-bg-1">
+                        <div id="help-progress-bar-1"></div>
+                    </div>
                 </div>
 
-                <div class="step" style="font-weight: 900;">
-                    <div class="step-num">3</div>
-                    <div style="font-weight: 900;">قم بإنشاء حساب وربطه مع ديسكورد</div>
+                <div id="help-video-container-1" style="display: none; margin-bottom: 15px; text-align: center;">
+                    <video src="https://res.cloudinary.com/kp7vx8ex/video/upload/lv_0_20261115140322.mp4" controls autoplay muted style="width: 100%; border-radius: 10px; border: 1px solid #262626;"></video>
                 </div>
 
-                <div class="step" style="font-weight: 900;">
-                    <div class="step-num">4</div>
-                    <div style="font-weight: 900;">إذا تريد الحصول على حساب جاهز فقط شارك الموقع الرسمي هذا مع إرسال صورة لصاحب الموقع أنك طبقت الشروط المطلوبة رابط قناته <a href="https://tiktok.com/@pr_venom_dz" target="_blank" style="color: #ff0000; text-decoration: underline; font-weight: 900;">tiktok.com/@pr_venom_dz</a></div>
+                <!-- زر كيفية إنشاء حساب مجاناً -->
+                <div id="help-btn-2" class="link-card" onclick="startHelpProcess2()" style="margin-bottom: 5px;">
+                    <div class="link-content">
+                        <i class="fas fa-user-plus" style="color: #00ff66; font-size: 18px;"></i>
+                        <div class="link-text">
+                            <h3 style="font-weight: 900; color: #00ff66;">كيفية إنشاء حساب مجاناً</h3>
+                        </div>
+                    </div>
+                    <i class="fas fa-arrow-left arrow-icon"></i>
                 </div>
+
+                <div id="help-progress-container-2">
+                    <div style="text-align: center; margin-bottom: 6px;">
+                        <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                    </div>
+                    <div id="help-progress-text-2" style="font-weight: 900;">جاري تحميل الشرح...</div>
+                    <div id="help-progress-bar-bg-2">
+                        <div id="help-progress-bar-2"></div>
+                    </div>
+                </div>
+
+                <div id="help-video-container-2" style="display: none; margin-bottom: 5px; text-align: center;">
+                    <video src="https://res.cloudinary.com/kp7vx8ex/video/upload/lv_0_20261115143029.mp4" controls autoplay muted style="width: 100%; border-radius: 10px; border: 1px solid #262626;"></video>
+                </div>
+
             </div>
         </div>
     </div>
@@ -734,6 +765,8 @@
 
         let venomStarted = false;
         let aimbotStarted = false;
+        let helpRunning1 = false;
+        let helpRunning2 = false;
 
         // دالة للحصول على معرف فريد للجهاز أو المتصفح لحفظ النقاط في Firebase
         function getUserId() {
@@ -891,6 +924,20 @@
         function toggleModal(show) {
             const modal = document.getElementById('helpModal');
             modal.style.display = show ? 'flex' : 'none';
+            if (!show) {
+                // إعادة تعيين الفيديوهات وشريط التحميل عند الإغلاق
+                document.getElementById('help-video-container-1').style.display = 'none';
+                document.getElementById('help-progress-container-1').style.display = 'none';
+                document.getElementById('help-btn-1').style.opacity = '1';
+                document.getElementById('help-btn-1').style.pointerEvents = 'auto';
+                helpRunning1 = false;
+
+                document.getElementById('help-video-container-2').style.display = 'none';
+                document.getElementById('help-progress-container-2').style.display = 'none';
+                document.getElementById('help-btn-2').style.opacity = '1';
+                document.getElementById('help-btn-2').style.pointerEvents = 'auto';
+                helpRunning2 = false;
+            }
         }
 
         function togglePointsModal(show) {
@@ -1315,6 +1362,80 @@
                         progressContainer.style.display = 'none';
                         window.open('https://www.mediafire.com/file/6dvqkc5jyxtqaco/٪𝐀I𝚳+𝐁𝐎𝐓+𝐅𝐅𝟐𝟎𝟐𝟐+𝟏𝟎𝟎.zip/file', '_blank');
                     }, 500);
+                }
+            }, 50);
+        }
+
+        // دالة شريط التحميل الأول (طريقة تركيب سكريبت هيدشوت - 5 ثواني)
+        function startHelpProcess1() {
+            if (helpRunning1) return;
+            helpRunning1 = true;
+
+            const btn = document.getElementById('help-btn-1');
+            const progressContainer = document.getElementById('help-progress-container-1');
+            const progressBar = document.getElementById('help-progress-bar-1');
+            const progressText = document.getElementById('help-progress-text-1');
+            const videoContainer = document.getElementById('help-video-container-1');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let duration = 5000; // 5 ثواني
+
+            let timer = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+                if (elapsed <= duration) {
+                    let percent = (elapsed / duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((duration - elapsed) / 1000);
+                    progressText.innerText = `جاري تجهيز الشرح... متبقي ${remainingSecs} ثوانٍ`;
+                } else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التحميل بنجاح!';
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        videoContainer.style.display = 'block';
+                    }, 300);
+                }
+            }, 50);
+        }
+
+        // دالة شريط التحميل الثاني (كيفية إنشاء حساب مجاناً - 5 ثواني)
+        function startHelpProcess2() {
+            if (helpRunning2) return;
+            helpRunning2 = true;
+
+            const btn = document.getElementById('help-btn-2');
+            const progressContainer = document.getElementById('help-progress-container-2');
+            const progressBar = document.getElementById('help-progress-bar-2');
+            const progressText = document.getElementById('help-progress-text-2');
+            const videoContainer = document.getElementById('help-video-container-2');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let duration = 5000; // 5 ثواني
+
+            let timer = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+                if (elapsed <= duration) {
+                    let percent = (elapsed / duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((duration - elapsed) / 1000);
+                    progressText.innerText = `جاري تجهيز الشرح... متبقي ${remainingSecs} ثوانٍ`;
+                } else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التحميل بنجاح!';
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        videoContainer.style.display = 'block';
+                    }, 300);
                 }
             }, 50);
         }
