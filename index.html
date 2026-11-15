@@ -1018,17 +1018,17 @@
             
             if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
                 let currentPts = await getPoints();
-                if (currentPts < 120) {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة لإظهار كلمة المرور.');
+                if (currentPts < 150) {
+                    alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لإظهار كلمة المرور.');
                     return;
                 }
                 
-                if (!confirm('هل تريد خصم 120 نقطة لإظهار كلمة المرور؟ سيتم حذف هذا الحساب نهائياً بعد 30 ثانية.')) {
+                if (!confirm('هل تريد خصم 150 نقطة لإظهار كلمة المرور؟ سيتم حذف هذا الحساب نهائياً بعد 30 ثانية.')) {
                     return;
                 }
 
-                await setPoints(currentPts - 120);
-                showToast('تم خصم 120 نقطة وإظهار كلمة المرور');
+                await setPoints(currentPts - 150);
+                showToast('تم خصم 150 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
                 btn.title = 'إخفاء كلمة المرور';
@@ -1051,9 +1051,9 @@
 
         async function buyAccount(accountLine) {
             let currentPts = await getPoints();
-            if (currentPts >= 120) {
-                if (confirm('هل تريد خصم 120 نقطة لشراء هذا الحساب والحصول عليه؟')) {
-                    await setPoints(currentPts - 120);
+            if (currentPts >= 150) {
+                if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب والحصول عليه؟')) {
+                    await setPoints(currentPts - 150);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
                         showToast('تم شراء الحساب ونسخ معلوماته بنجاح!');
@@ -1071,7 +1071,7 @@
                     fetchAndDisplayAccounts();
                 }
             } else {
-                alert('رصيدك غير كافٍ! تحتاج إلى 120 نقطة لشراء حساب.');
+                alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لشراء حساب.');
             }
         }
 
