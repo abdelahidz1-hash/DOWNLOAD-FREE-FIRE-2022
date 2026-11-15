@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- استدعاء مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- استدعاء مكتبة Google Sign-In SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
             box-sizing: border-box;
@@ -41,11 +43,20 @@
             position: relative;
         }
 
-        /* زر الرسائل في أعلى اليسار لوحده تماماً وبدون خلفية */
-        .msg-top-btn {
+        /* مجموعة الأزرار في أعلى اليسار (زر الرسائل وزر جوجل بجانبه) */
+        .top-left-group {
             position: absolute;
             top: 15px;
             left: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        /* زر الرسائل في أعلى اليسار لوحده تماماً وبدون خلفية */
+        .msg-top-btn {
+            position: relative;
             width: 28px;
             height: 28px;
             background: transparent !important;
@@ -55,7 +66,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 10;
         }
         .msg-top-btn img {
             width: 24px;
@@ -65,6 +75,30 @@
             transition: transform 0.3s ease;
         }
         .msg-top-btn:hover img {
+            transform: scale(1.1);
+        }
+
+        /* زر تسجيل الدخول بجوجل في أعلى اليسار بجانب الرسائل */
+        .google-login-btn {
+            width: 28px;
+            height: 28px;
+            background: #141414;
+            border: 1px solid #262626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .google-login-btn img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+        }
+        .google-login-btn:hover {
+            border-color: #737373;
+            background-color: #1c1c1c;
             transform: scale(1.1);
         }
 
@@ -510,10 +544,15 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- زر الرسائل لوحده في أعلى اليسار بدون خلفية وبالصورة الجديدة -->
-        <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الرسائل">
-            <img src="https://images.icon-icons.com/1769/PNG/96/4092561-email-envelope-mail-message-mobile-ui-ui-website_114031.png" alt="Messages">
-            <div id="msgNotificationDot" class="msg-dot"></div>
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر تسجيل الدخول بجوجل) -->
+        <div class="top-left-group">
+            <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
+                <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
+                <div id="msgNotificationDot" class="msg-dot"></div>
+            </div>
+            <div class="google-login-btn" onclick="loginWithGoogle()" title="تسجيل الدخول باستخدام جوجل">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Login">
+            </div>
         </div>
 
         <!-- مجموعة النقاط والمساعدة في أعلى اليمين -->
@@ -768,6 +807,51 @@
         let helpRunning1 = false;
         let helpRunning2 = false;
 
+        // تهيئة Google Identity Services
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: '595753304659-d3lk723k6os1i9u7tsdndbk3i79uftlg.apps.googleusercontent.com',
+                callback: handleGoogleSignInResponse
+            });
+            
+            loadPointsFromDatabase();
+            checkDownloadUnlockStatus();
+            checkMessagesNotification();
+            checkAdBlocker();
+        };
+
+        function loginWithGoogle() {
+            google.accounts.id.prompt((notification) => {
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    // في حال عدم ظهور نافذة التحديد التلقائي، يمكن استخدام نافذة منبثقة بديلة أو محاولة الضغط مجدداً
+                }
+            });
+        }
+
+        async function handleGoogleSignInResponse(response) {
+            try {
+                // فك تشفير توكن الاستجابة JWT لمعرفة بيانات المستخدم
+                let base64Url = response.credential.split('.')[1];
+                let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                
+                let userInfo = JSON.parse(jsonPayload);
+                let googleEmail = userInfo.email;
+                let googleName = userInfo.name;
+
+                // ربط البريد بمعرف الجهاز أو حفظه كمعرف فريد أساسي
+                localStorage.setItem('firebase_user_uid', 'google_' + btoa(googleEmail).replace(/=/g, ''));
+                showToast('مرحباً بك ' + googleName + ' تم تسجيل الدخول بنجاح!');
+                
+                await loadPointsFromDatabase();
+            } catch (err) {
+                console.error("خطأ في تسجيل الدخول بجوجل:", err);
+                showToast('فشل تسجيل الدخول باستخدام جوجل');
+            }
+        }
+
         // دالة للحصول على معرف فريد للجهاز أو المتصفح لحفظ النقاط في Firebase
         function getUserId() {
             let uid = localStorage.getItem('firebase_user_uid');
@@ -777,13 +861,6 @@
             }
             return uid;
         }
-
-        window.onload = async function() {
-            await loadPointsFromDatabase();
-            checkDownloadUnlockStatus();
-            checkMessagesNotification();
-            checkAdBlocker();
-        };
 
         // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
@@ -962,7 +1039,18 @@
             container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>';
             
             try {
-                let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
+                // جلب الحسابات المشتراة من Firebase لجميع المستخدمين
+                let remotePurchased = {};
+                try {
+                    let res = await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/purchased_accounts.json');
+                    if (res.ok) {
+                        let data = await res.json();
+                        if (data) remotePurchased = data;
+                    }
+                } catch (e) {
+                    console.error("خطأ في جلب الحسابات المشتراة:", e);
+                }
+
                 const response = await fetch('account.txt?' + new Date().getTime());
                 if (!response.ok) {
                     throw new Error('فشل جلب الملف');
@@ -970,10 +1058,11 @@
                 const text = await response.text();
                 let lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-                lines = lines.filter(line => !hiddenAccounts.includes(line));
+                // تصفية الحسابات التي تم شراؤها مسبقاً من قِبل أي مستخدم
+                lines = lines.filter(line => !remotePurchased[btoa(line)]);
 
                 if (lines.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً.</div>';
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً، تم شراء جميع الحسابات!</div>';
                     return;
                 }
 
@@ -1013,6 +1102,18 @@
             }
         }
 
+        async function markAccountAsPurchased(accountLine) {
+            try {
+                let encodedKey = btoa(accountLine);
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/purchased_accounts/${encodedKey}.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(true)
+                });
+            } catch (err) {
+                console.error("خطأ في تحديث حالة الحساب:", err);
+            }
+        }
+
         async function togglePasswordVisibility(passId, btn, accountLine) {
             let span = document.getElementById(passId);
             
@@ -1023,7 +1124,7 @@
                     return;
                 }
                 
-                if (!confirm('هل تريد خصم 150 نقطة لإظهار كلمة المرور؟ سيتم حذف هذا الحساب نهائياً بعد 30 ثانية.')) {
+                if (!confirm('هل تريد خصم 150 نقطة لإظهار كلمة المرور؟ سيتم إخفاء هذا الحساب نهائياً للجميع بعد 30 ثانية.')) {
                     return;
                 }
 
@@ -1033,13 +1134,9 @@
                 span.style.filter = 'none';
                 btn.title = 'إخفاء كلمة المرور';
 
-                setTimeout(() => {
-                    let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
-                    if (!hiddenAccounts.includes(accountLine)) {
-                        hiddenAccounts.push(accountLine);
-                        localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
-                    }
-                    showToast('انقضت 30 ثانية، تم حذف الحساب!');
+                setTimeout(async () => {
+                    await markAccountAsPurchased(accountLine);
+                    showToast('انقضت 30 ثانية، تم شراء الحساب وإخفاؤه للجميع!');
                     fetchAndDisplayAccounts();
                 }, 30000);
 
@@ -1052,22 +1149,17 @@
         async function buyAccount(accountLine) {
             let currentPts = await getPoints();
             if (currentPts >= 150) {
-                if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب والحصول عليه؟')) {
+                if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب وإخفائه عن باقي المستخدمين؟')) {
                     await setPoints(currentPts - 150);
+                    await markAccountAsPurchased(accountLine);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
-                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح!');
+                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح وإخفاؤه للجميع!');
                     }).catch(err => {
                         console.error('فشل النسخ', err);
-                        showToast('تم شراء الحساب بنجاح!');
+                        showToast('تم شراء الحساب وإخفاؤه للجميع بنجاح!');
                     });
                     
-                    let hiddenAccounts = JSON.parse(localStorage.getItem('purchased_accounts') || '[]');
-                    if (!hiddenAccounts.includes(accountLine)) {
-                        hiddenAccounts.push(accountLine);
-                        localStorage.setItem('purchased_accounts', JSON.stringify(hiddenAccounts));
-                    }
-
                     fetchAndDisplayAccounts();
                 }
             } else {
