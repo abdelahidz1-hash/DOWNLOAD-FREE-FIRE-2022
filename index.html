@@ -10,6 +10,78 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- استدعاء مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- استدعاء مكتبات Firebase (Firestore) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDE5lXPVHGoYrwhf3tccU-cZMG4BeIA83g",
+          authDomain: "ff-2022-633ed.firebaseapp.com",
+          projectId: "ff-2022-633ed",
+          storageBucket: "ff-2022-633ed.firebasestorage.app",
+          messagingSenderId: "595753304659",
+          appId: "1:595753304659:web:4d05a0656140c10369bca6",
+          measurementId: "G-S13QM6X44L"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+
+        // توليد أو جلب معرف فريد للجهاز
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('ff_device_id');
+            if (!deviceId) {
+                deviceId = 'user_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem('ff_device_id', deviceId);
+            }
+            return deviceId;
+        }
+
+        // دالة جلب النقاط من Firebase
+        async function fetchPointsFromFirebase() {
+            const deviceId = getDeviceId();
+            try {
+                const docRef = doc(db, "users_points", deviceId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const pts = docSnap.data().points || 0;
+                    localStorage.setItem('user_points', pts);
+                    updatePointsDisplay();
+                    checkDownloadUnlockStatus();
+                } else {
+                    // إذا لم يكن المستخدم موجوداً مسبقاً، نقوم بإنشائه بـ 0 نقطة
+                    await setDoc(docRef, { points: 0 });
+                    localStorage.setItem('user_points', '0');
+                    updatePointsDisplay();
+                    checkDownloadUnlockStatus();
+                }
+            } catch (err) {
+                console.error("خطأ في جلب النقاط من Firebase:", err);
+                // العودة للقيمة المحلية في حال انقطاع الاتصال
+                let localPts = parseInt(localStorage.getItem('user_points')) || 0;
+                setPoints(localPts, false);
+            }
+        }
+
+        // دالة تحديث النقاط في Firebase
+        async function updatePointsInFirebase(newPts) {
+            const deviceId = getDeviceId();
+            try {
+                const docRef = doc(db, "users_points", deviceId);
+                await setDoc(docRef, { points: newPts }, { merge: true });
+            } catch (err) {
+                console.error("خطأ في تحديث النقاط في Firebase:", err);
+            }
+        }
+
+        // ربط الدوال بالنافذة العامة لكي تعمل مع باقي السكريبت
+        window.initFirebasePoints = fetchPointsFromFirebase;
+        window.syncPointsToCloud = updatePointsInFirebase;
+    </script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -728,27 +800,31 @@
 
     <script>
         const SUPABASE_URL = 'https://s0nhasCNn0HyjGUMcztiTg.supabase.co';
-        // استخدام المفتاح السري المرفق مع مفتاح النشر
-        const SUPABASE_ANON_KEY = 'sb_secret_xczzjqxo5HYzMCcGlwJ7gQ_FMb_Qdsw';
+        const SUPABASE_ANON_KEY = 'Sb_publishable_s0nhasCNn0HyjGUMcztiTg_LqUARhSd';
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let venomStarted = false;
         let aimbotStarted = false;
-        // معرف فريد للمستخدم لربطه بقاعدة البيانات (محفوظ في المتصفح)
-        let userId = localStorage.getItem('ff_user_uuid');
-        if (!userId) {
-            userId = 'user_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            localStorage.setItem('ff_user_uuid', userId);
-        }
 
         window.onload = async function() {
-            await loadPointsFromDatabase();
+            if (localStorage.getItem('user_points') === null) {
+                localStorage.setItem('user_points', '0');
+            }
+            
+            // جلب النقاط من Firebase عند تحميل الصفحة
+            if (window.initFirebasePoints) {
+                await window.initFirebasePoints();
+            } else {
+                await loadPointsFromDatabase();
+            }
+
             checkDownloadUnlockStatus();
             checkMessagesNotification();
             checkAdBlocker();
         };
 
+        // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
             setTimeout(() => {
                 const adBox = document.getElementById('ad-banner-box');
@@ -763,48 +839,26 @@
         }
 
         async function getPoints() {
-            try {
-                let { data, error } = await supabaseClient
-                    .from('user_points')
-                    .select('points')
-                    .eq('user_id', userId)
-                    .single();
-                
-                if (data) {
-                    return data.points;
-                } else {
-                    // إذا لم يكن المستخدم موجوداً في القاعدة، قم بإنشائه بـ 0 نقطة
-                    await supabaseClient.from('user_points').insert([{ user_id: userId, points: 0 }]);
-                    return 0;
-                }
-            } catch (err) {
-                console.error("خطأ في جلب النقاط من Supabase:", err);
-                return parseInt(localStorage.getItem('user_points')) || 0;
-            }
+            return parseInt(localStorage.getItem('user_points')) || 0;
         }
 
         async function loadPointsFromDatabase() {
             try {
-                let pts = await getPoints();
-                setPoints(pts, false);
+                let localPts = parseInt(localStorage.getItem('user_points')) || 0;
+                setPoints(localPts, false);
             } catch (err) {
-                console.error("خطأ في الاتصال بقاعدة البيانات:", err);
+                console.error("خطأ في الاتصال:", err);
             }
         }
 
-        async function setPoints(pts, updateCloud = true) {
+        function setPoints(pts, syncCloud = true) {
             localStorage.setItem('user_points', pts);
             updatePointsDisplay();
             checkDownloadUnlockStatus();
-
-            if (updateCloud) {
-                try {
-                    await supabaseClient
-                        .from('user_points')
-                        .upsert({ user_id: userId, points: pts }, { onConflict: 'user_id' });
-                } catch (err) {
-                    console.error("خطأ في تحديث النقاط في Supabase:", err);
-                }
+            
+            // مزامنة النقاط مع Firebase مباشرة
+            if (syncCloud && window.syncPointsToCloud) {
+                window.syncPointsToCloud(pts);
             }
         }
 
@@ -871,7 +925,7 @@
                 let currentPts = await getPoints();
                 if (currentPts >= 20) {
                     if (confirm('هل تريد خصم 20 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
-                        await setPoints(currentPts - 20);
+                        setPoints(currentPts - 20);
                         localStorage.setItem('download_ff_unlocked', 'true');
                         localStorage.setItem('download_ff_unlock_time', Date.now());
                         checkDownloadUnlockStatus();
@@ -976,7 +1030,7 @@
                     return;
                 }
 
-                await setPoints(currentPts - 120);
+                setPoints(currentPts - 120);
                 showToast('تم خصم 120 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
@@ -1002,7 +1056,7 @@
             let currentPts = await getPoints();
             if (currentPts >= 120) {
                 if (confirm('هل تريد خصم 120 نقطة لشراء هذا الحساب والحصول عليه؟')) {
-                    await setPoints(currentPts - 120);
+                    setPoints(currentPts - 120);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
                         showToast('تم شراء الحساب ونسخ معلوماته بنجاح!');
@@ -1184,7 +1238,7 @@
                     }
 
                     let currentPts = await getPoints();
-                    await setPoints(currentPts + foundPoints);
+                    setPoints(currentPts + foundPoints);
                     localStorage.setItem(redeemedKey, 'true');
                     
                     msgDiv.style.color = '#00ff66';
@@ -1296,7 +1350,7 @@
                         navigator.clipboard.writeText(window.location.href);
                     }
                 } 
-                else if (elapsed <= totalActiveTable + pauseDuration) {
+                else if (elapsed <= totalActiveTime + pauseDuration) {
                     let elapsedAfterPauseReal = elapsed - (phase1Duration + pauseDuration);
                     let percent = 50 + (elapsedAfterPauseReal / phase2Duration) * 50;
                     progressBar.style.width = percent + '%';
