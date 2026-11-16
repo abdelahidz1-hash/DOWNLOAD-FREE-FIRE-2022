@@ -119,7 +119,7 @@
             background-color: #141414;
             border: 1px solid #262626;
             border-radius: 50%;
-            color: #ffffff;
+            color: #ffffff; /* تم توحيد لون النص والأيقونة للأبيض المرتب */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -142,7 +142,7 @@
             height: 8px;
             background-color: #ff0000;
             border-radius: 50%;
-            display: none;
+            display: none; /* مخفية افتراضياً حتى يتم التحقق من وجود رسائل */
             box-shadow: 0 0 4px #ff0000;
         }
 
@@ -472,47 +472,49 @@
             text-decoration: underline;
         }
 
-        /* تعديل تصميم بطاقات الحسابات المجانية لتصبح مربعة بأركان دائرية 5px مع الصورة المطلوبة وزر شراء تحتها */
-        #free-accounts-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
+        /* تصميم بطاقات الحسابات المجانية */
         .account-card {
             background-color: #181818;
             border: 1px solid #262626;
-            border-radius: 5px;
+            border-radius: 10px;
             padding: 10px;
+            margin-bottom: 8px;
             display: flex;
             flex-direction: column;
+            gap: 6px;
+            text-align: right;
+        }
+        .account-info {
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 900;
+            display: flex;
             align-items: center;
-            text-align: center;
-            gap: 8px;
+            justify-content: space-between;
         }
-        .account-card img.box-img {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
+        .account-pass-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
         }
-        .account-card .account-title {
-            font-size: 11px;
-            color: #ffcc00;
-            font-weight: 900;
-        }
-        .account-card .buy-account-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #ffcc00, #e6b800);
-            color: #000000;
+        .action-icon-btn {
+            background: transparent;
             border: none;
-            border-radius: 5px;
-            padding: 6px;
-            font-size: 11px;
-            font-weight: 900;
             cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.2s ease;
         }
-        .account-card .buy-account-btn:hover {
-            transform: scale(1.03);
+        .action-icon-btn:hover {
+            transform: scale(1.15);
+        }
+        .action-icon-btn img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -521,7 +523,7 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار -->
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر الإعدادات بجانبه بلون أبيض مرتب) -->
         <div class="top-left-group">
             <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
                 <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
@@ -544,7 +546,7 @@
             <img src="https://i.ibb.co/6R2C1JTt/Picsart-26-11-11-08-32-29-608.png" alt="Profile Picture" class="profile-pic">
         </div>
 
-        <!-- زر DOWNLOAD FF الرئيسي -->
+        <!-- زر DOWNLOAD FF الرئيسي الذي يفتح نافذة عرض الأزرار -->
         <div onclick="toggleDownloadModal(true)" class="link-card" id="main-download-ff-btn">
             <div class="link-content">
                 <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
@@ -556,7 +558,7 @@
             <i class="fas fa-arrow-left arrow-icon"></i>
         </div>
 
-        <!-- زر OPEN AN FF XMODZ -->
+        <!-- زر OPEN AN FF XMODZ الجديد -->
         <a href="https://unlockffbeta.com/" target="_blank" class="link-card">
             <div class="link-content">
                 <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
@@ -611,7 +613,7 @@
             </div>
         </div>
 
-        <!-- زر AIM BOT -->
+        <!-- زر AIM BOT الجديد -->
         <div id="aimbot-btn" class="link-card" onclick="startAimbotProcess()">
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Ingame_CS_Level_Killed.png" alt="Icon" class="venom-icon">
@@ -663,6 +665,7 @@
                     <span style="font-weight: 900;">اختر نسخة التحميل</span>
                 </div>
                 <div class="msg-items-container">
+                    <!-- زر DOWNLOAD FF 2022 -->
                     <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn" style="margin-bottom: 10px;">
                         <div class="link-content">
                             <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
@@ -680,6 +683,7 @@
                         <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
                     </div>
 
+                    <!-- زر DOWNLOAD FF 2019 -->
                     <div onclick="handleDownload2019Click(event)" class="link-card" id="download-ff-2019-btn" style="margin-bottom: 10px;">
                         <div class="link-content">
                             <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
@@ -697,6 +701,7 @@
                         <i class="fas fa-lock arrow-icon" id="download-2019-icon-status" style="color: #ff4444;"></i>
                     </div>
 
+                    <!-- زر DOWNLOAD FF XMODZ -->
                     <div onclick="handleDownloadXmodzClick(event)" class="link-card" id="download-xmodz-btn" style="margin-bottom: 0;">
                         <div class="link-content">
                             <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
@@ -730,7 +735,7 @@
                     <span style="font-weight: 900;">GET AN FREE ACCOUNT</span>
                 </div>
                 <div id="free-accounts-container" class="msg-items-container">
-                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900; grid-column: span 2;">جاري جلب الحسابات...</div>
+                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>
                 </div>
             </div>
         </div>
@@ -761,6 +766,7 @@
                     <span style="font-weight: 900;">الإعدادات والمساعدة</span>
                 </div>
 
+                <!-- زر طريقة تركيب سكريبت هيدشوت -->
                 <div id="help-btn-1" class="link-card" onclick="startHelpProcess1()" style="margin-bottom: 10px;">
                     <div class="link-content">
                         <i class="fas fa-video" style="color: #ffcc00; font-size: 18px;"></i>
@@ -785,6 +791,7 @@
                     <video src="https://res.cloudinary.com/kp7vx8ex/video/upload/lv_0_20261115140322.mp4" controls autoplay muted style="width: 100%; border-radius: 10px; border: 1px solid #262626;"></video>
                 </div>
 
+                <!-- زر كيفية إنشاء حساب مجاناً -->
                 <div id="help-btn-2" class="link-card" onclick="startHelpProcess2()" style="margin-bottom: 5px;">
                     <div class="link-content">
                         <i class="fas fa-user-plus" style="color: #00ff66; font-size: 18px;"></i>
@@ -862,6 +869,7 @@
             checkAdBlocker();
         };
 
+        // دالة للحصول على معرف فريد للجهاز أو المتصفح لحفظ النقاط في Firebase
         function getUserId() {
             let uid = localStorage.getItem('firebase_user_uid');
             if (!uid) {
@@ -871,6 +879,7 @@
             return uid;
         }
 
+        // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
             setTimeout(() => {
                 const adBox = document.getElementById('ad-banner-box');
@@ -1148,7 +1157,7 @@
 
         async function fetchAndDisplayAccounts() {
             const container = document.getElementById('free-accounts-container');
-            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900; grid-column: span 2;">جاري جلب الحسابات...</div>';
+            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>';
             
             try {
                 let remotePurchased = {};
@@ -1172,27 +1181,43 @@
                 lines = lines.filter(line => !remotePurchased[btoa(line)]);
 
                 if (lines.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900; grid-column: span 2;">لا توجد حسابات متاحة حالياً، تم شراء جميع الحسابات!</div>';
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً، تم شراء جميع الحسابات!</div>';
                     return;
                 }
 
                 container.innerHTML = '';
-                lines.forEach((line) => {
+                lines.forEach((line, index) => {
+                    let parts = line.split(':');
+                    let username = parts[0] ? parts[0].trim() : 'غير معروف';
+                    let password = parts[1] ? parts[1].trim() : '';
+
                     const card = document.createElement('div');
                     card.className = 'account-card';
 
-                    card.innerHTML = `
-                        <img src="https://i.ibb.co/fVBvNmpm/924eb361-30d6-4a98-bc0f-82c8c33836a5.jpg" alt="Account Box" class="box-img">
-                        <div class="account-title">حساب مجاني فري فاير</div>
-                        <button class="buy-account-btn" onclick="buyAccount('${line.replace(/'/g, "\\'")}')">شراء (200 نقطة)</button>
+                    const infoRow = document.createElement('div');
+                    infoRow.className = 'account-info';
+                    infoRow.innerHTML = `<span>المستخدم: <strong style="color: #00ff66;">${username}</strong></span>`;
+
+                    const passRow = document.createElement('div');
+                    passRow.className = 'account-pass-row';
+
+                    let passId = 'pass_' + index;
+                    passRow.innerHTML = `
+                        <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
+                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
+                        </div>
                     `;
 
+                    card.appendChild(infoRow);
+                    card.appendChild(passRow);
                     container.appendChild(card);
                 });
 
             } catch (err) {
                 console.error(err);
-                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900; grid-column: span 2;">عذراً، تعذر العثور على ملف account.txt</div>';
+                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">عذراً، تعذر العثور على ملف account.txt</div>';
             }
         }
 
@@ -1208,24 +1233,56 @@
             }
         }
 
+        async function togglePasswordVisibility(passId, btn, accountLine) {
+            let span = document.getElementById(passId);
+            
+            if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
+                let currentPts = await getPoints();
+                if (currentPts < 150) {
+                    alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لإظهار كلمة المرور.');
+                    return;
+                }
+                
+                if (!confirm('هل تريد خصم 150 نقطة لإظهار كلمة المرور؟ سيتم إخفاء هذا الحساب نهائياً للجميع بعد 30 ثانية.')) {
+                    return;
+                }
+
+                await setPoints(currentPts - 150);
+                showToast('تم خصم 150 نقطة وإظهار كلمة المرور');
+
+                span.style.filter = 'none';
+                btn.title = 'إخفاء كلمة المرور';
+
+                setTimeout(async () => {
+                    await markAccountAsPurchased(accountLine);
+                    showToast('انقضت 30 ثانية، تم شراء الحساب وإخفاؤه للجميع!');
+                    fetchAndDisplayAccounts();
+                }, 30000);
+
+            } else {
+                span.style.filter = 'blur(5px)';
+                btn.title = 'إظهار كلمة المرور';
+            }
+        }
+
         async function buyAccount(accountLine) {
             let currentPts = await getPoints();
-            if (currentPts >= 200) {
-                if (confirm('هل تريد خصم 200 نقطة لشراء هذا الحساب ونسخ معلوماته؟ (سيتم إخفاؤه للجميع فوراً)')) {
-                    await setPoints(currentPts - 200);
+            if (currentPts >= 150) {
+                if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب وإخفائه عن باقي المستخدمين؟')) {
+                    await setPoints(currentPts - 150);
                     await markAccountAsPurchased(accountLine);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
-                        showToast('تم شراء الحساب ونسخه بنجاح وإخفاؤه عن باقي المستخدمين!');
+                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح وإخفاؤه للجميع!');
                     }).catch(err => {
                         console.error('فشل النسخ', err);
-                        showToast('تم شراء الحساب وإخفاؤه بنجاح!');
+                        showToast('تم شراء الحساب وإخفاؤه للجميع بنجاح!');
                     });
                     
                     fetchAndDisplayAccounts();
                 }
             } else {
-                alert('رصيدك غير كافٍ! تحتاج إلى 200 نقطة لشراء الحساب.');
+                alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لشراء حساب.');
             }
         }
 
