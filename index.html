@@ -797,6 +797,10 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        @keyframes spinImage {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 
     <script>
@@ -1039,7 +1043,7 @@
             const modal = document.getElementById('diamondPointsModal');
             modal.style.display = show ? 'flex' : 'none';
             document.getElementById('promoDiamondCodeInput').value = '';
-            document.getElementById('promo-diamond-msg').innerText = '';
+            document.getElementById('promo-diamond-msg').innerHTML = '';
         }
 
         function toggleFreeAccountModal(show) {
@@ -1375,8 +1379,7 @@
                 return;
             }
 
-            msgDiv.style.color = '#ffcc00';
-            msgDiv.innerText = 'جاري التحقق من كود الماس...';
+            msgDiv.innerHTML = '<img src="https://images.icon-icons.com/390/PNG/96/clockwise-rotation_38553.png" alt="Checking..." style="width: 22px; height: 22px; object-fit: contain; animation: spinImage 1s linear infinite; vertical-align: middle;">';
 
             try {
                 const response = await fetch('vip.diamond.txt?' + new Date().getTime());
@@ -1422,8 +1425,7 @@
                     await setDiamondPoints(currentPts + foundPoints);
                     localStorage.setItem(redeemedKey, 'true');
                     
-                    msgDiv.style.color = '#00ff66';
-                    msgDiv.innerText = `تم إضافة ${foundPoints} نقطة ماس بنجاح!`;
+                    msgDiv.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 6px;"><img src="https://images.icon-icons.com/1904/PNG/96/correct_121331.png" alt="Success" style="width: 20px; height: 20px; object-fit: contain;"><span style="color: #00ff66; font-weight: 900;">تم إضافة ${foundPoints} نقطة ماس بنجاح!</span></div>`;
                     setTimeout(() => {
                         toggleDiamondPointsModal(false);
                     }, 1500);
