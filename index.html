@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- استدعاء مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- استدعاء مكتبة Google Sign-In SDK -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
             box-sizing: border-box;
@@ -43,7 +41,7 @@
             position: relative;
         }
 
-        /* مجموعة الأزرار في أعلى اليسار (زر الرسائل وزر جوجل بجانبه) */
+        /* مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر الإعدادات بجانبه) */
         .top-left-group {
             position: absolute;
             top: 15px;
@@ -54,35 +52,12 @@
             z-index: 10;
         }
 
-        /* زر الرسائل في أعلى اليسار لوحده تماماً وبدون خلفية */
+        /* زر الإشعارات في أعلى اليسار داخل دائرة تشبه زر الإعدادات تماماً */
         .msg-top-btn {
             position: relative;
             width: 28px;
             height: 28px;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .msg-top-btn img {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-            filter: invert(1);
-            transition: transform 0.3s ease;
-        }
-        .msg-top-btn:hover img {
-            transform: scale(1.1);
-        }
-
-        /* زر تسجيل الدخول بجوجل في أعلى اليسار بجانب الرسائل */
-        .google-login-btn {
-            width: 28px;
-            height: 28px;
-            background: #141414;
+            background-color: #141414;
             border: 1px solid #262626;
             border-radius: 50%;
             display: flex;
@@ -91,18 +66,22 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .google-login-btn img {
+        .msg-top-btn img {
             width: 14px;
             height: 14px;
             object-fit: contain;
+            filter: invert(1);
+            transition: transform 0.3s ease;
         }
-        .google-login-btn:hover {
+        .msg-top-btn:hover {
             border-color: #737373;
             background-color: #1c1c1c;
+        }
+        .msg-top-btn:hover img {
             transform: scale(1.1);
         }
 
-        /* مجموعة الأزرار الأخرى (النقاط والمساعدة) في أعلى اليمين */
+        /* مجموعة الأزرار الأخرى (النقاط فقط) في أعلى اليمين */
         .top-right-group {
             position: absolute;
             top: 15px;
@@ -140,7 +119,7 @@
             background-color: #141414;
             border: 1px solid #262626;
             border-radius: 50%;
-            color: #e5e5e5;
+            color: #ffffff; /* تم توحيد لون النص والأيقونة للأبيض المرتب */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -493,17 +472,20 @@
             text-decoration: underline;
         }
 
-        /* تصميم بطاقات الحسابات المجانية */
+        /* تصميم بطاقات الحسابات المجانية (مربعات بأركان دائرية حجم 10 مع الخلفية المحددة) */
         .account-card {
-            background-color: #181818;
+            background-image: url('https://i.ibb.co/fVBvNmpm/924eb361-30d6-4a98-bc0f-82c8c33836a5.jpg');
+            background-size: cover;
+            background-position: center;
             border: 1px solid #262626;
             border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             text-align: right;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
         .account-info {
             font-size: 12px;
@@ -512,12 +494,34 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 8px;
+            border-radius: 8px;
         }
         .account-pass-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 8px;
+            border-radius: 8px;
+        }
+        .buy-account-btn {
+            background-color: #ffcc00;
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .buy-account-btn:hover {
+            background-color: #e6b800;
         }
         .action-icon-btn {
             background: transparent;
@@ -544,25 +548,22 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر تسجيل الدخول بجوجل) -->
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر الإعدادات بجانبه بلون أبيض مرتب) -->
         <div class="top-left-group">
             <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
                 <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
                 <div id="msgNotificationDot" class="msg-dot"></div>
             </div>
-            <div class="google-login-btn" onclick="loginWithGoogle()" title="تسجيل الدخول باستخدام جوجل">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Login">
+            <div class="help-btn" onclick="toggleModal(true)" title="الإعدادات">
+                <img src="https://images.icon-icons.com/1558/PNG/96/353407-cog-settings_107485.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain; filter: invert(1);">
             </div>
         </div>
 
-        <!-- مجموعة النقاط والمساعدة في أعلى اليمين -->
+        <!-- مجموعة النقاط في أعلى اليمين -->
         <div class="top-right-group">
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
                 <span id="points-num" style="font-weight: 900;">0</span>
-            </div>
-            <div class="help-btn" onclick="toggleModal(true)" title="الإعدادات">
-                <img src="https://images.icon-icons.com/1558/PNG/96/353407-cog-settings_107485.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain; filter: invert(1);">
             </div>
         </div>
 
@@ -570,22 +571,29 @@
             <img src="https://i.ibb.co/6R2C1JTt/Picsart-26-11-11-08-32-29-608.png" alt="Profile Picture" class="profile-pic">
         </div>
 
-        <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn">
+        <!-- زر DOWNLOAD FF الرئيسي الذي يفتح نافذة عرض الأزرار -->
+        <div onclick="toggleDownloadModal(true)" class="link-card" id="main-download-ff-btn">
             <div class="link-content">
                 <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
-                    <h3 id="download-title" style="font-weight: 900;">
-                        𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
-                        <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                            <span style="font-weight: 900;">20</span>
-                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
-                        </span>
-                    </h3>
-                    <p id="download-sub"></p>
+                    <h3 style="font-weight: 900;">𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅</h3>
+                    <p></p>
                 </div>
             </div>
-            <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
+            <i class="fas fa-arrow-left arrow-icon"></i>
         </div>
+
+        <!-- زر OPEN AN FF XMODZ الجديد -->
+        <a href="https://unlockffbeta.com/" target="_blank" class="link-card">
+            <div class="link-content">
+                <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
+                <div class="link-text">
+                    <h3 style="font-weight: 900;">𝐎𝐏𝐄𝐍 𝐀𝐍 𝐅𝐅 𝐗𝐌𝐎𝐃𝐙</h3>
+                    <p></p>
+                </div>
+            </div>
+            <i class="fas fa-arrow-left arrow-icon"></i>
+        </a>
 
         <a href="https://register.samosasmobiles.dpdns.org/" target="_blank" class="link-card">
             <div class="link-content">
@@ -667,6 +675,76 @@
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
             اضغط على إعلان لتطوير الموقع الرسمي الخاص بنا ولن تخسر شيئاً
+        </div>
+    </div>
+
+    <!-- نافذة عرض أزرار التحميل الثلاثة -->
+    <div id="downloadModal" class="modal-overlay" onclick="handleModalClick(event, 'downloadModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="toggleDownloadModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <i class="fas fa-download" style="color: #ffcc00;"></i>
+                    <span style="font-weight: 900;">اختر نسخة التحميل</span>
+                </div>
+                <div class="msg-items-container">
+                    <!-- زر DOWNLOAD FF 2022 -->
+                    <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn" style="margin-bottom: 10px;">
+                        <div class="link-content">
+                            <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
+                            <div class="link-text">
+                                <h3 id="download-title" style="font-weight: 900;">
+                                    𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
+                                    <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                                        <span style="font-weight: 900;">20</span>
+                                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
+                                    </span>
+                                </h3>
+                                <p id="download-sub"></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
+                    </div>
+
+                    <!-- زر DOWNLOAD FF 2019 -->
+                    <div onclick="handleDownload2019Click(event)" class="link-card" id="download-ff-2019-btn" style="margin-bottom: 10px;">
+                        <div class="link-content">
+                            <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
+                            <div class="link-text">
+                                <h3 id="download-2019-title" style="font-weight: 900;">
+                                    𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟏𝟗
+                                    <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                                        <span style="font-weight: 900;">25</span>
+                                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
+                                    </span>
+                                </h3>
+                                <p></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-lock arrow-icon" id="download-2019-icon-status" style="color: #ff4444;"></i>
+                    </div>
+
+                    <!-- زر DOWNLOAD FF XMODZ -->
+                    <div onclick="handleDownloadXmodzClick(event)" class="link-card" id="download-xmodz-btn" style="margin-bottom: 0;">
+                        <div class="link-content">
+                            <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
+                            <div class="link-text">
+                                <h3 id="download-xmodz-title" style="font-weight: 900;">
+                                    𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝐗𝐌𝐎𝐃𝐙
+                                    <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                                        <span style="font-weight: 900;">30</span>
+                                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
+                                    </span>
+                                </h3>
+                                <p></p>
+                            </div>
+                        </div>
+                        <i class="fas fa-lock arrow-icon" id="download-xmodz-icon-status" style="color: #ff4444;"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -807,52 +885,15 @@
         let helpRunning1 = false;
         let helpRunning2 = false;
 
-        // تهيئة Google Identity Services
         window.onload = function() {
-            google.accounts.id.initialize({
-                client_id: '595753304659-d3lk723k6os1i9u7tsdndbk3i79uftlg.apps.googleusercontent.com',
-                callback: handleGoogleSignInResponse
-            });
-            
             loadPointsFromDatabase();
             checkDownloadUnlockStatus();
+            checkDownload2019UnlockStatus();
+            checkDownloadXmodzUnlockStatus();
             checkMessagesNotification();
             checkAdBlocker();
         };
 
-        function loginWithGoogle() {
-            google.accounts.id.prompt((notification) => {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    // في حال عدم ظهور نافذة التحديد التلقائي، يمكن استخدام نافذة منبثقة بديلة أو محاولة الضغط مجدداً
-                }
-            });
-        }
-
-        async function handleGoogleSignInResponse(response) {
-            try {
-                // فك تشفير توكن الاستجابة JWT لمعرفة بيانات المستخدم
-                let base64Url = response.credential.split('.')[1];
-                let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-                
-                let userInfo = JSON.parse(jsonPayload);
-                let googleEmail = userInfo.email;
-                let googleName = userInfo.name;
-
-                // ربط البريد بمعرف الجهاز أو حفظه كمعرف فريد أساسي
-                localStorage.setItem('firebase_user_uid', 'google_' + btoa(googleEmail).replace(/=/g, ''));
-                showToast('مرحباً بك ' + googleName + ' تم تسجيل الدخول بنجاح!');
-                
-                await loadPointsFromDatabase();
-            } catch (err) {
-                console.error("خطأ في تسجيل الدخول بجوجل:", err);
-                showToast('فشل تسجيل الدخول باستخدام جوجل');
-            }
-        }
-
-        // دالة للحصول على معرف فريد للجهاز أو المتصفح لحفظ النقاط في Firebase
         function getUserId() {
             let uid = localStorage.getItem('firebase_user_uid');
             if (!uid) {
@@ -862,7 +903,6 @@
             return uid;
         }
 
-        // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
             setTimeout(() => {
                 const adBox = document.getElementById('ad-banner-box');
@@ -895,7 +935,7 @@
         async function loadPointsFromDatabase() {
             try {
                 let pts = await getPoints();
-                setPoints(pts, false); // تحديث العرض دون الحاجة لإعادة رفعها مجدداً
+                setPoints(pts, false);
             } catch (err) {
                 console.error("خطأ في الاتصال بقاعدة البيانات:", err);
             }
@@ -904,6 +944,8 @@
         async function setPoints(pts, saveToFirebase = true) {
             updatePointsDisplayDirect(pts);
             checkDownloadUnlockStatus();
+            checkDownload2019UnlockStatus();
+            checkDownloadXmodzUnlockStatus();
 
             if (saveToFirebase) {
                 try {
@@ -975,6 +1017,63 @@
             }
         }
 
+        function checkDownload2019UnlockStatus() {
+            const unlockTime = parseInt(localStorage.getItem('download_ff_2019_unlock_time')) || 0;
+            const oneDayInMillis = 24 * 60 * 60 * 1000;
+            const currentTime = Date.now();
+
+            const titleEl = document.getElementById('download-2019-title');
+            const iconEl = document.getElementById('download-2019-icon-status');
+
+            if (unlockTime && (currentTime - unlockTime > oneDayInMillis)) {
+                localStorage.removeItem('download_ff_2019_unlocked');
+                localStorage.removeItem('download_ff_2019_unlock_time');
+            }
+
+            const isUnlocked = localStorage.getItem('download_ff_2019_unlocked') === 'true';
+
+            if (isUnlocked) {
+                titleEl.style.color = '#00ff66';
+                iconEl.className = 'fas fa-arrow-left arrow-icon';
+                iconEl.style.color = '#a3a3a3';
+            } else {
+                titleEl.style.color = '#00ff66';
+                iconEl.className = 'fas fa-lock arrow-icon';
+                iconEl.style.color = '#ff4444';
+            }
+        }
+
+        function checkDownloadXmodzUnlockStatus() {
+            const unlockTime = parseInt(localStorage.getItem('download_xmodz_unlock_time')) || 0;
+            const oneDayInMillis = 24 * 60 * 60 * 1000;
+            const currentTime = Date.now();
+
+            const titleEl = document.getElementById('download-xmodz-title');
+            const iconEl = document.getElementById('download-xmodz-icon-status');
+
+            if (unlockTime && (currentTime - unlockTime > oneDayInMillis)) {
+                localStorage.removeItem('download_xmodz_unlocked');
+                localStorage.removeItem('download_xmodz_unlock_time');
+            }
+
+            const isUnlocked = localStorage.getItem('download_xmodz_unlocked') === 'true';
+
+            if (isUnlocked) {
+                titleEl.style.color = '#00ff66';
+                iconEl.className = 'fas fa-arrow-left arrow-icon';
+                iconEl.style.color = '#a3a3a3';
+            } else {
+                titleEl.style.color = '#00ff66';
+                iconEl.className = 'fas fa-lock arrow-icon';
+                iconEl.style.color = '#ff4444';
+            }
+        }
+
+        function toggleDownloadModal(show) {
+            const modal = document.getElementById('downloadModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
         async function handleDownloadClick(event) {
             checkDownloadUnlockStatus();
             const isUnlocked = localStorage.getItem('download_ff_unlocked') === 'true';
@@ -998,11 +1097,56 @@
             }
         }
 
+        async function handleDownload2019Click(event) {
+            checkDownload2019UnlockStatus();
+            const isUnlocked = localStorage.getItem('download_ff_2019_unlocked') === 'true';
+            
+            if (isUnlocked) {
+                window.open('https://www.mediafire.com/file/l5h0cvziqhwpip6/LASTUPDATEBLGEXACT.apk/file', '_blank');
+            } else {
+                let currentPts = await getPoints();
+                if (currentPts >= 25) {
+                    if (confirm('نسخة تعمل بدون كود او تسجيل بحساب فقط ضيف مجانا. هل تريد خصم 25 نقطة للتحميل (صالح لمدة 24 ساعة)؟')) {
+                        await setPoints(currentPts - 25);
+                        localStorage.setItem('download_ff_2019_unlocked', 'true');
+                        localStorage.setItem('download_ff_2019_unlock_time', Date.now());
+                        checkDownload2019UnlockStatus();
+                        showToast('تم فتح قفل زر صالح لمدة يوم');
+                        window.open('https://www.mediafire.com/file/l5h0cvziqhwpip6/LASTUPDATEBLGEXACT.apk/file', '_blank');
+                    }
+                } else {
+                    alert('رصيدك غير كافٍ! تحتاج إلى 25 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
+                }
+            }
+        }
+
+        async function handleDownloadXmodzClick(event) {
+            checkDownloadXmodzUnlockStatus();
+            const isUnlocked = localStorage.getItem('download_xmodz_unlocked') === 'true';
+            
+            if (isUnlocked) {
+                window.open('https://www.mediafire.com/file/l2rvhymtxl7stt3/Z9-YASSINE-XMODZ.apk/file', '_blank');
+            } else {
+                let currentPts = await getPoints();
+                if (currentPts >= 30) {
+                    if (confirm('هل تريد خصم 30 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
+                        await setPoints(currentPts - 30);
+                        localStorage.setItem('download_xmodz_unlocked', 'true');
+                        localStorage.setItem('download_xmodz_unlock_time', Date.now());
+                        checkDownloadXmodzUnlockStatus();
+                        showToast('تم فتح قفل زر صالح لمدة يوم');
+                        window.open('https://www.mediafire.com/file/l2rvhymtxl7stt3/Z9-YASSINE-XMODZ.apk/file', '_blank');
+                    }
+                } else {
+                    alert('رصيدك غير كافٍ! تحتاج إلى 30 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
+                }
+            }
+        }
+
         function toggleModal(show) {
             const modal = document.getElementById('helpModal');
             modal.style.display = show ? 'flex' : 'none';
             if (!show) {
-                // إعادة تعيين الفيديوهات وشريط التحميل عند الإغلاق
                 document.getElementById('help-video-container-1').style.display = 'none';
                 document.getElementById('help-progress-container-1').style.display = 'none';
                 document.getElementById('help-btn-1').style.opacity = '1';
@@ -1039,7 +1183,6 @@
             container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>';
             
             try {
-                // جلب الحسابات المشتراة من Firebase لجميع المستخدمين
                 let remotePurchased = {};
                 try {
                     let res = await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/purchased_accounts.json');
@@ -1058,7 +1201,6 @@
                 const text = await response.text();
                 let lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-                // تصفية الحسابات التي تم شراؤها مسبقاً من قِبل أي مستخدم
                 lines = lines.filter(line => !remotePurchased[btoa(line)]);
 
                 if (lines.length === 0) {
@@ -1085,14 +1227,19 @@
                     let passId = 'pass_' + index;
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
-                        <div style="display: flex; gap: 6px; align-items: center;">
-                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
-                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
-                        </div>
+                        <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this)" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
                     `;
+
+                    const buyBtn = document.createElement('button');
+                    buyBtn.className = 'buy-account-btn';
+                    buyBtn.innerText = 'شراء الحساب (200 نقطة)';
+                    buyBtn.onclick = function() {
+                        buyAccountDirect(line);
+                    };
 
                     card.appendChild(infoRow);
                     card.appendChild(passRow);
+                    card.appendChild(buyBtn);
                     container.appendChild(card);
                 });
 
@@ -1114,47 +1261,26 @@
             }
         }
 
-        async function togglePasswordVisibility(passId, btn, accountLine) {
+        function togglePasswordVisibility(passId, btn) {
             let span = document.getElementById(passId);
-            
             if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
-                let currentPts = await getPoints();
-                if (currentPts < 150) {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لإظهار كلمة المرور.');
-                    return;
-                }
-                
-                if (!confirm('هل تريد خصم 150 نقطة لإظهار كلمة المرور؟ سيتم إخفاء هذا الحساب نهائياً للجميع بعد 30 ثانية.')) {
-                    return;
-                }
-
-                await setPoints(currentPts - 150);
-                showToast('تم خصم 150 نقطة وإظهار كلمة المرور');
-
                 span.style.filter = 'none';
                 btn.title = 'إخفاء كلمة المرور';
-
-                setTimeout(async () => {
-                    await markAccountAsPurchased(accountLine);
-                    showToast('انقضت 30 ثانية، تم شراء الحساب وإخفاؤه للجميع!');
-                    fetchAndDisplayAccounts();
-                }, 30000);
-
             } else {
                 span.style.filter = 'blur(5px)';
                 btn.title = 'إظهار كلمة المرور';
             }
         }
 
-        async function buyAccount(accountLine) {
+        async function buyAccountDirect(accountLine) {
             let currentPts = await getPoints();
-            if (currentPts >= 150) {
-                if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب وإخفائه عن باقي المستخدمين؟')) {
-                    await setPoints(currentPts - 150);
+            if (currentPts >= 200) {
+                if (confirm('هل تريد خصم 200 نقطة لشراء هذا الحساب ونسخ معلوماته؟ سيتم إخفاء الحساب نهائياً لمستخدمين آخرين.')) {
+                    await setPoints(currentPts - 200);
                     await markAccountAsPurchased(accountLine);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
-                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح وإخفاؤه للجميع!');
+                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح وتم إخفاؤه للجميع!');
                     }).catch(err => {
                         console.error('فشل النسخ', err);
                         showToast('تم شراء الحساب وإخفاؤه للجميع بنجاح!');
@@ -1163,7 +1289,7 @@
                     fetchAndDisplayAccounts();
                 }
             } else {
-                alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لشراء حساب.');
+                alert('رصيدك غير كافٍ! تحتاج إلى 200 نقطة لشراء حساب.');
             }
         }
 
@@ -1270,6 +1396,7 @@
                 if (modalId === 'pointsModal') togglePointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
+                if (modalId === 'downloadModal') toggleDownloadModal(false);
             }
         }
 
@@ -1458,7 +1585,6 @@
             }, 50);
         }
 
-        // دالة شريط التحميل الأول (طريقة تركيب سكريبت هيدشوت - 5 ثواني)
         function startHelpProcess1() {
             if (helpRunning1) return;
             helpRunning1 = true;
@@ -1474,7 +1600,7 @@
             progressContainer.style.display = 'block';
 
             let startTime = Date.now();
-            let duration = 5000; // 5 ثواني
+            let duration = 5000;
 
             let timer = setInterval(() => {
                 let elapsed = Date.now() - startTime;
@@ -1495,7 +1621,6 @@
             }, 50);
         }
 
-        // دالة شريط التحميل الثاني (كيفية إنشاء حساب مجاناً - 5 ثواني)
         function startHelpProcess2() {
             if (helpRunning2) return;
             helpRunning2 = true;
@@ -1511,7 +1636,7 @@
             progressContainer.style.display = 'block';
 
             let startTime = Date.now();
-            let duration = 5000; // 5 ثواني
+            let duration = 5000;
 
             let timer = setInterval(() => {
                 let elapsed = Date.now() - startTime;
