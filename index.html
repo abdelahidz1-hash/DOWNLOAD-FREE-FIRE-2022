@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> download FF 2022 </title>
+    <title> download FF  </title>
     <!-- استدعاء خط Cairo بوزن 300 من Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <!-- استدعاء FontAwesome للأيقونات -->
@@ -472,20 +472,33 @@
             text-decoration: underline;
         }
 
-        /* تصميم بطاقات الحسابات المجانية (مربعات بأركان دائرية حجم 10 مع الخلفية المحددة) */
+        /* تصميم بطاقات الحسابات المجانية الجديدة (مربع بأركان دائرية 10) */
         .account-card {
-            background-image: url('https://i.ibb.co/fVBvNmpm/924eb361-30d6-4a98-bc0f-82c8c33836a5.jpg');
-            background-size: cover;
-            background-position: center;
+            background-color: #181818;
             border: 1px solid #262626;
             border-radius: 10px;
             padding: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            text-align: right;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            gap: 10px;
+            text-align: center;
+        }
+        .account-img-box {
+            width: 100%;
+            height: 110px;
+            background-color: #141414;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #262626;
+        }
+        .account-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .account-info {
             font-size: 12px;
@@ -494,34 +507,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px 8px;
-            border-radius: 8px;
+            text-align: right;
         }
         .account-pass-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: 12px;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px 8px;
-            border-radius: 8px;
-        }
-        .buy-account-btn {
-            background-color: #ffcc00;
-            color: #000000;
-            border: none;
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 900;
-            cursor: pointer;
-            text-align: center;
-            transition: background 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-        }
-        .buy-account-btn:hover {
-            background-color: #e6b800;
+            text-align: right;
         }
         .action-icon-btn {
             background: transparent;
@@ -540,6 +533,22 @@
             width: 22px;
             height: 22px;
             object-fit: contain;
+        }
+        .account-buy-btn {
+            width: 100%;
+            background-color: #ffcc00;
+            color: #000000;
+            border: none;
+            border-radius: 10px;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-align: center;
+        }
+        .account-buy-btn:hover {
+            background-color: #e6b800;
         }
     </style>
 </head>
@@ -894,6 +903,7 @@
             checkAdBlocker();
         };
 
+        // دالة للحصول على معرف فريد للجهاز أو المتصفح لحفظ النقاط في Firebase
         function getUserId() {
             let uid = localStorage.getItem('firebase_user_uid');
             if (!uid) {
@@ -903,6 +913,7 @@
             return uid;
         }
 
+        // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
             setTimeout(() => {
                 const adBox = document.getElementById('ad-banner-box');
@@ -1201,10 +1212,8 @@
                 const text = await response.text();
                 let lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
 
-                lines = lines.filter(line => !remotePurchased[btoa(line)]);
-
                 if (lines.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً، تم شراء جميع الحسابات!</div>';
+                    container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لا توجد حسابات متاحة حالياً!</div>';
                     return;
                 }
 
@@ -1213,9 +1222,15 @@
                     let parts = line.split(':');
                     let username = parts[0] ? parts[0].trim() : 'غير معروف';
                     let password = parts[1] ? parts[1].trim() : '';
+                    let encodedKey = btoa(line);
+                    let isAlreadyPurchased = remotePurchased[encodedKey] === true;
 
                     const card = document.createElement('div');
                     card.className = 'account-card';
+
+                    const imgBox = document.createElement('div');
+                    imgBox.className = 'account-img-box';
+                    imgBox.innerHTML = `<img src="https://i.ibb.co/fVBvNmpm/924eb361-30d6-4a98-bc0f-82c8c33836a5.jpg" alt="Account Item">`;
 
                     const infoRow = document.createElement('div');
                     infoRow.className = 'account-info';
@@ -1225,21 +1240,34 @@
                     passRow.className = 'account-pass-row';
 
                     let passId = 'pass_' + index;
+                    let passContent = isAlreadyPurchased ? password : `<span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span>`;
+
                     passRow.innerHTML = `
-                        <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
-                        <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this)" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
+                        <span>كلمة المرور: ${passContent}</span>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            ${!isAlreadyPurchased ? `<button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>` : ''}
+                        </div>
                     `;
 
-                    const buyBtn = document.createElement('button');
-                    buyBtn.className = 'buy-account-btn';
-                    buyBtn.innerText = 'شراء الحساب (200 نقطة)';
-                    buyBtn.onclick = function() {
-                        buyAccountDirect(line);
-                    };
-
+                    card.appendChild(imgBox);
                     card.appendChild(infoRow);
                     card.appendChild(passRow);
-                    card.appendChild(buyBtn);
+
+                    if (isAlreadyPurchased) {
+                        const purchasedMsg = document.createElement('div');
+                        purchasedMsg.style.cssText = 'color: #ff4444; font-size: 11px; font-weight: 900; text-align: center; margin-top: 4px;';
+                        purchasedMsg.innerText = 'تم شراؤه';
+                        card.appendChild(purchasedMsg);
+                    } else {
+                        const buyBtn = document.createElement('button');
+                        buyBtn.className = 'account-buy-btn';
+                        buyBtn.innerText = 'أضف إلى السلة (شراء بـ 200 نقطة)';
+                        buyBtn.onclick = function() {
+                            buyAccount(line);
+                        };
+                        card.appendChild(buyBtn);
+                    }
+
                     container.appendChild(card);
                 });
 
@@ -1261,9 +1289,17 @@
             }
         }
 
-        function togglePasswordVisibility(passId, btn) {
+        async function togglePasswordVisibility(passId, btn, accountLine) {
             let span = document.getElementById(passId);
+            if (!span) return;
+            
             if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
+                let currentPts = await getPoints();
+                if (currentPts < 200) {
+                    alert('رصيدك غير كافٍ! تحتاج إلى 200 نقطة لإظهار كلمة المرور.');
+                    return;
+                }
+            
                 span.style.filter = 'none';
                 btn.title = 'إخفاء كلمة المرور';
             } else {
@@ -1272,24 +1308,24 @@
             }
         }
 
-        async function buyAccountDirect(accountLine) {
+        async function buyAccount(accountLine) {
             let currentPts = await getPoints();
             if (currentPts >= 200) {
-                if (confirm('هل تريد خصم 200 نقطة لشراء هذا الحساب ونسخ معلوماته؟ سيتم إخفاء الحساب نهائياً لمستخدمين آخرين.')) {
+                if (confirm('هل تريد خصم 200 نقطة لشراء هذا الحساب ونسخ معلوماته؟ سيتم ترك رسالة "تم شراؤه" ولن يتمكن شخص آخر من شرائه.')) {
                     await setPoints(currentPts - 200);
                     await markAccountAsPurchased(accountLine);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
-                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح وتم إخفاؤه للجميع!');
+                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح!');
                     }).catch(err => {
                         console.error('فشل النسخ', err);
-                        showToast('تم شراء الحساب وإخفاؤه للجميع بنجاح!');
+                        showToast('تم شراء الحساب بنجاح!');
                     });
                     
                     fetchAndDisplayAccounts();
                 }
             } else {
-                alert('رصيدك غير كافٍ! تحتاج إلى 200 نقطة لشراء حساب.');
+                alert('رصيدك غير كافٍ! تحتاج إلى 200 نقطة لشراء الحساب.');
             }
         }
 
