@@ -546,29 +546,22 @@
             <img src="https://i.ibb.co/6R2C1JTt/Picsart-26-11-11-08-32-29-608.png" alt="Profile Picture" class="profile-pic">
         </div>
 
-        <!-- زر DOWNLOAD FF الرئيسي الذي يفتح نافذة عرض الأزرار -->
-        <div onclick="toggleDownloadModal(true)" class="link-card" id="main-download-ff-btn">
+        <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn">
             <div class="link-content">
                 <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅</h3>
-                    <p></p>
+                    <h3 id="download-title" style="font-weight: 900;">
+                        𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
+                        <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                            <span style="font-weight: 900;">20</span>
+                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
+                        </span>
+                    </h3>
+                    <p id="download-sub"></p>
                 </div>
             </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
+            <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
         </div>
-
-        <!-- زر OPEN AN FF XMODZ الجديد -->
-        <a href="https://unlockffbeta.com/" target="_blank" class="link-card">
-            <div class="link-content">
-                <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
-                <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐎𝐏𝐄𝐍 𝐀𝐍 𝐅𝐅 𝐗𝐌𝐎𝐃𝐙</h3>
-                    <p></p>
-                </div>
-            </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
-        </a>
 
         <a href="https://register.samosasmobiles.dpdns.org/" target="_blank" class="link-card">
             <div class="link-content">
@@ -650,76 +643,6 @@
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
             اضغط على إعلان لتطوير الموقع الرسمي الخاص بنا ولن تخسر شيئاً
-        </div>
-    </div>
-
-    <!-- نافذة عرض أزرار التحميل الثلاثة -->
-    <div id="downloadModal" class="modal-overlay" onclick="handleModalClick(event, 'downloadModal')">
-        <div class="modal-content">
-            <div class="instructions-box" style="margin-top: 0; position: relative;">
-                <div class="close-modal" onclick="toggleDownloadModal(false)">
-                    <i class="fas fa-times"></i>
-                </div>
-                <div class="instructions-title" style="font-weight: 900;">
-                    <i class="fas fa-download" style="color: #ffcc00;"></i>
-                    <span style="font-weight: 900;">اختر نسخة التحميل</span>
-                </div>
-                <div class="msg-items-container">
-                    <!-- زر DOWNLOAD FF 2022 -->
-                    <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn" style="margin-bottom: 10px;">
-                        <div class="link-content">
-                            <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
-                            <div class="link-text">
-                                <h3 id="download-title" style="font-weight: 900;">
-                                    𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
-                                    <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                                        <span style="font-weight: 900;">20</span>
-                                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
-                                    </span>
-                                </h3>
-                                <p id="download-sub"></p>
-                            </div>
-                        </div>
-                        <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
-                    </div>
-
-                    <!-- زر DOWNLOAD FF 2019 -->
-                    <div onclick="handleDownload2019Click(event)" class="link-card" id="download-ff-2019-btn" style="margin-bottom: 10px;">
-                        <div class="link-content">
-                            <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
-                            <div class="link-text">
-                                <h3 id="download-2019-title" style="font-weight: 900;">
-                                    𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟏𝟗
-                                    <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                                        <span style="font-weight: 900;">25</span>
-                                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
-                                    </span>
-                                </h3>
-                                <p></p>
-                            </div>
-                        </div>
-                        <i class="fas fa-lock arrow-icon" id="download-2019-icon-status" style="color: #ff4444;"></i>
-                    </div>
-
-                    <!-- زر DOWNLOAD FF XMODZ -->
-                    <div onclick="handleDownloadXmodzClick(event)" class="link-card" id="download-xmodz-btn" style="margin-bottom: 0;">
-                        <div class="link-content">
-                            <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
-                            <div class="link-text">
-                                <h3 id="download-xmodz-title" style="font-weight: 900;">
-                                    𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝐗𝐌𝐎𝐃𝐙
-                                    <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                                        <span style="font-weight: 900;">30</span>
-                                        <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
-                                    </span>
-                                </h3>
-                                <p></p>
-                            </div>
-                        </div>
-                        <i class="fas fa-lock arrow-icon" id="download-xmodz-icon-status" style="color: #ff4444;"></i>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -863,8 +786,6 @@
         window.onload = function() {
             loadPointsFromDatabase();
             checkDownloadUnlockStatus();
-            checkDownload2019UnlockStatus();
-            checkDownloadXmodzUnlockStatus();
             checkMessagesNotification();
             checkAdBlocker();
         };
@@ -921,8 +842,6 @@
         async function setPoints(pts, saveToFirebase = true) {
             updatePointsDisplayDirect(pts);
             checkDownloadUnlockStatus();
-            checkDownload2019UnlockStatus();
-            checkDownloadXmodzUnlockStatus();
 
             if (saveToFirebase) {
                 try {
@@ -994,63 +913,6 @@
             }
         }
 
-        function checkDownload2019UnlockStatus() {
-            const unlockTime = parseInt(localStorage.getItem('download_ff_2019_unlock_time')) || 0;
-            const oneDayInMillis = 24 * 60 * 60 * 1000;
-            const currentTime = Date.now();
-
-            const titleEl = document.getElementById('download-2019-title');
-            const iconEl = document.getElementById('download-2019-icon-status');
-
-            if (unlockTime && (currentTime - unlockTime > oneDayInMillis)) {
-                localStorage.removeItem('download_ff_2019_unlocked');
-                localStorage.removeItem('download_ff_2019_unlock_time');
-            }
-
-            const isUnlocked = localStorage.getItem('download_ff_2019_unlocked') === 'true';
-
-            if (isUnlocked) {
-                titleEl.style.color = '#00ff66';
-                iconEl.className = 'fas fa-arrow-left arrow-icon';
-                iconEl.style.color = '#a3a3a3';
-            } else {
-                titleEl.style.color = '#00ff66';
-                iconEl.className = 'fas fa-lock arrow-icon';
-                iconEl.style.color = '#ff4444';
-            }
-        }
-
-        function checkDownloadXmodzUnlockStatus() {
-            const unlockTime = parseInt(localStorage.getItem('download_xmodz_unlock_time')) || 0;
-            const oneDayInMillis = 24 * 60 * 60 * 1000;
-            const currentTime = Date.now();
-
-            const titleEl = document.getElementById('download-xmodz-title');
-            const iconEl = document.getElementById('download-xmodz-icon-status');
-
-            if (unlockTime && (currentTime - unlockTime > oneDayInMillis)) {
-                localStorage.removeItem('download_xmodz_unlocked');
-                localStorage.removeItem('download_xmodz_unlock_time');
-            }
-
-            const isUnlocked = localStorage.getItem('download_xmodz_unlocked') === 'true';
-
-            if (isUnlocked) {
-                titleEl.style.color = '#00ff66';
-                iconEl.className = 'fas fa-arrow-left arrow-icon';
-                iconEl.style.color = '#a3a3a3';
-            } else {
-                titleEl.style.color = '#00ff66';
-                iconEl.className = 'fas fa-lock arrow-icon';
-                iconEl.style.color = '#ff4444';
-            }
-        }
-
-        function toggleDownloadModal(show) {
-            const modal = document.getElementById('downloadModal');
-            modal.style.display = show ? 'flex' : 'none';
-        }
-
         async function handleDownloadClick(event) {
             checkDownloadUnlockStatus();
             const isUnlocked = localStorage.getItem('download_ff_unlocked') === 'true';
@@ -1070,52 +932,6 @@
                     }
                 } else {
                     alert('رصيدك غير كافٍ! تحتاج إلى 20 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
-                }
-            }
-        }
-
-        async function handleDownload2019Click(event) {
-            checkDownload2019UnlockStatus();
-            const isUnlocked = localStorage.getItem('download_ff_2019_unlocked') === 'true';
-            
-            if (isUnlocked) {
-                window.open('https://www.mediafire.com/file/l5h0cvziqhwpip6/LASTUPDATEBLGEXACT.apk/file', '_blank');
-            } else {
-                let currentPts = await getPoints();
-                if (currentPts >= 25) {
-                    if (confirm('نسخة تعمل بدون كود او تسجيل بحساب فقط ضيف مجانا. هل تريد خصم 25 نقطة للتحميل (صالح لمدة 24 ساعة)؟')) {
-                        await setPoints(currentPts - 25);
-                        localStorage.setItem('download_ff_2019_unlocked', 'true');
-                        localStorage.setItem('download_ff_2019_unlock_time', Date.now());
-                        checkDownload2019UnlockStatus();
-                        showToast('تم فتح قفل زر صالح لمدة يوم');
-                        window.open('https://www.mediafire.com/file/l5h0cvziqhwpip6/LASTUPDATEBLGEXACT.apk/file', '_blank');
-                    }
-                } else {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 25 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
-                }
-            }
-        }
-
-        async function handleDownloadXmodzClick(event) {
-            checkDownloadXmodzUnlockStatus();
-            const isUnlocked = localStorage.getItem('download_xmodz_unlocked') === 'true';
-            
-            if (isUnlocked) {
-                window.open('https://www.mediafire.com/file/l2rvhymtxl7stt3/Z9-YASSINE-XMODZ.apk/file', '_blank');
-            } else {
-                let currentPts = await getPoints();
-                if (currentPts >= 30) {
-                    if (confirm('هل تريد خصم 30 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
-                        await setPoints(currentPts - 30);
-                        localStorage.setItem('download_xmodz_unlocked', 'true');
-                        localStorage.setItem('download_xmodz_unlock_time', Date.now());
-                        checkDownloadXmodzUnlockStatus();
-                        showToast('تم فتح قفل زر صالح لمدة يوم');
-                        window.open('https://www.mediafire.com/file/l2rvhymtxl7stt3/Z9-YASSINE-XMODZ.apk/file', '_blank');
-                    }
-                } else {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 30 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
                 }
             }
         }
@@ -1389,7 +1205,6 @@
                 if (modalId === 'pointsModal') togglePointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
-                if (modalId === 'downloadModal') toggleDownloadModal(false);
             }
         }
 
