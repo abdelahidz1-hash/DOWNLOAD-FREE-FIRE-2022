@@ -534,11 +534,15 @@
             </div>
         </div>
 
-        <!-- مجموعة النقاط في أعلى اليمين -->
+        <!-- مجموعة النقاط في أعلى اليمين (الزر القديم والزر الجديد بالأيقونة الجديدة) -->
         <div class="top-right-group">
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
                 <span id="points-num" style="font-weight: 900;">0</span>
+            </div>
+            <div class="points-badge" id="user-diamond-points" title="نقاط الماس الحالية" onclick="toggleDiamondPointsModal(true)">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png" alt="Diamond Icon" style="width: 14px; height: 14px; object-fit: contain;">
+                <span id="diamond-points-num" style="font-weight: 900;">0</span>
             </div>
         </div>
 
@@ -765,6 +769,29 @@
         </div>
     </div>
 
+    <!-- نافذة أكواد الماس الجديدة المعتمدة على vip.diamond.txt -->
+    <div id="diamondPointsModal" class="modal-overlay" onclick="handleModalClick(event, 'diamondPointsModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="toggleDiamondPointsModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png" alt="Diamond Gift Icon" style="width: 18px; height: 18px; object-fit: contain;">
+                    <span style="font-weight: 900;">VIP DIAMOND CODES</span>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; margin-bottom: 12px; font-weight: 900;">
+                    أدخل كود الماس للحصول على النقاط:
+                </div>
+                <input type="text" id="promoDiamondCodeInput" class="promo-input" placeholder="أدخل كود الماس هنا..." style="font-weight: 900;">
+                <button class="promo-submit-btn" onclick="submitDiamondPromoCode()" style="font-weight: 900;">
+                    <img src="https://images.icon-icons.com/5232/PNG/96/294060_paper-plane-icon.png" alt="Send">
+                </button>
+                <div id="promo-diamond-msg" style="font-weight: 900;"></div>
+            </div>
+        </div>
+    </div>
+
     <style>
         @keyframes spinHourglass {
             0% { transform: rotate(0deg); }
@@ -785,6 +812,7 @@
 
         window.onload = function() {
             loadPointsFromDatabase();
+            loadDiamondPointsFromDatabase();
             checkDownloadUnlockStatus();
             checkMessagesNotification();
             checkAdBlocker();
@@ -854,6 +882,52 @@
                     console.error("خطأ في حفظ النقاط:", err);
                 }
             }
+        }
+
+        // دوال خاصة بنقاط الماس الجديدة وجلبها من فايربيس
+        async function getDiamondPoints() {
+            try {
+                let uid = getUserId();
+                let response = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/diamond_points.json`);
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data !== null) {
+                        return parseInt(data) || 0;
+                    }
+                }
+            } catch (err) {
+                console.error("خطأ في جلب نقاط الماس:", err);
+            }
+            return 0;
+        }
+
+        async function loadDiamondPointsFromDatabase() {
+            try {
+                let pts = await getDiamondPoints();
+                setDiamondPoints(pts, false);
+            } catch (err) {
+                console.error("خطأ في الاتصال بقاعدة البيانات للماس:", err);
+            }
+        }
+
+        async function setDiamondPoints(pts, saveToFirebase = true) {
+            updateDiamondPointsDisplayDirect(pts);
+
+            if (saveToFirebase) {
+                try {
+                    let uid = getUserId();
+                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/diamond_points.json`, {
+                        method: 'PUT',
+                        body: JSON.stringify(pts)
+                    });
+                } catch (err) {
+                    console.error("خطأ في حفظ نقاط الماس:", err);
+                }
+            }
+        }
+
+        function updateDiamondPointsDisplayDirect(pts) {
+            document.getElementById('diamond-points-num').innerText = formatLargeNumber(pts);
         }
 
         function formatLargeNumber(num) {
@@ -959,6 +1033,13 @@
             modal.style.display = show ? 'flex' : 'none';
             document.getElementById('promoCodeInput').value = '';
             document.getElementById('promo-msg').innerText = '';
+        }
+
+        function toggleDiamondPointsModal(show) {
+            const modal = document.getElementById('diamondPointsModal');
+            modal.style.display = show ? 'flex' : 'none';
+            document.getElementById('promoDiamondCodeInput').value = '';
+            document.getElementById('promo-diamond-msg').innerText = '';
         }
 
         function toggleFreeAccountModal(show) {
@@ -1203,6 +1284,7 @@
             if (event.target.id === modalId) {
                 if (modalId === 'helpModal') toggleModal(false);
                 if (modalId === 'pointsModal') togglePointsModal(false);
+                if (modalId === 'diamondPointsModal') toggleDiamondPointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
             }
@@ -1279,6 +1361,81 @@
                 console.error(err);
                 msgDiv.style.color = '#ff4444';
                 msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف cod.gift.';
+            }
+        }
+
+        // دالة التحقق من أكواد الماس المأخوذة من vip.diamond.txt
+        async function submitDiamondPromoCode() {
+            const codeInput = document.getElementById('promoDiamondCodeInput').value.trim();
+            const msgDiv = document.getElementById('promo-diamond-msg');
+
+            if (!codeInput) {
+                msgDiv.style.color = '#ff4444';
+                msgDiv.innerText = 'الرجاء إدخال كود الماس أولاً.';
+                return;
+            }
+
+            msgDiv.style.color = '#ffcc00';
+            msgDiv.innerText = 'جاري التحقق من كود الماس...';
+
+            try {
+                const response = await fetch('vip.diamond.txt?' + new Date().getTime());
+                
+                if (!response.ok) {
+                    throw new Error('فشل في جلب ملف أكواد الماس');
+                }
+
+                const fileText = await response.text();
+                const lines = fileText.split(/\r?\n/);
+                let foundPoints = 0;
+                let isValid = false;
+
+                for (let line of lines) {
+                    let parts = line.trim().split(':');
+                    let fileCode = parts[0].trim();
+                    let ptsToAdd = parts[1] ? parseInt(parts[1]) : 50;
+
+                    if (fileCode === codeInput) {
+                        isValid = true;
+                        foundPoints = ptsToAdd;
+                        break;
+                    }
+                }
+
+                if (!isValid) {
+                    const cleanCodes = lines.map(l => l.trim()).filter(l => l.length > 0);
+                    if (cleanCodes.includes(codeInput)) {
+                        isValid = true;
+                        foundPoints = 50;
+                    }
+                }
+
+                if (isValid) {
+                    const redeemedKey = 'redeemed_diamond_code_' + codeInput;
+                    if (localStorage.getItem(redeemedKey) === 'true') {
+                        msgDiv.style.color = '#ff4444';
+                        msgDiv.innerText = 'لقد استخدمت هذا الكود مسبقاً!';
+                        return;
+                    }
+
+                    let currentPts = await getDiamondPoints();
+                    await setDiamondPoints(currentPts + foundPoints);
+                    localStorage.setItem(redeemedKey, 'true');
+                    
+                    msgDiv.style.color = '#00ff66';
+                    msgDiv.innerText = `تم إضافة ${foundPoints} نقطة ماس بنجاح!`;
+                    setTimeout(() => {
+                        toggleDiamondPointsModal(false);
+                    }, 1500);
+                } else {
+                    msgDiv.style.color = '#ff4444';
+                    msgDiv.innerText = 'الكود غير صحيح أو انتهت صلاحيته.';
+                }
+
+            } catch (err) {
+                console.error(err);
+                msgDiv.style.color = '#ff4444';
+                msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف vip.diamond.txt.';
             }
         }
 
