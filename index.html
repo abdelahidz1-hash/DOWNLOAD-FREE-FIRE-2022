@@ -393,9 +393,9 @@
             object-fit: contain;
         }
 
-        #promo-msg {
-            font-size: 11px;
-            margin-top: 8px;
+        #promo-msg, #promo-diamond-msg {
+            font-size: 10px;
+            margin-top: 6px;
             text-align: center;
             font-weight: 900;
         }
@@ -1343,6 +1343,7 @@
                     const redeemedKey = 'redeemed_code_' + codeInput;
                     if (localStorage.getItem(redeemedKey) === 'true') {
                         msgDiv.style.color = '#ff4444';
+                        msgDiv.style.fontSize = '9px';
                         msgDiv.innerText = 'لقد استخدمت هذا الكود مسبقاً!';
                         return;
                     }
@@ -1351,19 +1352,21 @@
                     await setPoints(currentPts + foundPoints);
                     localStorage.setItem(redeemedKey, 'true');
                     
-                    msgDiv.style.color = '#00ff66';
-                    msgDiv.innerText = `تم إضافة ${foundPoints} نقطة بنجاح!`;
+                    let formattedPts = formatLargeNumber(foundPoints);
+                    msgDiv.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 4px;"><img src="https://images.icon-icons.com/1904/PNG/96/correct_121331.png" alt="Success" style="width: 16px; height: 16px; object-fit: contain;"><span style="color: #00ff66; font-weight: 900;">+${formattedPts} POINTS</span></div>`;
                     setTimeout(() => {
                         togglePointsModal(false);
                     }, 1500);
                 } else {
                     msgDiv.style.color = '#ff4444';
+                    msgDiv.style.fontSize = '9px';
                     msgDiv.innerText = 'الكود غير صحيح أو انتهت صلاحيته.';
                 }
 
             } catch (err) {
                 console.error(err);
                 msgDiv.style.color = '#ff4444';
+                msgDiv.style.fontSize = '9px';
                 msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف cod.gift.';
             }
         }
@@ -1375,11 +1378,12 @@
 
             if (!codeInput) {
                 msgDiv.style.color = '#ff4444';
+                msgDiv.style.fontSize = '9px';
                 msgDiv.innerText = 'الرجاء إدخال كود الماس أولاً.';
                 return;
             }
 
-            msgDiv.innerHTML = '<img src="https://images.icon-icons.com/390/PNG/96/clockwise-rotation_38553.png" alt="Checking..." style="width: 22px; height: 22px; object-fit: contain; animation: spinImage 1s linear infinite; vertical-align: middle;">';
+            msgDiv.innerHTML = '<img src="https://images.icon-icons.com/390/PNG/96/clockwise-rotation_38553.png" alt="Checking..." style="width: 18px; height: 18px; object-fit: contain; animation: spinImage 1s linear infinite; vertical-align: middle;">';
 
             try {
                 const response = await fetch('vip.diamond.txt?' + new Date().getTime());
@@ -1417,6 +1421,7 @@
                     const redeemedKey = 'redeemed_diamond_code_' + codeInput;
                     if (localStorage.getItem(redeemedKey) === 'true') {
                         msgDiv.style.color = '#ff4444';
+                        msgDiv.style.fontSize = '9px';
                         msgDiv.innerText = 'لقد استخدمت هذا الكود مسبقاً!';
                         return;
                     }
@@ -1425,18 +1430,21 @@
                     await setDiamondPoints(currentPts + foundPoints);
                     localStorage.setItem(redeemedKey, 'true');
                     
-                    msgDiv.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 6px;"><img src="https://images.icon-icons.com/1904/PNG/96/correct_121331.png" alt="Success" style="width: 20px; height: 20px; object-fit: contain;"><span style="color: #00ff66; font-weight: 900;">تم إضافة ${foundPoints} نقطة ماس بنجاح!</span></div>`;
+                    let formattedPts = formatLargeNumber(foundPoints);
+                    msgDiv.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 4px;"><img src="https://images.icon-icons.com/1904/PNG/96/correct_121331.png" alt="Success" style="width: 16px; height: 16px; object-fit: contain;"><span style="color: #00ff66; font-weight: 900;">+${formattedPts} POINTS</span></div>`;
                     setTimeout(() => {
                         toggleDiamondPointsModal(false);
                     }, 1500);
                 } else {
                     msgDiv.style.color = '#ff4444';
+                    msgDiv.style.fontSize = '9px';
                     msgDiv.innerText = 'الكود غير صحيح أو انتهت صلاحيته.';
                 }
 
             } catch (err) {
                 console.error(err);
                 msgDiv.style.color = '#ff4444';
+                msgDiv.style.fontSize = '9px';
                 msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف vip.diamond.txt.';
             }
         }
