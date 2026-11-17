@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> download ff </title>
+    <title> download FF  </title>
     <!-- استدعاء خط Cairo بوزن 300 من Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <!-- استدعاء FontAwesome للأيقونات -->
@@ -614,9 +614,48 @@
             margin-top: 8px;
             font-weight: 900;
         }
+
+        /* شاشة الموقع قيد التطوير بكامل الشاشة */
+        #maintenanceScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+        }
+        .maintenance-box {
+            width: 100%;
+            max-width: 380px;
+            background-color: #0d0d0d;
+            border: 1px solid #262626;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
     </style>
 </head>
 <body>
+
+    <!-- شاشة الموقع قيد التطوير -->
+    <div id="maintenanceScreen">
+        <div class="maintenance-box">
+            <i class="fas fa-tools" style="font-size: 40px; color: #ffcc00;"></i>
+            <div style="font-size: 16px; color: #ffcc00; font-weight: 900;">الموقع قيد التطوير</div>
+            <div style="font-size: 12px; color: #9ca3af; font-weight: 900; line-height: 1.6;">نعتذر منك، الموقع قيد الصيانة والتطوير حالياً. يرجى العودة لاحقاً.</div>
+        </div>
+    </div>
 
     <!-- نافذة تسجيل الدخول الاحترافية قبل الدخول للصفحة -->
     <div id="authModal">
@@ -787,24 +826,32 @@
                 </div>
                 <div class="msg-items-container" style="font-size: 12px; font-weight: 900; text-align: right; gap: 10px;">
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af;">اسم المستخدم:</span>
-                        <span id="acc-modal-username" style="color: #00ff66;">-</span>
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">USERNAME:</span>
+                        <span id="acc-modal-username" style="color: #00ff66; font-weight: 900; font-family: 'Cairo', sans-serif;">-</span>
                     </div>
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af;">إجمالي النقاط:</span>
-                        <span id="acc-modal-points" style="color: #ffcc00;">0</span>
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">PASSWORD:</span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="acc-modal-password" style="color: #ffffff; font-weight: 900; font-family: 'Cairo', sans-serif; filter: blur(5px); transition: filter 0.3s; user-select: none;">-</span>
+                            <button id="acc-pass-toggle-btn" class="action-icon-btn" onclick="toggleAccModalPassword()" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png" alt="إظهار"></button>
+                        </div>
                     </div>
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af;">إجمالي الماس:</span>
-                        <span id="acc-modal-diamonds" style="color: #00ccff;">0</span>
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOTAL POINTS:</span>
+                        <span id="acc-modal-points" style="color: #ffcc00; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
                     </div>
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af;">الحسابات المشتراة:</span>
-                        <span id="acc-modal-purchased-count" style="color: #ffffff;">0</span>
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOTAL DIAMONDS:</span>
+                        <span id="acc-modal-diamonds" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
+                    </div>
+                    <!-- الإضافات الجديدة المطلوبة -->
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">THE NUMBER ON DOWNLOAD:</span>
+                        <span id="acc-modal-downloads" style="color: #ff0055; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
                     </div>
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af;">إجمالي النقاط المنصرفة:</span>
-                        <span id="acc-modal-spent-points" style="color: #ff4444;">0</span>
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">DATE OF LOGIN:</span>
+                        <span id="acc-modal-login-date" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif;">-</span>
                     </div>
                 </div>
             </div>
@@ -975,21 +1022,54 @@
         let helpRunning1 = false;
         let helpRunning2 = false;
 
-        window.onload = function() {
+        window.onload = async function() {
+            await checkMaintenanceStatus();
             checkExistingAuth();
             checkAdBlocker();
         };
+
+        async function checkMaintenanceStatus() {
+            try {
+                let response = await fetch('off.txt?' + new Date().getTime());
+                if (response.ok) {
+                    let text = (await response.text()).trim();
+                    if (text !== 'صحيح') {
+                        document.getElementById('maintenanceScreen').style.display = 'flex';
+                    } else {
+                        document.getElementById('maintenanceScreen').style.display = 'none';
+                    }
+                }
+            } catch (err) {
+                console.error("خطأ في التحقق من ملف off.txt", err);
+            }
+        }
 
         function checkExistingAuth() {
             let savedUser = localStorage.getItem('firebase_current_username');
             if (savedUser) {
                 document.getElementById('authModal').style.display = 'none';
+                verifyAndInitLoginDate(savedUser);
                 loadPointsFromDatabase();
                 loadDiamondPointsFromDatabase();
                 checkDownloadUnlockStatus();
                 checkMessagesNotification();
             } else {
                 document.getElementById('authModal').style.display = 'flex';
+            }
+        }
+
+        async function verifyAndInitLoginDate(username) {
+            let loginDateKey = 'user_login_date_' + username;
+            let existingDate = localStorage.getItem(loginDateKey);
+            if (!existingDate) {
+                let nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+                localStorage.setItem(loginDateKey, nowStr);
+                try {
+                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${username}/login_date.json`, {
+                        method: 'PUT',
+                        body: JSON.stringify(nowStr)
+                    });
+                } catch(e) {}
             }
         }
 
@@ -1004,7 +1084,7 @@
             }
 
             errorMsg.style.color = '#ffcc00';
-            errorMsg.innerText = 'جاري التحقق وحفظ البيانات في قاعدة البيانات...';
+            errorMsg.innerText = 'جاري التحقق من الحساب...';
 
             let safeKey = usernameInput.replace(/[.#$\/\[\]]/g, '_');
 
@@ -1012,10 +1092,21 @@
                 let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}.json`);
                 let userData = await res.json();
 
+                let nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
                 if (userData) {
                     if (userData.password === passwordInput) {
                         localStorage.setItem('firebase_current_username', safeKey);
                         localStorage.setItem('firebase_user_uid', safeKey);
+                        if (!userData.login_date) {
+                            await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}/login_date.json`, {
+                                method: 'PUT',
+                                body: JSON.stringify(nowStr)
+                            });
+                            localStorage.setItem('user_login_date_' + safeKey, nowStr);
+                        } else {
+                            localStorage.setItem('user_login_date_' + safeKey, userData.login_date);
+                        }
                         document.getElementById('authModal').style.display = 'none';
                         loadPointsFromDatabase();
                         loadDiamondPointsFromDatabase();
@@ -1026,11 +1117,20 @@
                         errorMsg.innerText = 'كلمة المرور غير صحيحة لهذا المستخدم!';
                     }
                 } else {
+                    let registeredDevice = localStorage.getItem('firebase_device_already_registered');
+                    if (registeredDevice) {
+                        errorMsg.style.color = '#ff4444';
+                        errorMsg.innerText = 'أنت تمتلك حساباً مسبقاً، لا يمكنك فتح حساب جديد!';
+                        return;
+                    }
+
                     let newUserData = {
                         username: usernameInput,
                         password: passwordInput,
                         points: 0,
-                        diamond_points: 0
+                        diamond_points: 0,
+                        login_date: nowStr,
+                        downloads_count: 0
                     };
 
                     await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}.json`, {
@@ -1038,8 +1138,10 @@
                         body: JSON.stringify(newUserData)
                     });
 
+                    localStorage.setItem('firebase_device_already_registered', 'true');
                     localStorage.setItem('firebase_current_username', safeKey);
                     localStorage.setItem('firebase_user_uid', safeKey);
+                    localStorage.setItem('user_login_date_' + safeKey, nowStr);
                     document.getElementById('authModal').style.display = 'none';
                     loadPointsFromDatabase();
                     loadDiamondPointsFromDatabase();
@@ -1219,11 +1321,24 @@
             }
         }
 
+        async function incrementDownloadCount() {
+            let uid = getUserId();
+            let currentCount = parseInt(localStorage.getItem('user_downloads_count_' + uid) || '0') + 1;
+            localStorage.setItem('user_downloads_count_' + uid, currentCount);
+            try {
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/downloads_count.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(currentCount)
+                });
+            } catch(e) {}
+        }
+
         async function handleDownloadClick(event) {
             checkDownloadUnlockStatus();
             const isUnlocked = localStorage.getItem('download_ff_unlocked') === 'true';
             
             if (isUnlocked) {
+                await incrementDownloadCount();
                 window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
             } else {
                 let currentPts = await getPoints();
@@ -1236,6 +1351,7 @@
                         localStorage.setItem('download_ff_unlock_time', Date.now());
                         checkDownloadUnlockStatus();
                         showToast('تم فتح قفل زر صالح لمدة يوم');
+                        await incrementDownloadCount();
                         window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
                     }
                 } else {
@@ -1281,7 +1397,7 @@
             modal.style.display = show ? 'flex' : 'none';
         }
 
-        // دالة فتح نافذة معلومات الحساب وحساب عدد الحسابات المشتراة والمصروفات
+        // دالة فتح نافذة معلومات الحساب وجلب البيانات (اسم المستخدم وكلمة المرور وتاريخ الدخول وعدد التحميلات)
         async function toggleAccountDetailsModal(show) {
             const modal = document.getElementById('accountDetailsModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -1289,27 +1405,53 @@
                 let username = localStorage.getItem('firebase_current_username') || 'غير معروف';
                 document.getElementById('acc-modal-username').innerText = username;
                 
+                // جلب بيانات الحساب من قاعدة البيانات
+                try {
+                    let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${username}.json`);
+                    let userData = await res.json();
+                    if (userData) {
+                        document.getElementById('acc-modal-password').innerText = userData.password || '****';
+                        document.getElementById('acc-modal-downloads').innerText = userData.downloads_count || 0;
+                        document.getElementById('acc-modal-login-date').innerText = userData.login_date || localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
+                    } else {
+                        document.getElementById('acc-modal-password').innerText = '****';
+                        document.getElementById('acc-modal-downloads').innerText = '0';
+                        document.getElementById('acc-modal-login-date').innerText = 'غير متوفر';
+                    }
+                } catch(e) {
+                    document.getElementById('acc-modal-password').innerText = '****';
+                    document.getElementById('acc-modal-downloads').innerText = localStorage.getItem('user_downloads_count_' + username) || '0';
+                    document.getElementById('acc-modal-login-date').innerText = localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
+                }
+
+                // إعادة إخفاء كلمة المرور افتراضياً عند فتح النافذة
+                let passSpan = document.getElementById('acc-modal-password');
+                let toggleBtnImg = document.querySelector('#acc-pass-toggle-btn img');
+                passSpan.style.filter = 'blur(5px)';
+                toggleBtnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png';
+                document.getElementById('acc-pass-toggle-btn').title = 'إظهار كلمة المرور';
+
                 let pts = await getPoints();
                 let diam = await getDiamondPoints();
                 document.getElementById('acc-modal-points').innerText = formatLargeNumber(pts);
                 document.getElementById('acc-modal-diamonds').innerText = formatLargeNumber(diam);
+            }
+        }
 
-                let spent = localStorage.getItem('user_total_spent_points') || '0';
-                document.getElementById('acc-modal-spent-points').innerText = formatLargeNumber(parseInt(spent));
+        // دالة إظهار/إخفاء كلمة المرور في نافذة الحساب
+        function toggleAccModalPassword() {
+            let span = document.getElementById('acc-modal-password');
+            let btnImg = document.querySelector('#acc-pass-toggle-btn img');
+            let btn = document.getElementById('acc-pass-toggle-btn');
 
-                // حساب عدد الحسابات المشتراة الخاصة بالمستخدم من فايربيس
-                try {
-                    let res = await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/purchased_accounts.json');
-                    if (res.ok) {
-                        let data = await res.json();
-                        let count = data ? Object.keys(data).length : 0;
-                        document.getElementById('acc-modal-purchased-count').innerText = count;
-                    } else {
-                        document.getElementById('acc-modal-purchased-count').innerText = '0';
-                    }
-                } catch (e) {
-                    document.getElementById('acc-modal-purchased-count').innerText = '0';
-                }
+            if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
+                span.style.filter = 'none';
+                btnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png';
+                btn.title = 'إخفاء كلمة المرور';
+            } else {
+                span.style.filter = 'blur(5px)';
+                btnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png';
+                btn.title = 'إظهار كلمة المرور';
             }
         }
 
@@ -1368,7 +1510,7 @@
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
                         <div style="display: flex; gap: 6px; align-items: center;">
-                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png" alt="إظهار"></button>
+                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png" alt="إظهار"></button>
                             <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
                         </div>
                     `;
@@ -1398,6 +1540,7 @@
 
         async function togglePasswordVisibility(passId, btn, accountLine) {
             let span = document.getElementById(passId);
+            let btnImg = btn.querySelector('img');
             
             if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
                 let currentPts = await getPoints();
@@ -1416,6 +1559,7 @@
                 showToast('تم خصم 150 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
+                btnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png';
                 btn.title = 'إخفاء كلمة المرور';
 
                 setTimeout(async () => {
@@ -1426,6 +1570,7 @@
 
             } else {
                 span.style.filter = 'blur(5px)';
+                btnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png';
                 btn.title = 'إظهار كلمة المرور';
             }
         }
@@ -1734,7 +1879,7 @@
             let phase2Duration = 10000; 
             let totalActiveTime = phase1Duration + phase2Duration;
 
-            let timer = setInterval(() => {
+            let timer = setInterval(async () => {
                 let elapsed = Date.now() - startTime;
 
                 if (elapsed <= phase1Duration) {
@@ -1758,6 +1903,7 @@
                     progressBar.style.width = '100%';
                     progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
                     clearInterval(timer);
+                    await incrementDownloadCount();
                     setTimeout(() => {
                         progressContainer.style.display = 'none';
                         window.open('https://www.mediafire.com/file/zuaiunm506aa94p/ꜱᴄʀɪpt+ʜᴇᴀᴅꜱʜᴏᴛ+.zip/file', '_blank');
@@ -1785,7 +1931,7 @@
             let phase2Duration = 10000; 
             let totalActiveTime = phase1Duration + phase2Duration;
 
-            let timer = setInterval(() => {
+            let timer = setInterval(async () => {
                 let elapsed = Date.now() - startTime;
 
                 if (elapsed <= phase1Duration) {
@@ -1818,6 +1964,7 @@
                     progressBar.style.width = '100%';
                     progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
                     clearInterval(timer);
+                    await incrementDownloadCount();
                     setTimeout(() => {
                         progressContainer.style.display = 'none';
                         window.open('https://www.mediafire.com/file/6dvqkc5jyxtqaco/٪𝐀I𝚳+𝐁𝐎𝐓+𝐅𝐅𝟐𝟎𝟐𝟐+𝟏𝟎𝟎.zip/file', '_blank');
