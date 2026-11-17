@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> download FF  </title>
+    <title> download ff </title>
     <!-- استدعاء خط Cairo بوزن 300 من Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <!-- استدعاء FontAwesome للأيقونات -->
@@ -41,7 +41,7 @@
             position: relative;
         }
 
-        /* مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر الإعدادات بجانبه) */
+        /* مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الإشعارات وزر الإعدادات بجانبه) */
         .top-left-group {
             position: absolute;
             top: 15px;
@@ -50,6 +50,35 @@
             align-items: center;
             gap: 6px;
             z-index: 10;
+        }
+
+        /* زر الحساب الشخصي الجديد في أعلى اليسار */
+        .account-top-btn {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .account-top-btn img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+            filter: invert(1);
+            transition: transform 0.3s ease;
+        }
+        .account-top-btn:hover {
+            border-color: #737373;
+            background-color: #1c1c1c;
+        }
+        .account-top-btn:hover img {
+            transform: scale(1.1);
         }
 
         /* زر الإشعارات في أعلى اليسار داخل دائرة تشبه زر الإعدادات تماماً */
@@ -516,15 +545,110 @@
             height: 22px;
             object-fit: contain;
         }
+
+        /* تنسيق نافذة تسجيل الدخول الاحترافية */
+        #authModal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(5, 5, 5, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .auth-box {
+            width: 100%;
+            max-width: 380px;
+            background-color: #0d0d0d;
+            border: 1px solid #262626;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            text-align: center;
+        }
+        .auth-title {
+            font-size: 16px;
+            color: #ffcc00;
+            font-weight: 900;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .auth-input-group {
+            margin-bottom: 12px;
+            text-align: right;
+        }
+        .auth-input-group label {
+            display: block;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+            font-weight: 900;
+        }
+        .auth-btn {
+            width: 100%;
+            background-color: #00ff66;
+            color: #000000;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+        }
+        .auth-btn:hover {
+            background-color: #00cc52;
+        }
+        #auth-error-msg {
+            font-size: 11px;
+            color: #ff4444;
+            margin-top: 8px;
+            font-weight: 900;
+        }
     </style>
 </head>
 <body>
 
+    <!-- نافذة تسجيل الدخول الاحترافية قبل الدخول للصفحة -->
+    <div id="authModal">
+        <div class="auth-box">
+            <div class="auth-title">
+                <i class="fas fa-user-shield" style="color: #ffcc00;"></i>
+                <span>LOG IN DOWNLOAD FF</span>
+            </div>
+            <div style="font-size: 11px; color: #9ca3af; margin-bottom: 15px; font-weight: 900;">
+                الرجاء إدخال اسم المستخدم وكلمة المرور الخاصة بك للمتابعة:
+            </div>
+            <div class="auth-input-group">
+                <label>𝐔𝐒𝐄𝐑𝐍𝐀𝐌𝐄 :</label>
+                <input type="text" id="authUsername" class="promo-input" placeholder="أدخل اسم المستخدم...">
+            </div>
+            <div class="auth-input-group">
+                <label>𝐏𝐀𝐒𝐒𝐖𝐎𝐑𝐃 :</label>
+                <input type="password" id="authPassword" class="promo-input" placeholder="أدخل كلمة المرور...">
+            </div>
+            <button class="auth-btn" onclick="handleUserAuthentication()">LOG IN</button>
+            <div id="auth-error-msg"></div>
+        </div>
+    </div>
+
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار (زر الإشعارات وزر الإعدادات بجانبه بلون أبيض مرتب) -->
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الإشعارات وزر الإعدادات بجانبه) -->
         <div class="top-left-group">
+            <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="معلومات الحساب">
+                <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Account Info">
+            </div>
             <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
                 <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
                 <div id="msgNotificationDot" class="msg-dot"></div>
@@ -647,6 +771,43 @@
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
             اضغط على إعلان لتطوير الموقع الرسمي الخاص بنا ولن تخسر شيئاً
+        </div>
+    </div>
+
+    <!-- نافذة معلومات الحساب الشخصي الجديدة -->
+    <div id="accountDetailsModal" class="modal-overlay" onclick="handleModalClick(event, 'accountDetailsModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="toggleAccountDetailsModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Account Icon" style="width: 18px; height: 18px; object-fit: contain; filter: invert(1);">
+                    <span style="font-weight: 900;">ACCOUNT INFORMATION</span>
+                </div>
+                <div class="msg-items-container" style="font-size: 12px; font-weight: 900; text-align: right; gap: 10px;">
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9ca3af;">اسم المستخدم:</span>
+                        <span id="acc-modal-username" style="color: #00ff66;">-</span>
+                    </div>
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9ca3af;">إجمالي النقاط:</span>
+                        <span id="acc-modal-points" style="color: #ffcc00;">0</span>
+                    </div>
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9ca3af;">إجمالي الماس:</span>
+                        <span id="acc-modal-diamonds" style="color: #00ccff;">0</span>
+                    </div>
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9ca3af;">الحسابات المشتراة:</span>
+                        <span id="acc-modal-purchased-count" style="color: #ffffff;">0</span>
+                    </div>
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #9ca3af;">إجمالي النقاط المنصرفة:</span>
+                        <span id="acc-modal-spent-points" style="color: #ff4444;">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -815,24 +976,92 @@
         let helpRunning2 = false;
 
         window.onload = function() {
-            loadPointsFromDatabase();
-            loadDiamondPointsFromDatabase();
-            checkDownloadUnlockStatus();
-            checkMessagesNotification();
+            checkExistingAuth();
             checkAdBlocker();
         };
 
-        // دالة للحصول على معرف فريد للجهاز أو المتصفح لحفظ النقاط في Firebase
+        function checkExistingAuth() {
+            let savedUser = localStorage.getItem('firebase_current_username');
+            if (savedUser) {
+                document.getElementById('authModal').style.display = 'none';
+                loadPointsFromDatabase();
+                loadDiamondPointsFromDatabase();
+                checkDownloadUnlockStatus();
+                checkMessagesNotification();
+            } else {
+                document.getElementById('authModal').style.display = 'flex';
+            }
+        }
+
+        async function handleUserAuthentication() {
+            const usernameInput = document.getElementById('authUsername').value.trim();
+            const passwordInput = document.getElementById('authPassword').value.trim();
+            const errorMsg = document.getElementById('auth-error-msg');
+
+            if (!usernameInput || !passwordInput) {
+                errorMsg.innerText = 'يرجى إدخال اسم المستخدم وكلمة المرور.';
+                return;
+            }
+
+            errorMsg.style.color = '#ffcc00';
+            errorMsg.innerText = 'جاري التحقق وحفظ البيانات في قاعدة البيانات...';
+
+            let safeKey = usernameInput.replace(/[.#$\/\[\]]/g, '_');
+
+            try {
+                let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}.json`);
+                let userData = await res.json();
+
+                if (userData) {
+                    if (userData.password === passwordInput) {
+                        localStorage.setItem('firebase_current_username', safeKey);
+                        localStorage.setItem('firebase_user_uid', safeKey);
+                        document.getElementById('authModal').style.display = 'none';
+                        loadPointsFromDatabase();
+                        loadDiamondPointsFromDatabase();
+                        checkDownloadUnlockStatus();
+                        checkMessagesNotification();
+                    } else {
+                        errorMsg.style.color = '#ff4444';
+                        errorMsg.innerText = 'كلمة المرور غير صحيحة لهذا المستخدم!';
+                    }
+                } else {
+                    let newUserData = {
+                        username: usernameInput,
+                        password: passwordInput,
+                        points: 0,
+                        diamond_points: 0
+                    };
+
+                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}.json`, {
+                        method: 'PUT',
+                        body: JSON.stringify(newUserData)
+                    });
+
+                    localStorage.setItem('firebase_current_username', safeKey);
+                    localStorage.setItem('firebase_user_uid', safeKey);
+                    document.getElementById('authModal').style.display = 'none';
+                    loadPointsFromDatabase();
+                    loadDiamondPointsFromDatabase();
+                    checkDownloadUnlockStatus();
+                    checkMessagesNotification();
+                }
+            } catch (err) {
+                console.error(err);
+                errorMsg.style.color = '#ff4444';
+                errorMsg.innerText = 'حدث خطأ في الاتصال بقاعدة البيانات.';
+            }
+        }
+
         function getUserId() {
-            let uid = localStorage.getItem('firebase_user_uid');
+            let uid = localStorage.getItem('firebase_current_username');
             if (!uid) {
-                uid = 'user_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-                localStorage.setItem('firebase_user_uid', uid);
+                uid = 'user_' + Math.random().toString(36).substring(2, 10);
+                localStorage.setItem('firebase_current_username', uid);
             }
             return uid;
         }
 
-        // دالة التحقق من مانع الإعلانات
         function checkAdBlocker() {
             setTimeout(() => {
                 const adBox = document.getElementById('ad-banner-box');
@@ -888,7 +1117,6 @@
             }
         }
 
-        // دوال خاصة بنقاط الماس الجديدة وجلبها من فايربيس
         async function getDiamondPoints() {
             try {
                 let uid = getUserId();
@@ -1002,6 +1230,8 @@
                 if (currentPts >= 20) {
                     if (confirm('هل تريد خصم 20 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
                         await setPoints(currentPts - 20);
+                        let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 20;
+                        localStorage.setItem('user_total_spent_points', spent);
                         localStorage.setItem('download_ff_unlocked', 'true');
                         localStorage.setItem('download_ff_unlock_time', Date.now());
                         checkDownloadUnlockStatus();
@@ -1049,6 +1279,38 @@
         function toggleFreeAccountModal(show) {
             const modal = document.getElementById('freeAccountModal');
             modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // دالة فتح نافذة معلومات الحساب وحساب عدد الحسابات المشتراة والمصروفات
+        async function toggleAccountDetailsModal(show) {
+            const modal = document.getElementById('accountDetailsModal');
+            modal.style.display = show ? 'flex' : 'none';
+            if (show) {
+                let username = localStorage.getItem('firebase_current_username') || 'غير معروف';
+                document.getElementById('acc-modal-username').innerText = username;
+                
+                let pts = await getPoints();
+                let diam = await getDiamondPoints();
+                document.getElementById('acc-modal-points').innerText = formatLargeNumber(pts);
+                document.getElementById('acc-modal-diamonds').innerText = formatLargeNumber(diam);
+
+                let spent = localStorage.getItem('user_total_spent_points') || '0';
+                document.getElementById('acc-modal-spent-points').innerText = formatLargeNumber(parseInt(spent));
+
+                // حساب عدد الحسابات المشتراة الخاصة بالمستخدم من فايربيس
+                try {
+                    let res = await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/purchased_accounts.json');
+                    if (res.ok) {
+                        let data = await res.json();
+                        let count = data ? Object.keys(data).length : 0;
+                        document.getElementById('acc-modal-purchased-count').innerText = count;
+                    } else {
+                        document.getElementById('acc-modal-purchased-count').innerText = '0';
+                    }
+                } catch (e) {
+                    document.getElementById('acc-modal-purchased-count').innerText = '0';
+                }
+            }
         }
 
         async function openFreeAccountModal() {
@@ -1149,6 +1411,8 @@
                 }
 
                 await setPoints(currentPts - 150);
+                let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 150;
+                localStorage.setItem('user_total_spent_points', spent);
                 showToast('تم خصم 150 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
@@ -1171,6 +1435,8 @@
             if (currentPts >= 150) {
                 if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب وإخفائه عن باقي المستخدمين؟')) {
                     await setPoints(currentPts - 150);
+                    let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 150;
+                    localStorage.setItem('user_total_spent_points', spent);
                     await markAccountAsPurchased(accountLine);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
@@ -1291,6 +1557,7 @@
                 if (modalId === 'diamondPointsModal') toggleDiamondPointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
+                if (modalId === 'accountDetailsModal') toggleAccountDetailsModal(false);
             }
         }
 
@@ -1371,7 +1638,6 @@
             }
         }
 
-        // دالة التحقق من أكواد الماس المأخوذة من vip.diamond.txt
         async function submitDiamondPromoCode() {
             const codeInput = document.getElementById('promoDiamondCodeInput').value.trim();
             const msgDiv = document.getElementById('promo-diamond-msg');
