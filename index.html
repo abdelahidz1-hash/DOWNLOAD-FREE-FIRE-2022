@@ -752,7 +752,7 @@
         </div>
 
         <div class="profile-container">
-            <img src="https://i.ibb.co/6R2C1JTt/Picsart-26-11-11-08-32-29-608.png" alt="Profile Picture" class="profile-pic">
+            <img src="https://i.ibb.co/xtSgjDXB/Picsart-26-11-18-08-16-16-398.png" alt="Profile Picture" class="profile-pic">
         </div>
 
         <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn">
@@ -900,7 +900,6 @@
                 <!-- شريط الإدخال والتحكم -->
                 <div style="display: flex; gap: 6px; align-items: center;">
                     <input type="text" id="chatInput" class="promo-input" placeholder="اكتب رسالتك..." style="margin-bottom: 0; flex: 1;">
-                    <button id="micBtn" onclick="toggleVoiceRecording()" class="action-icon-btn" title="تسجيل صوتي" style="background: #181818; border: 1px solid #262626; border-radius: 10px; width: 38px; height: 38px;"><i class="fas fa-microphone" style="color: #ffcc00; font-size: 14px;"></i></button>
                     <button onclick="sendChatMessage()" class="action-icon-btn" title="إرسال" style="background: #ffcc00; border: none; border-radius: 10px; width: 38px; height: 38px;"><i class="fas fa-paper-plane" style="color: #000000; font-size: 14px;"></i></button>
                 </div>
             </div>
@@ -1791,11 +1790,7 @@
             }
         }
 
-        /* دوال نظام الدردشة المدمج مع ميزة المايک، التعديل والحذف */
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
-
+        /* دوال نظام الدردشة المدمج مع ميزة التعديل والحذف */
         async function loadChatMessages() {
             const container = document.getElementById('chat-messages-container');
             try {
@@ -1888,54 +1883,6 @@
                 } catch(e) {
                     showToast('فشل التعديل');
                 }
-            }
-        }
-
-        async function toggleVoiceRecording() {
-            let micBtn = document.getElementById('micBtn');
-            if (!isRecording) {
-                try {
-                    let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
-                    mediaRecorder.onstop = async () => {
-                        let audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                        let reader = new FileReader();
-                        reader.readAsDataURL(audioBlob);
-                        reader.onloadend = async function() {
-                            let base64Audio = reader.result;
-                            let currentUser = localStorage.getItem('firebase_current_username') || 'user';
-                            let timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            try {
-                                await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/community_chat.json', {
-                                    method: 'POST',
-                                    body: JSON.stringify({
-                                        user: currentUser,
-                                        content: base64Audio,
-                                        type: 'audio',
-                                        time: timeStr
-                                    })
-                                });
-                                loadChatMessages();
-                            } catch(e) {
-                                showToast('فشل إرسال التسجيل الصوتي');
-                            }
-                        };
-                    };
-                    mediaRecorder.start();
-                    isRecording = true;
-                    micBtn.style.background = '#00ff66'; // لون أخضر عند بدء التسجيل
-                    showToast('جاري التسجيل... اضغط مرة أخرى للإيقاف والإرسال');
-                } catch(err) {
-                    alert('تعذر الوصول إلى الميكروفون!');
-                }
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                micBtn.style.background = '#ff4444'; // لون أحمر عند إيقاف التسجيل
             }
         }
 
