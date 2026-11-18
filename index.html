@@ -177,7 +177,7 @@
             background-color: #141414;
             border: 1px solid #262626;
             border-radius: 50%;
-            color: #ffffff;
+            color: #ffffff; /* تم توحيد لون النص والأيقونة للأبيض المرتب */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -200,7 +200,7 @@
             height: 8px;
             background-color: #ff0000;
             border-radius: 50%;
-            display: none;
+            display: none; /* مخفية افتراضياً حتى يتم التحقق من وجود رسائل */
             box-shadow: 0 0 4px #ff0000;
         }
 
@@ -359,6 +359,30 @@
             color: #ffcc00;
         }
 
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+
+        .step-num {
+            background-color: #262626;
+            color: #ff0000;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
         #venom-progress-container, #aimbot-progress-container, #skin-progress-container, #help-progress-container-1, #help-progress-container-2 {
             display: none;
             margin-bottom: 15px;
@@ -425,6 +449,13 @@
             width: 20px;
             height: 20px;
             object-fit: contain;
+        }
+
+        #promo-msg, #promo-diamond-msg {
+            font-size: 10px;
+            margin-top: 6px;
+            text-align: center;
+            font-weight: 900;
         }
 
         #custom-toast {
@@ -499,6 +530,7 @@
             text-decoration: underline;
         }
 
+        /* تصميم بطاقات الحسابات المجانية */
         .account-card {
             background-color: #181818;
             border: 1px solid #262626;
@@ -543,6 +575,7 @@
             object-fit: contain;
         }
 
+        /* تنسيق نافذة تسجيل الدخول الاحترافية */
         #authModal {
             display: flex;
             position: fixed;
@@ -626,6 +659,7 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* شاشة الموقع قيد التطوير بكامل الشاشة */
         #maintenanceScreen {
             display: none;
             position: fixed;
@@ -658,6 +692,7 @@
 </head>
 <body>
 
+    <!-- شاشة الموقع قيد التطوير -->
     <div id="maintenanceScreen">
         <div class="maintenance-box">
             <i class="fas fa-tools" style="font-size: 40px; color: #ffcc00;"></i>
@@ -666,6 +701,7 @@
         </div>
     </div>
 
+    <!-- نافذة تسجيل الدخول الاحترافية قبل الدخول للصفحة -->
     <div id="authModal">
         <div class="auth-box">
             <div class="auth-img-container">
@@ -686,6 +722,7 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
         <div class="top-left-group">
             <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="معلومات الحساب">
                 <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Account Info">
@@ -702,6 +739,7 @@
             </div>
         </div>
 
+        <!-- مجموعة النقاط في أعلى اليمين -->
         <div class="top-right-group">
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
@@ -745,6 +783,7 @@
             <i class="fas fa-arrow-left arrow-icon"></i>
         </a>
 
+        <!-- تم إضافة id="free-account-btn" هنا لربط إعلان الفيديو بالمنصة -->
         <div class="link-card" id="free-account-btn" onclick="openFreeAccountModal()">
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" class="venom-icon">
@@ -843,6 +882,7 @@
         </div>
     </div>
 
+    <!-- نافذة الدردشة الجديدة -->
     <div id="chatModal" class="modal-overlay" onclick="handleModalClick(event, 'chatModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative; padding-bottom: 12px;">
@@ -853,9 +893,11 @@
                     <i class="fas fa-comments" style="color: #00ff66;"></i>
                     <span style="font-weight: 900;">COMMUNITY CHAT</span>
                 </div>
+                <!-- صندوق عرض الرسائل -->
                 <div id="chat-messages-container" class="msg-items-container" style="max-height: 280px; min-height: 200px; background: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; margin-bottom: 10px;">
                     <div style="text-align: center; color: #9ca3af; font-size: 11px; font-weight: 900;">لا توجد رسائل بعد، ابدأ الدردشة...</div>
                 </div>
+                <!-- شريط الإدخال والتحكم -->
                 <div style="display: flex; gap: 6px; align-items: center;">
                     <input type="text" id="chatInput" class="promo-input" placeholder="اكتب رسالتك..." style="margin-bottom: 0; flex: 1;">
                     <button onclick="sendChatMessage()" class="action-icon-btn" title="إرسال" style="background: #ffcc00; border: none; border-radius: 10px; width: 38px; height: 38px;"><i class="fas fa-paper-plane" style="color: #000000; font-size: 14px;"></i></button>
@@ -864,6 +906,7 @@
         </div>
     </div>
 
+    <!-- نافذة معلومات الحساب الشخصي الجديدة -->
     <div id="accountDetailsModal" class="modal-overlay" onclick="handleModalClick(event, 'accountDetailsModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -886,10 +929,10 @@
                             <button id="acc-pass-toggle-btn" class="action-icon-btn" onclick="toggleAccModalPassword()" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png" alt="إظهار"></button>
                         </div>
                     </div>
-                    <!-- عرض التوكن الجديد لكل جهاز -->
+                    <!-- إضافة حقل عرض token_account -->
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">DEVICE TOKEN:</span>
-                        <span id="acc-modal-token" style="color: #ffcc00; font-weight: 900; font-family: 'Cairo', sans-serif; word-break: break-all; font-size: 11px;">-</span>
+                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOKEN ACCOUNT:</span>
+                        <span id="acc-modal-token" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif; word-break: break-all; font-size: 10px;">-</span>
                     </div>
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOTAL POINTS:</span>
@@ -912,6 +955,7 @@
         </div>
     </div>
 
+    <!-- واجهة GET AN FREE ACCOUNT المنبثقة -->
     <div id="freeAccountModal" class="modal-overlay" onclick="handleModalClick(event, 'freeAccountModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -929,6 +973,7 @@
         </div>
     </div>
 
+    <!-- لافتة الرسائل الجديدة -->
     <div id="msgModal" class="modal-overlay" onclick="handleModalClick(event, 'msgModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -1079,6 +1124,16 @@
             loadChatMessages();
         };
 
+        // دالة لتوليد توكن فريد يتكون من 20 حرفاً بالشكل المطلوب (FF-NEW-YEA-R-XXXX)
+        function generate20CharToken() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'FF-NEW-YEA-R-'; // 13 حرف ثابت
+            for (let i = 0; i < 7; i++) { // إضافة 7 أحرف عشوائية ليصبح الإجمالي 20 حرفاً
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
         async function checkMaintenanceStatus() {
             try {
                 let response = await fetch('off.txt?' + new Date().getTime());
@@ -1095,38 +1150,11 @@
             }
         }
 
-        // دالة توليد وتخزين توكن فريد لكل جهاز بطول 15 حرفاً يبدأ بـ FF-
-        async function getOrGenerateDeviceToken(username) {
-            let tokenKey = 'device_token_' + username;
-            let existingToken = localStorage.getItem(tokenKey);
-            
-            if (!existingToken) {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let randomPart = '';
-                for (let i = 0; i < 11; i++) {
-                    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                existingToken = 'FF-' + randomPart; // مجموع الحروف 15 حرفاً (FF- + 11 عشوائي = 14/15)
-                localStorage.setItem(tokenKey, existingToken);
-            }
-
-            // ربط التوكن وحفظه في Firebase تحت token_account
-            try {
-                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${username}/token_account.json`, {
-                    method: 'PUT',
-                    body: JSON.stringify(existingToken)
-                });
-            } catch(e) {}
-
-            return existingToken;
-        }
-
         function checkExistingAuth() {
             let savedUser = localStorage.getItem('firebase_current_username');
             if (savedUser) {
                 document.getElementById('authModal').style.display = 'none';
                 verifyAndInitLoginDate(savedUser);
-                getOrGenerateDeviceToken(savedUser);
                 loadPointsFromDatabase();
                 loadDiamondPointsFromDatabase();
                 checkDownloadUnlockStatus();
@@ -1176,6 +1204,18 @@
                     if (userData.password === passwordInput) {
                         localStorage.setItem('firebase_current_username', safeKey);
                         localStorage.setItem('firebase_user_uid', safeKey);
+                        
+                        // التحقق من وجود token_account أو توليد واحد جديد وتحديثه
+                        let userToken = userData.token_account;
+                        if (!userToken) {
+                            userToken = generate20CharToken();
+                            await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}/token_account.json`, {
+                                method: 'PUT',
+                                body: JSON.stringify(userToken)
+                            });
+                        }
+                        localStorage.setItem('user_token_account_' + safeKey, userToken);
+
                         if (!userData.login_date) {
                             await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}/login_date.json`, {
                                 method: 'PUT',
@@ -1185,9 +1225,6 @@
                         } else {
                             localStorage.setItem('user_login_date_' + safeKey, userData.login_date);
                         }
-                        
-                        await getOrGenerateDeviceToken(safeKey);
-
                         document.getElementById('authModal').style.display = 'none';
                         loadPointsFromDatabase();
                         loadDiamondPointsFromDatabase();
@@ -1205,13 +1242,17 @@
                         return;
                     }
 
+                    // توليد التوكن الخاص بالجهاز (20 حرفاً)
+                    let newDeviceToken = generate20CharToken();
+
                     let newUserData = {
                         username: usernameInput,
                         password: passwordInput,
                         points: 0,
                         diamond_points: 0,
                         login_date: nowStr,
-                        downloads_count: 0
+                        downloads_count: 0,
+                        token_account: newDeviceToken
                     };
 
                     await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${safeKey}.json`, {
@@ -1222,10 +1263,8 @@
                     localStorage.setItem('firebase_device_already_registered', 'true');
                     localStorage.setItem('firebase_current_username', safeKey);
                     localStorage.setItem('firebase_user_uid', safeKey);
+                    localStorage.setItem('user_token_account_' + safeKey, newDeviceToken);
                     localStorage.setItem('user_login_date_' + safeKey, nowStr);
-                    
-                    await getOrGenerateDeviceToken(safeKey);
-
                     document.getElementById('authModal').style.display = 'none';
                     loadPointsFromDatabase();
                     loadDiamondPointsFromDatabase();
@@ -1365,6 +1404,11 @@
             document.getElementById('points-num').innerText = formatLargeNumber(pts);
         }
 
+        async function updatePointsDisplay() {
+            let pts = await getPoints();
+            document.getElementById('points-num').innerText = formatLargeNumber(pts);
+        }
+
         function showToast(message) {
             const toast = document.getElementById('custom-toast');
             toast.innerText = message;
@@ -1491,27 +1535,23 @@
                 let username = localStorage.getItem('firebase_current_username') || 'غير معروف';
                 document.getElementById('acc-modal-username').innerText = username;
                 
-                // جلب وعرض التوكن الخاص بالجهاز داخل معلومات الحساب
-                let deviceToken = localStorage.getItem('device_token_' + username);
-                if (!deviceToken) {
-                    deviceToken = await getOrGenerateDeviceToken(username);
-                }
-                document.getElementById('acc-modal-token').innerText = deviceToken;
-
                 try {
                     let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${username}.json`);
                     let userData = await res.json();
                     if (userData) {
                         document.getElementById('acc-modal-password').innerText = userData.password || '****';
+                        document.getElementById('acc-modal-token').innerText = userData.token_account || localStorage.getItem('user_token_account_' + username) || 'غير متوفر';
                         document.getElementById('acc-modal-downloads').innerText = userData.downloads_count || 0;
                         document.getElementById('acc-modal-login-date').innerText = userData.login_date || localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
                     } else {
                         document.getElementById('acc-modal-password').innerText = '****';
+                        document.getElementById('acc-modal-token').innerText = 'غير متوفر';
                         document.getElementById('acc-modal-downloads').innerText = '0';
                         document.getElementById('acc-modal-login-date').innerText = 'غير متوفر';
                     }
                 } catch(e) {
                     document.getElementById('acc-modal-password').innerText = '****';
+                    document.getElementById('acc-modal-token').innerText = localStorage.getItem('user_token_account_' + username) || 'غير متوفر';
                     document.getElementById('acc-modal-downloads').innerText = localStorage.getItem('user_downloads_count_' + username) || '0';
                     document.getElementById('acc-modal-login-date').innerText = localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
                 }
@@ -1785,6 +1825,7 @@
             }
         }
 
+        /* دوال نظام الدردشة المدمج مع ميزة التعديل والحذف */
         async function loadChatMessages() {
             const container = document.getElementById('chat-messages-container');
             try {
@@ -1802,7 +1843,12 @@
                     msgDiv.style.cssText = "background: #141414; border: 1px solid #262626; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; text-align: right;";
                     
                     let headerHtml = `<div style="display: flex; justify-content: space-between; font-size: 10px; color: #00ff66; font-weight: 900; margin-bottom: 4px;"><span>${msgObj.user}</span><span>${msgObj.time}</span></div>`;
-                    let contentHtml = `<div id="msg_text_${key}" style="font-size: 12px; color: #ffffff; font-weight: 900; word-break: break-all;">${msgObj.content}</div>`;
+                    let contentHtml = '';
+                    if (msgObj.type === 'audio') {
+                        contentHtml = `<div style="margin: 4px 0;"><audio controls src="${msgObj.content}" style="width: 100%; height: 32px;"></audio></div>`;
+                    } else {
+                        contentHtml = `<div id="msg_text_${key}" style="font-size: 12px; color: #ffffff; font-weight: 900; word-break: break-all;">${msgObj.content}</div>`;
+                    }
 
                     let actionsHtml = '';
                     if (msgObj.user === currentUser) {
