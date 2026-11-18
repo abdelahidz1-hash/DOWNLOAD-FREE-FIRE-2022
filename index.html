@@ -1927,7 +1927,7 @@
                     };
                     mediaRecorder.start();
                     isRecording = true;
-                    micBtn.style.background = '#ff4444';
+                    micBtn.style.background = '#00ff66'; // لون أخضر عند بدء التسجيل
                     showToast('جاري التسجيل... اضغط مرة أخرى للإيقاف والإرسال');
                 } catch(err) {
                     alert('تعذر الوصول إلى الميكروفون!');
@@ -1935,7 +1935,7 @@
             } else {
                 mediaRecorder.stop();
                 isRecording = false;
-                micBtn.style.background = '#181818';
+                micBtn.style.background = '#ff4444'; // لون أحمر عند إيقاف التسجيل
             }
         }
 
@@ -2339,8 +2339,5 @@
             }, 50);
         }
     </script>
-    
-    <!-- كود إعلان الفيديو المرتبط بزر GET AN FREE ACCOUNT -->
-    <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="473055"></script>
 </body>
 </html>
