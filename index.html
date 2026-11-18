@@ -41,7 +41,7 @@
             position: relative;
         }
 
-        /* مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الإشعارات وزر الإعدادات بجانبه) */
+        /* مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) */
         .top-left-group {
             position: absolute;
             top: 15px;
@@ -78,6 +78,35 @@
             background-color: #1c1c1c;
         }
         .account-top-btn:hover img {
+            transform: scale(1.1);
+        }
+
+        /* زر الدردشة الجديد في أعلى اليسار */
+        .chat-top-btn {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .chat-top-btn img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+            filter: invert(1);
+            transition: transform 0.3s ease;
+        }
+        .chat-top-btn:hover {
+            border-color: #737373;
+            background-color: #1c1c1c;
+        }
+        .chat-top-btn:hover img {
             transform: scale(1.1);
         }
 
@@ -354,7 +383,7 @@
             margin-top: 2px;
         }
 
-        #venom-progress-container, #aimbot-progress-container, #help-progress-container-1, #help-progress-container-2 {
+        #venom-progress-container, #aimbot-progress-container, #skin-progress-container, #help-progress-container-1, #help-progress-container-2 {
             display: none;
             margin-bottom: 15px;
             background-color: #141414;
@@ -363,7 +392,7 @@
             padding: 12px;
             text-align: right;
         }
-        #venom-progress-bar-bg, #aimbot-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
+        #venom-progress-bar-bg, #aimbot-progress-bar-bg, #skin-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
             width: 100%;
             height: 8px;
             background-color: #262626;
@@ -371,13 +400,13 @@
             overflow: hidden;
             margin-top: 8px;
         }
-        #venom-progress-bar, #aimbot-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
+        #venom-progress-bar, #aimbot-progress-bar, #skin-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
             width: 0%;
             height: 100%;
             background-color: #ff0000;
             transition: width 0.1s linear;
         }
-        #venom-progress-text, #aimbot-progress-text, #help-progress-text-1, #help-progress-text-2 {
+        #venom-progress-text, #aimbot-progress-text, #skin-progress-text, #help-progress-text-1, #help-progress-text-2 {
             font-size: 11px;
             color: #9ca3af;
         }
@@ -554,65 +583,80 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(5, 5, 5, 0.95);
+            background-color: #080710;
             z-index: 9999;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
         .auth-box {
-            width: 100%;
-            max-width: 380px;
-            background-color: #0d0d0d;
-            border: 1px solid #262626;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            width: 260px;
+            background-color: #1a1a23;
+            border-radius: 30px;
+            padding: 30px 20px;
+            border: 2px solid #000000;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             text-align: center;
+            position: relative;
         }
-        .auth-title {
-            font-size: 16px;
-            color: #ffcc00;
-            font-weight: 900;
-            margin-bottom: 15px;
+        .auth-box * {
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            outline: none;
+            border: none;
+        }
+        .auth-img-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px auto;
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 8px;
+            align-items: center;
         }
-        .auth-input-group {
-            margin-bottom: 12px;
-            text-align: right;
-        }
-        .auth-input-group label {
+        .auth-form-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            font-size: 11px;
-            color: #9ca3af;
-            margin-bottom: 4px;
-            font-weight: 900;
+            border-radius: 50%;
+        }
+        .auth-box label {
+            display: block;
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: left;
+        }
+        .auth-box input {
+            display: block;
+            height: 40px;
+            width: 100%;
+            background-color: #2c2c38;
+            border-radius: 10px;
+            padding: 0 12px;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #ffffff;
         }
         .auth-btn {
+            margin-top: 20px;
             width: 100%;
-            background-color: #00ff66;
-            color: #000000;
-            border: none;
+            background-color: #ffffff;
+            color: #000;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 600;
             border-radius: 12px;
-            padding: 12px;
-            font-size: 13px;
-            font-weight: 900;
             cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
-        }
-        .auth-btn:hover {
-            background-color: #00cc52;
         }
         #auth-error-msg {
             font-size: 11px;
             color: #ff4444;
             margin-top: 8px;
-            font-weight: 900;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
         }
 
         /* شاشة الموقع قيد التطوير بكامل الشاشة */
@@ -660,22 +704,17 @@
     <!-- نافذة تسجيل الدخول الاحترافية قبل الدخول للصفحة -->
     <div id="authModal">
         <div class="auth-box">
-            <div class="auth-title">
-                <i class="fas fa-user-shield" style="color: #ffcc00;"></i>
-                <span>LOG IN DOWNLOAD FF</span>
+            <div class="auth-img-container">
+                <img src="https://i.ibb.co/xtSgjDXB/Picsart-26-11-18-08-16-16-398.png" alt="Logo" class="auth-form-logo">
             </div>
-            <div style="font-size: 11px; color: #9ca3af; margin-bottom: 15px; font-weight: 900;">
-                الرجاء إدخال اسم المستخدم وكلمة المرور الخاصة بك للمتابعة:
-            </div>
-            <div class="auth-input-group">
-                <label>𝐔𝐒𝐄𝐑𝐍𝐀𝐌𝐄 :</label>
-                <input type="text" id="authUsername" class="promo-input" placeholder="أدخل اسم المستخدم...">
-            </div>
-            <div class="auth-input-group">
-                <label>𝐏𝐀𝐒𝐒𝐖𝐎𝐑𝐃 :</label>
-                <input type="password" id="authPassword" class="promo-input" placeholder="أدخل كلمة المرور...">
-            </div>
-            <button class="auth-btn" onclick="handleUserAuthentication()">LOG IN</button>
+
+            <label for="authUsername">𝐮𝐬𝐞𝐫 𝐧𝐚𝐦𝐞</label>
+            <input type="text" placeholder="Email or Phone" id="authUsername">
+
+            <label for="authPassword">𝐩𝐚𝐬𝐬𝐰𝐨𝐫𝐝</label>
+            <input type="password" placeholder="Password" id="authPassword">
+
+            <button class="auth-btn" onclick="handleUserAuthentication()">𝐋𝐎𝐆 𝐈𝐍</button>
             <div id="auth-error-msg"></div>
         </div>
     </div>
@@ -683,21 +722,24 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الإشعارات وزر الإعدادات بجانبه) -->
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
         <div class="top-left-group">
             <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="معلومات الحساب">
                 <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Account Info">
+            </div>
+            <div class="chat-top-btn" onclick="toggleChatModal(true)" title="الدردشة">
+                <img src="https://images.icon-icons.com/1744/PNG/96/3643728-balloon-chat-conversation-speak-word_113413.png" alt="Chat">
             </div>
             <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
                 <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
                 <div id="msgNotificationDot" class="msg-dot"></div>
             </div>
             <div class="help-btn" onclick="toggleModal(true)" title="الإعدادات">
-                <img src="https://images.icon-icons.com/1558/PNG/96/353407-cog-settings_107485.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain; filter: invert(1);">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Prime_Btn_Setting.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain;">
             </div>
         </div>
 
-        <!-- مجموعة النقاط في أعلى اليمين (الزر القديم والزر الجديد بالأيقونة الجديدة) -->
+        <!-- مجموعة النقاط في أعلى اليمين -->
         <div class="top-right-group">
             <div class="points-badge" id="user-points" title="نقاطك الحالية" onclick="togglePointsModal(true)">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Points Icon" style="width: 14px; height: 14px; object-fit: contain;">
@@ -741,7 +783,8 @@
             <i class="fas fa-arrow-left arrow-icon"></i>
         </a>
 
-        <div class="link-card" onclick="openFreeAccountModal()">
+        <!-- تم إضافة id="free-account-btn" هنا لربط إعلان الفيديو بالمنصة -->
+        <div class="link-card" id="free-account-btn" onclick="openFreeAccountModal()">
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" class="venom-icon">
                 <div class="link-text">
@@ -773,7 +816,6 @@
             </div>
         </div>
 
-        <!-- زر AIM BOT الجديد -->
         <div id="aimbot-btn" class="link-card" onclick="startAimbotProcess()">
             <div class="link-content">
                 <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Ingame_CS_Level_Killed.png" alt="Icon" class="venom-icon">
@@ -795,6 +837,33 @@
             </div>
         </div>
 
+        <div id="skin-btn" class="link-card" onclick="startSkinProcess()">
+            <div class="link-content">
+                <img src="https://i.ibb.co/RTTzmNJc/Picsart-26-05-31-10-21-22-114.png" alt="Icon" class="venom-icon">
+                <div class="link-text">
+                    <h3 style="font-weight: 900;">
+                        𝐒𝐊𝐈𝐍 𝐅𝐅 𝟐𝟎𝟐𝟔 𝐍𝐎 𝐁𝐀𝐍
+                        <span style="font-size: 11px; color: #00ccff; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                            <span style="font-weight: 900;">100</span>
+                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png" alt="Diamond" class="inline-point-icon">
+                        </span>
+                    </h3>
+                    <p></p>
+                </div>
+            </div>
+            <i class="fas fa-arrow-left arrow-icon"></i>
+        </div>
+
+        <div id="skin-progress-container">
+            <div style="text-align: center; margin-bottom: 6px;">
+                <i class="fas fa-hourglass-half" style="color: #00ccff; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+            </div>
+            <div id="skin-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
+            <div id="skin-progress-bar-bg">
+                <div id="skin-progress-bar" style="background-color: #00ccff;"></div>
+            </div>
+        </div>
+
         <div class="ad-container" id="ad-banner-box">
             <script>
               atOptions = {
@@ -810,6 +879,31 @@
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
             اضغط على إعلان لتطوير الموقع الرسمي الخاص بنا ولن تخسر شيئاً
+        </div>
+    </div>
+
+    <!-- نافذة الدردشة الجديدة -->
+    <div id="chatModal" class="modal-overlay" onclick="handleModalClick(event, 'chatModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative; padding-bottom: 12px;">
+                <div class="close-modal" onclick="toggleChatModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900; margin-bottom: 10px;">
+                    <i class="fas fa-comments" style="color: #00ff66;"></i>
+                    <span style="font-weight: 900;">COMMUNITY CHAT</span>
+                </div>
+                <!-- صندوق عرض الرسائل -->
+                <div id="chat-messages-container" class="msg-items-container" style="max-height: 280px; min-height: 200px; background: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; margin-bottom: 10px;">
+                    <div style="text-align: center; color: #9ca3af; font-size: 11px; font-weight: 900;">لا توجد رسائل بعد، ابدأ الدردشة...</div>
+                </div>
+                <!-- شريط الإدخال والتحكم -->
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <input type="text" id="chatInput" class="promo-input" placeholder="اكتب رسالتك..." style="margin-bottom: 0; flex: 1;">
+                    <button id="micBtn" onclick="toggleVoiceRecording()" class="action-icon-btn" title="تسجيل صوتي" style="background: #181818; border: 1px solid #262626; border-radius: 10px; width: 38px; height: 38px;"><i class="fas fa-microphone" style="color: #ffcc00; font-size: 14px;"></i></button>
+                    <button onclick="sendChatMessage()" class="action-icon-btn" title="إرسال" style="background: #ffcc00; border: none; border-radius: 10px; width: 38px; height: 38px;"><i class="fas fa-paper-plane" style="color: #000000; font-size: 14px;"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -844,7 +938,6 @@
                         <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOTAL DIAMONDS:</span>
                         <span id="acc-modal-diamonds" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
                     </div>
-                    <!-- الإضافات الجديدة المطلوبة -->
                     <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">THE NUMBER ON DOWNLOAD:</span>
                         <span id="acc-modal-downloads" style="color: #ff0055; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
@@ -901,7 +994,6 @@
                     <span style="font-weight: 900;">الإعدادات والمساعدة</span>
                 </div>
 
-                <!-- زر طريقة تركيب سكريبت هيدشوت -->
                 <div id="help-btn-1" class="link-card" onclick="startHelpProcess1()" style="margin-bottom: 10px;">
                     <div class="link-content">
                         <i class="fas fa-video" style="color: #ffcc00; font-size: 18px;"></i>
@@ -926,7 +1018,6 @@
                     <video src="https://res.cloudinary.com/kp7vx8ex/video/upload/lv_0_20261115140322.mp4" controls autoplay muted style="width: 100%; border-radius: 10px; border: 1px solid #262626;"></video>
                 </div>
 
-                <!-- زر كيفية إنشاء حساب مجاناً -->
                 <div id="help-btn-2" class="link-card" onclick="startHelpProcess2()" style="margin-bottom: 5px;">
                     <div class="link-content">
                         <i class="fas fa-user-plus" style="color: #00ff66; font-size: 18px;"></i>
@@ -977,7 +1068,6 @@
         </div>
     </div>
 
-    <!-- نافذة أكواد الماس الجديدة المعتمدة على vip.diamond.txt -->
     <div id="diamondPointsModal" class="modal-overlay" onclick="handleModalClick(event, 'diamondPointsModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -1019,6 +1109,7 @@
 
         let venomStarted = false;
         let aimbotStarted = false;
+        let skinStarted = false;
         let helpRunning1 = false;
         let helpRunning2 = false;
 
@@ -1026,6 +1117,7 @@
             await checkMaintenanceStatus();
             checkExistingAuth();
             checkAdBlocker();
+            loadChatMessages();
         };
 
         async function checkMaintenanceStatus() {
@@ -1397,7 +1489,14 @@
             modal.style.display = show ? 'flex' : 'none';
         }
 
-        // دالة فتح نافذة معلومات الحساب وجلب البيانات (اسم المستخدم وكلمة المرور وتاريخ الدخول وعدد التحميلات)
+        function toggleChatModal(show) {
+            const modal = document.getElementById('chatModal');
+            modal.style.display = show ? 'flex' : 'none';
+            if (show) {
+                loadChatMessages();
+            }
+        }
+
         async function toggleAccountDetailsModal(show) {
             const modal = document.getElementById('accountDetailsModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -1405,7 +1504,6 @@
                 let username = localStorage.getItem('firebase_current_username') || 'غير معروف';
                 document.getElementById('acc-modal-username').innerText = username;
                 
-                // جلب بيانات الحساب من قاعدة البيانات
                 try {
                     let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${username}.json`);
                     let userData = await res.json();
@@ -1424,7 +1522,6 @@
                     document.getElementById('acc-modal-login-date').innerText = localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
                 }
 
-                // إعادة إخفاء كلمة المرور افتراضياً عند فتح النافذة
                 let passSpan = document.getElementById('acc-modal-password');
                 let toggleBtnImg = document.querySelector('#acc-pass-toggle-btn img');
                 passSpan.style.filter = 'blur(5px)';
@@ -1438,7 +1535,6 @@
             }
         }
 
-        // دالة إظهار/إخفاء كلمة المرور في نافذة الحساب
         function toggleAccModalPassword() {
             let span = document.getElementById('acc-modal-password');
             let btnImg = document.querySelector('#acc-pass-toggle-btn img');
@@ -1695,6 +1791,154 @@
             }
         }
 
+        /* دوال نظام الدردشة المدمج مع ميزة المايک، التعديل والحذف */
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function loadChatMessages() {
+            const container = document.getElementById('chat-messages-container');
+            try {
+                let res = await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/community_chat.json');
+                let data = await res.json();
+                container.innerHTML = '';
+                if (!data) {
+                    container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 11px; font-weight: 900;">لا توجد رسائل بعد، ابدأ الدردشة...</div>';
+                    return;
+                }
+                let currentUser = localStorage.getItem('firebase_current_username') || 'user';
+                Object.keys(data).forEach(key => {
+                    let msgObj = data[key];
+                    let msgDiv = document.createElement('div');
+                    msgDiv.style.cssText = "background: #141414; border: 1px solid #262626; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; text-align: right;";
+                    
+                    let headerHtml = `<div style="display: flex; justify-content: space-between; font-size: 10px; color: #00ff66; font-weight: 900; margin-bottom: 4px;"><span>${msgObj.user}</span><span>${msgObj.time}</span></div>`;
+                    let contentHtml = '';
+                    if (msgObj.type === 'audio') {
+                        contentHtml = `<div style="margin: 4px 0;"><audio controls src="${msgObj.content}" style="width: 100%; height: 32px;"></audio></div>`;
+                    } else {
+                        contentHtml = `<div id="msg_text_${key}" style="font-size: 12px; color: #ffffff; font-weight: 900; word-break: break-all;">${msgObj.content}</div>`;
+                    }
+
+                    let actionsHtml = '';
+                    if (msgObj.user === currentUser) {
+                        actionsHtml = `<div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; align-items: center;">
+                            <span onclick="editChatMessage('${key}')" style="font-size: 10px; color: #ffcc00; cursor: pointer; font-weight: 900; display: inline-flex; align-items: center; gap: 3px;"><img src="https://images.icon-icons.com/1558/PNG/96/353430-checkbox-edit-pen-pencil_107516.png" alt="تعديل" style="width: 14px; height: 14px; object-fit: contain;"> تعديل</span>
+                            <span onclick="deleteChatMessage('${key}')" style="font-size: 10px; color: #ff4444; cursor: pointer; font-weight: 900; display: inline-flex; align-items: center; gap: 3px;"><img src="https://images.icon-icons.com/868/PNG/96/trash_bin_icon-icons.com_67981.png" alt="حذف" style="width: 14px; height: 14px; object-fit: contain;"> حذف</span>
+                        </div>`;
+                    }
+
+                    msgDiv.innerHTML = headerHtml + contentHtml + actionsHtml;
+                    container.appendChild(msgDiv);
+                });
+                container.scrollTop = container.scrollHeight;
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function sendChatMessage() {
+            let input = document.getElementById('chatInput');
+            let text = input.value.trim();
+            if (!text) return;
+            let currentUser = localStorage.getItem('firebase_current_username') || 'user';
+            let timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            try {
+                await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/community_chat.json', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        user: currentUser,
+                        content: text,
+                        type: 'text',
+                        time: timeStr
+                    })
+                });
+                input.value = '';
+                loadChatMessages();
+            } catch(e) {
+                showToast('فشل إرسال الرسالة');
+            }
+        }
+
+        async function deleteChatMessage(key) {
+            if (confirm('هل تريد حذف هذه الرسالة؟')) {
+                try {
+                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/community_chat/${key}.json`, {
+                        method: 'DELETE'
+                    });
+                    loadChatMessages();
+                } catch(e) {
+                    showToast('فشل الحذف');
+                }
+            }
+        }
+
+        async function editChatMessage(key) {
+            let el = document.getElementById('msg_text_' + key);
+            let currentText = el.innerText;
+            let newText = prompt('تعديل الرسالة:', currentText);
+            if (newText !== null && newText.trim() !== '') {
+                try {
+                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/community_chat/${key}/content.json`, {
+                        method: 'PUT',
+                        body: JSON.stringify(newText.trim())
+                    });
+                    loadChatMessages();
+                } catch(e) {
+                    showToast('فشل التعديل');
+                }
+            }
+        }
+
+        async function toggleVoiceRecording() {
+            let micBtn = document.getElementById('micBtn');
+            if (!isRecording) {
+                try {
+                    let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+                    mediaRecorder.onstop = async () => {
+                        let audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        let reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = async function() {
+                            let base64Audio = reader.result;
+                            let currentUser = localStorage.getItem('firebase_current_username') || 'user';
+                            let timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            try {
+                                await fetch('https://ff-2022-633ed-default-rtdb.firebaseio.com/community_chat.json', {
+                                    method: 'POST',
+                                    body: JSON.stringify({
+                                        user: currentUser,
+                                        content: base64Audio,
+                                        type: 'audio',
+                                        time: timeStr
+                                    })
+                                });
+                                loadChatMessages();
+                            } catch(e) {
+                                showToast('فشل إرسال التسجيل الصوتي');
+                            }
+                        };
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    micBtn.style.background = '#ff4444';
+                    showToast('جاري التسجيل... اضغط مرة أخرى للإيقاف والإرسال');
+                } catch(err) {
+                    alert('تعذر الوصول إلى الميكروفون!');
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                micBtn.style.background = '#181818';
+            }
+        }
+
         function handleModalClick(event, modalId) {
             if (event.target.id === modalId) {
                 if (modalId === 'helpModal') toggleModal(false);
@@ -1703,6 +1947,7 @@
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
                 if (modalId === 'accountDetailsModal') toggleAccountDetailsModal(false);
+                if (modalId === 'chatModal') toggleChatModal(false);
             }
         }
 
@@ -1858,6 +2103,55 @@
                 msgDiv.style.fontSize = '9px';
                 msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف vip.diamond.txt.';
             }
+        }
+
+        async function startSkinProcess() {
+            if (skinStarted) return;
+            
+            let currentDiamonds = await getDiamondPoints();
+            if (currentDiamonds < 100) {
+                alert('رصيدك من الألماس غير كافٍ! تحتاج إلى 100 ألماس لتنفيذ هذا السكريبت. يمكنك شحن الألماس عبر إدخال الكود في نافذة VIP DIAMOND CODES.');
+                return;
+            }
+
+            if (!confirm('هل تريد خصم 100 ألماس لفتح وتحميل سكريبت السكين (NO BAN)؟')) {
+                return;
+            }
+
+            await setDiamondPoints(currentDiamonds - 100);
+            skinStarted = true;
+
+            const btn = document.getElementById('skin-btn');
+            const progressContainer = document.getElementById('skin-progress-container');
+            const progressBar = document.getElementById('skin-progress-bar');
+            const progressText = document.getElementById('skin-progress-text');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let duration = 10000;
+
+            let timer = setInterval(async () => {
+                let elapsed = Date.now() - startTime;
+
+                if (elapsed <= duration) {
+                    let percent = (elapsed / duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((duration - elapsed) / 1000);
+                    progressText.innerText = `جاري تجهيز التحميل... متبقي ${remainingSecs} ثوانٍ`;
+                } else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
+                    clearInterval(timer);
+                    await incrementDownloadCount();
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        window.open('https://www.mediafire.com/file/uu5956twai2w8p9/𝐒𝐂𝐑𝐈𝐏𝐓+𝐒𝐊𝐈𝐍+𝐅𝐅𝟐𝟎𝟐𝟔+𝐍𝐎+𝐁𝐀𝐍.zip/file', '_blank');
+                    }, 500);
+                }
+            }, 50);
         }
 
         function startVenomProcess() {
@@ -2045,5 +2339,8 @@
             }, 50);
         }
     </script>
+    
+    <!-- كود إعلان الفيديو المرتبط بزر GET AN FREE ACCOUNT -->
+    <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="473055"></script>
 </body>
 </html>
