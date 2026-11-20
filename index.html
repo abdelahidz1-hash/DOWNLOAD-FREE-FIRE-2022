@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> download FF  </title>
+    <title> download FF </title>
     <!-- استدعاء خط Cairo بوزن 300 من Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <!-- استدعاء FontAwesome للأيقونات -->
@@ -177,7 +177,7 @@
             background-color: #141414;
             border: 1px solid #262626;
             border-radius: 50%;
-            color: #ffffff; /* تم توحيد لون النص والأيقونة للأبيض المرتب */
+            color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -200,7 +200,7 @@
             height: 8px;
             background-color: #ff0000;
             border-radius: 50%;
-            display: none; /* مخفية افتراضياً حتى يتم التحقق من وجود رسائل */
+            display: none;
             box-shadow: 0 0 4px #ff0000;
         }
 
@@ -237,6 +237,30 @@
 
         .close-modal:hover {
             color: #ffffff;
+        }
+
+        /* زر الحسابات المشتراة داخل لافتة GET AN FREE ACCOUNT */
+        .purchased-acc-btn-top {
+            position: absolute;
+            top: 10px;
+            left: 42px;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 8px;
+            padding: 4px 8px;
+            color: #ffcc00;
+            font-size: 11px;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+        .purchased-acc-btn-top:hover {
+            background-color: #1c1c1c;
+            border-color: #ffcc00;
         }
 
         .profile-container {
@@ -688,6 +712,32 @@
             align-items: center;
             gap: 15px;
         }
+
+        /* زر المطالبة اليومية داخل نافذة الحساب */
+        .daily-login-btn {
+            width: 100%;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: #00ff66;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .daily-login-btn:hover:not(:disabled) {
+            border-color: #00ff66;
+            background-color: #1c1c1c;
+        }
+        .daily-login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            color: #9ca3af;
+        }
     </style>
 </head>
 <body>
@@ -722,10 +772,10 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
+        <!-- مجموعة الأزرار في أعلى اليسار (زر المهام، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
         <div class="top-left-group">
-            <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="معلومات الحساب">
-                <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Account Info">
+            <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="المهام">
+                <i class="fas fa-tasks" style="color: #ffffff; font-size: 13px;"></i>
             </div>
             <div class="chat-top-btn" onclick="toggleChatModal(true)" title="الدردشة">
                 <img src="https://images.icon-icons.com/1744/PNG/96/3643728-balloon-chat-conversation-speak-word_113413.png" alt="Chat">
@@ -760,9 +810,9 @@
                 <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
                 <div class="link-text">
                     <h3 id="download-title" style="font-weight: 900;">
-                        𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
+                        𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 FREE FIRE
                         <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                            <span style="font-weight: 900;">20</span>
+                            <span style="font-weight: 900;">100</span>
                             <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
                         </span>
                     </h3>
@@ -878,7 +928,7 @@
         </div>
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
-            اضغط على إعلان لتطوير الموقع الرسمي الخاص بنا ولن تخسر شيئاً
+            دعمك يفرق معنا! اضغط على الإعلان للمساهمة في تطوير الموقع مجاناً
         </div>
     </div>
 
@@ -906,7 +956,7 @@
         </div>
     </div>
 
-    <!-- نافذة معلومات الحساب الشخصي الجديدة -->
+    <!-- نافذة معلومات الحساب والمهام الجديدة -->
     <div id="accountDetailsModal" class="modal-overlay" onclick="handleModalClick(event, 'accountDetailsModal')">
         <div class="modal-content">
             <div class="instructions-box" style="margin-top: 0; position: relative;">
@@ -914,41 +964,45 @@
                     <i class="fas fa-times"></i>
                 </div>
                 <div class="instructions-title" style="font-weight: 900;">
-                    <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Account Icon" style="width: 18px; height: 18px; object-fit: contain; filter: invert(1);">
-                    <span style="font-weight: 900;">ACCOUNT INFORMATION</span>
+                    <i class="fas fa-tasks" style="color: #ffcc00; font-size: 16px;"></i>
+                    <span style="font-weight: 900;">المهام</span>
                 </div>
                 <div class="msg-items-container" style="font-size: 12px; font-weight: 900; text-align: right; gap: 10px;">
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">USERNAME:</span>
-                        <span id="acc-modal-username" style="color: #00ff66; font-weight: 900; font-family: 'Cairo', sans-serif;">-</span>
+                    <!-- زر تسجيل الدخول اليومي للحصول على 25 -> 50 -> 75 -> 100 كل 24 ساعة -->
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px;">
+                        <button id="dailyLoginRewardBtn" class="daily-login-btn" onclick="claimDailyLoginPoints()">
+                            <span style="display: inline-flex; align-items: center; gap: 6px; font-weight: 900;">
+                                <i class="fas fa-calendar-check" style="color: #ffcc00;"></i>
+                                <span id="dailyLoginRewardLabel" style="font-weight: 900;">تسجيل الدخول اليومي</span>
+                            </span>
+                            <span id="dailyLoginStatusText" style="color: #ffcc00; font-size: 11px; font-weight: 900;">مطالبة</span>
+                        </button>
+                        <div id="dailyLoginMsg" style="font-size: 10px; margin-top: 6px; text-align: center; font-weight: 900;"></div>
                     </div>
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">PASSWORD:</span>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span id="acc-modal-password" style="color: #ffffff; font-weight: 900; font-family: 'Cairo', sans-serif; filter: blur(5px); transition: filter 0.3s; user-select: none;">-</span>
-                            <button id="acc-pass-toggle-btn" class="action-icon-btn" onclick="toggleAccModalPassword()" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png" alt="إظهار"></button>
-                        </div>
+
+                    <!-- مهمة متابعة حساب FOLLOW ACCOUNT -->
+                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px;">
+                        <button id="followAccountTaskBtn" class="daily-login-btn" onclick="handleFollowAccountTask()">
+                            <span style="display: inline-flex; align-items: center; gap: 6px; font-weight: 900;">
+                                <i class="fab fa-tiktok" style="color: #00ff66;"></i>
+                                FOLLOW ACCOUNT
+                            </span>
+                            <span id="followAccountStatusText" style="color: #00ff66; font-size: 11px; font-weight: 900;">متابعة</span>
+                        </button>
+                        <div id="followAccountMsg" style="font-size: 10px; margin-top: 6px; text-align: center; font-weight: 900;"></div>
                     </div>
-                    <!-- إضافة حقل عرض token_account -->
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOKEN ACCOUNT:</span>
-                        <span id="acc-modal-token" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif; word-break: break-all; font-size: 10px;">-</span>
-                    </div>
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOTAL POINTS:</span>
-                        <span id="acc-modal-points" style="color: #ffcc00; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
-                    </div>
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">TOTAL DIAMONDS:</span>
-                        <span id="acc-modal-diamonds" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
-                    </div>
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">THE NUMBER ON DOWNLOAD:</span>
-                        <span id="acc-modal-downloads" style="color: #ff0055; font-weight: 900; font-family: 'Cairo', sans-serif;">0</span>
-                    </div>
-                    <div style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #9ca3af; font-weight: 900; font-family: 'Cairo', sans-serif;">DATE OF LOGIN:</span>
-                        <span id="acc-modal-login-date" style="color: #00ccff; font-weight: 900; font-family: 'Cairo', sans-serif;">-</span>
+
+                    <!-- مهمة اضغط على AD (+75 ألماس) -->
+                    <div id="clickAdTaskBox" style="background-color: #181818; border: 1px solid #262626; border-radius: 10px; padding: 10px;">
+                        <button id="clickAdTaskBtn" class="daily-login-btn" onclick="handleClickAdTask()">
+                            <span style="display: inline-flex; align-items: center; gap: 6px; font-weight: 900;">
+                                <i class="fas fa-ad" style="color: #ffcc00;"></i>
+                                اضغط على AD
+                            </span>
+                            <span id="clickAdStatusText" style="color: #ffcc00; font-size: 11px; font-weight: 900;">عرض الإعلان</span>
+                        </button>
+                        <div id="clickAdBannerWrapper" style="display: none; margin-top: 10px; text-align: center;"></div>
+                        <div id="clickAdMsg" style="font-size: 10px; margin-top: 6px; text-align: center; font-weight: 900;"></div>
                     </div>
                 </div>
             </div>
@@ -962,12 +1016,33 @@
                 <div class="close-modal" onclick="toggleFreeAccountModal(false)">
                     <i class="fas fa-times"></i>
                 </div>
+                <!-- زر الحسابات المشتراة المضاف -->
+                <button class="purchased-acc-btn-top" onclick="openPurchasedAccountsModal()">
+                    <i class="fas fa-shopping-bag" style="color: #ffcc00;"></i>
+                </button>
                 <div class="instructions-title" style="font-weight: 900;">
                     <i class="fas fa-gift" style="color: #ffcc00;"></i>
                     <span style="font-weight: 900;">GET AN FREE ACCOUNT</span>
                 </div>
                 <div id="free-accounts-container" class="msg-items-container">
                     <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب الحسابات...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهة الحسابات المشتراة المنبثقة الجديدة -->
+    <div id="purchasedAccountsModal" class="modal-overlay" onclick="handleModalClick(event, 'purchasedAccountsModal')">
+        <div class="modal-content">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="togglePurchasedAccountsModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <i class="fas fa-box-open" style="color: #00ff66;"></i>
+                </div>
+                <div id="purchased-accounts-container" class="msg-items-container">
+                    <div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب سجل الحسابات...</div>
                 </div>
             </div>
         </div>
@@ -1465,10 +1540,10 @@
                 window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
             } else {
                 let currentPts = await getPoints();
-                if (currentPts >= 20) {
-                    if (confirm('هل تريد خصم 20 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
-                        await setPoints(currentPts - 20);
-                        let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 20;
+                if (currentPts >= 100) {
+                    if (confirm('هل تريد خصم 100 نقطة لفتح رابط التحميل (صالح لمدة 24 ساعة)؟')) {
+                        await setPoints(currentPts - 100);
+                        let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 100;
                         localStorage.setItem('user_total_spent_points', spent);
                         localStorage.setItem('download_ff_unlocked', 'true');
                         localStorage.setItem('download_ff_unlock_time', Date.now());
@@ -1478,7 +1553,7 @@
                         window.open('https://www.mediafire.com/file/m5kuzdjwdb8nk53/freefire2022_32bit_65bit.zip/file?dkey=7q5b31efa3g&r=772', '_blank');
                     }
                 } else {
-                    alert('رصيدك غير كافٍ! تحتاج إلى 20 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
+                    alert('رصيدك غير كافٍ! تحتاج إلى 100 نقطة على الأقل لفتح هذا الزر. يمكنك شحن النقاط عبر إدخال الكود في نافذة GIFT CODES.');
                 }
             }
         }
@@ -1520,6 +1595,16 @@
             modal.style.display = show ? 'flex' : 'none';
         }
 
+        function togglePurchasedAccountsModal(show) {
+            const modal = document.getElementById('purchasedAccountsModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function openPurchasedAccountsModal() {
+            togglePurchasedAccountsModal(true);
+            loadUserPurchasedAccounts();
+        }
+
         function toggleChatModal(show) {
             const modal = document.getElementById('chatModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -1528,60 +1613,484 @@
             }
         }
 
+        async function recordPurchasedAccountForUser(accountLine) {
+            let uid = getUserId();
+            let parts = accountLine.split(':');
+            let username = parts[0] ? parts[0].trim() : 'غير معروف';
+            let password = parts[1] ? parts[1].trim() : '';
+            let entry = {
+                username: username,
+                password: password,
+                raw: accountLine,
+                date: new Date().toISOString().replace('T', ' ').substring(0, 19)
+            };
+
+            let localKey = 'user_purchased_accounts_' + uid;
+            let list = [];
+            try {
+                list = JSON.parse(localStorage.getItem(localKey) || '[]');
+            } catch (e) {
+                list = [];
+            }
+            if (!list.some(item => item.raw === accountLine)) {
+                list.unshift(entry);
+                localStorage.setItem(localKey, JSON.stringify(list));
+            }
+
+            try {
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/purchased_history.json`, {
+                    method: 'POST',
+                    body: JSON.stringify(entry)
+                });
+            } catch (e) {
+                console.error("خطأ في حفظ سجل الحساب المشترى:", e);
+            }
+        }
+
+        async function loadUserPurchasedAccounts() {
+            const container = document.getElementById('purchased-accounts-container');
+            container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب سجل الحسابات...</div>';
+            
+            let uid = getUserId();
+            let list = [];
+
+            try {
+                let localData = localStorage.getItem('user_purchased_accounts_' + uid);
+                if (localData) {
+                    list = JSON.parse(localData);
+                }
+            } catch(e) {}
+
+            try {
+                let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/purchased_history.json`);
+                if (res.ok) {
+                    let remoteData = await res.json();
+                    if (remoteData) {
+                        let remoteList = Object.values(remoteData);
+                        remoteList.forEach(item => {
+                            if (!list.some(l => l.raw === item.raw)) {
+                                list.push(item);
+                            }
+                        });
+                    }
+                }
+            } catch(e) {}
+
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #ff4444; font-size: 12px; padding: 15px; font-weight: 900;">لم تقم بشراء أي حساب بعد!</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            list.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'account-card';
+
+                const infoRow = document.createElement('div');
+                infoRow.className = 'account-info';
+                infoRow.innerHTML = `<span>المستخدم: <strong style="color: #00ff66;">${item.username}</strong></span><span style="font-size: 10px; color: #9ca3af;">${item.date || ''}</span>`;
+
+                const passRow = document.createElement('div');
+                passRow.className = 'account-pass-row';
+                passRow.innerHTML = `
+                    <span>كلمة المرور: <strong style="color: #ffcc00;">${item.password}</strong></span>
+                    <button class="action-icon-btn" onclick="copyAccountInfo('${item.raw}')" title="نسخ معلومات الحساب"><i class="fas fa-copy" style="color: #00ff66; font-size: 16px;"></i></button>
+                `;
+
+                card.appendChild(infoRow);
+                card.appendChild(passRow);
+                container.appendChild(card);
+            });
+        }
+
+        function copyAccountInfo(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('تم نسخ معلومات الحساب بنجاح!');
+            }).catch(err => {
+                showToast('فشل النسخ');
+            });
+        }
+
+        /* دوال مهمة متابعة الحساب FOLLOW ACCOUNT (+50 نقطة) */
+        async function checkFollowAccountTaskStatus() {
+            const btn = document.getElementById('followAccountTaskBtn');
+            const statusText = document.getElementById('followAccountStatusText');
+            const msgEl = document.getElementById('followAccountMsg');
+            if (!btn || !statusText || !msgEl) return;
+
+            const uid = getUserId();
+            let isClaimed = localStorage.getItem('follow_account_claimed_' + uid) === 'true';
+
+            try {
+                let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/follow_account_claimed.json`);
+                if (res.ok) {
+                    let dbVal = await res.json();
+                    if (dbVal === true) {
+                        isClaimed = true;
+                        localStorage.setItem('follow_account_claimed_' + uid, 'true');
+                    }
+                }
+            } catch (e) {}
+
+            if (isClaimed) {
+                btn.disabled = true;
+                statusText.innerText = 'مكتمل';
+                statusText.style.color = '#9ca3af';
+                msgEl.style.color = '#00ff66';
+                msgEl.innerText = '';
+            } else {
+                btn.disabled = false;
+                statusText.innerText = 'متابعة';
+                statusText.style.color = '#00ff66';
+                msgEl.innerText = '';
+            }
+        }
+
+        async function handleFollowAccountTask() {
+            const btn = document.getElementById('followAccountTaskBtn');
+            const statusText = document.getElementById('followAccountStatusText');
+            const msgEl = document.getElementById('followAccountMsg');
+            if (!btn || btn.disabled) return;
+
+            const uid = getUserId();
+            window.open('https://www.tiktok.com/@pr_venom_dz', '_blank');
+
+            btn.disabled = true;
+            statusText.innerText = 'جاري...';
+            msgEl.style.color = '#ffcc00';
+            msgEl.innerText = 'يتم توزيع حسابات واكواد ونقاط';
+
+            try {
+                let currentPts = await getPoints();
+                let newPts = currentPts + 50;
+                await setPoints(newPts, true);
+
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/follow_account_claimed.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(true)
+                });
+                localStorage.setItem('follow_account_claimed_' + uid, 'true');
+
+                statusText.innerText = 'مكتمل';
+                statusText.style.color = '#9ca3af';
+                msgEl.style.color = '#00ff66';
+                msgEl.innerText = 'يتم توزيع حسابات واكواد ونقاط';
+                showToast('يتم توزيع حسابات واكواد ونقاط');
+            } catch (e) {
+                console.error(e);
+                msgEl.style.color = '#ff4444';
+                msgEl.innerText = 'حدث خطأ أثناء إضافة النقاط.';
+                btn.disabled = false;
+                statusText.innerText = 'متابعة';
+            }
+        }
+
+        /* دوال مهمة اضغط على AD (+75 ألماس) */
+        let clickAdRewardGranted = false;
+
+        async function checkClickAdTaskStatus() {
+            const box = document.getElementById('clickAdTaskBox');
+            const btn = document.getElementById('clickAdTaskBtn');
+            const statusText = document.getElementById('clickAdStatusText');
+            const bannerWrapper = document.getElementById('clickAdBannerWrapper');
+            const msgEl = document.getElementById('clickAdMsg');
+            if (!box || !btn || !statusText || !bannerWrapper || !msgEl) return;
+
+            const uid = getUserId();
+            let isCompleted = localStorage.getItem('click_ad_task_completed_' + uid) === 'true';
+
+            try {
+                let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/click_ad_task_completed.json`);
+                if (res.ok) {
+                    let dbVal = await res.json();
+                    if (dbVal === true) {
+                        isCompleted = true;
+                        localStorage.setItem('click_ad_task_completed_' + uid, 'true');
+                    }
+                }
+            } catch (e) {}
+
+            if (isCompleted) {
+                bannerWrapper.style.display = 'none';
+                bannerWrapper.innerHTML = '';
+                btn.disabled = true;
+                statusText.innerText = 'مكتمل';
+                statusText.style.color = '#9ca3af';
+                msgEl.style.color = '#00ff66';
+                msgEl.innerText = '';
+            } else {
+                btn.disabled = false;
+                statusText.innerText = 'عرض الإعلان';
+                statusText.style.color = '#ffcc00';
+                msgEl.innerText = '';
+            }
+        }
+
+        function handleClickAdTask() {
+            const btn = document.getElementById('clickAdTaskBtn');
+            const statusText = document.getElementById('clickAdStatusText');
+            const bannerWrapper = document.getElementById('clickAdBannerWrapper');
+            const msgEl = document.getElementById('clickAdMsg');
+            if (!btn || btn.disabled) return;
+
+            clickAdRewardGranted = false;
+            bannerWrapper.style.display = 'flex';
+            bannerWrapper.style.justifyContent = 'center';
+            bannerWrapper.style.alignItems = 'center';
+            bannerWrapper.style.flexDirection = 'column';
+            bannerWrapper.innerHTML = '';
+
+            const adFrameBox = document.createElement('div');
+            adFrameBox.style.cssText = 'position: relative; width: 320px; height: 50px; border-radius: 8px; overflow: hidden; border: 1px solid #262626; background: #141414;';
+
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = 'width: 320px; height: 50px; border: none; display: block;';
+            iframe.srcdoc = `
+                <!DOCTYPE html>
+                <html>
+                <head><style>body{margin:0;padding:0;overflow:hidden;background:#141414;display:flex;justify-content:center;align-items:center;}</style></head>
+                <body>
+                    <script>
+                        atOptions = {
+                            'key' : '69ab74afae32c71dfa68f3228b696128',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script src="https://bauval.org/22/69ab74afae32c71dfa68f3228b696128"><\/script>
+                </body>
+                </html>
+            `;
+
+            // طبقة شفافة لرصد النقرة والتحقق من ضغط المستخدم على الإعلان
+            const clickDetector = document.createElement('div');
+            clickDetector.style.cssText = 'position: absolute; inset: 0; cursor: pointer; z-index: 5; background: transparent;';
+            clickDetector.addEventListener('pointerdown', async function() {
+                clickDetector.style.display = 'none';
+                await verifyAdClickAndGrantReward();
+            });
+
+            adFrameBox.appendChild(iframe);
+            adFrameBox.appendChild(clickDetector);
+            bannerWrapper.appendChild(adFrameBox);
+
+            // رصد خروج التركيز من نافذة الصفحة (دليل على فتح رابط الإعلان)
+            window.addEventListener('blur', onAdWindowBlurOnce, { once: true });
+
+            statusText.innerText = 'اضغط على الإعلان';
+            msgEl.style.color = '#ffcc00';
+            msgEl.innerText = 'اضغط على إعلان البانر الظاهر أسفل الزر للتحقق والحصول على 75 ألماس...';
+        }
+
+        async function onAdWindowBlurOnce() {
+            if (!clickAdRewardGranted) {
+                await verifyAdClickAndGrantReward();
+            }
+        }
+
+        async function verifyAdClickAndGrantReward() {
+            if (clickAdRewardGranted) return;
+            clickAdRewardGranted = true;
+
+            const btn = document.getElementById('clickAdTaskBtn');
+            const statusText = document.getElementById('clickAdStatusText');
+            const bannerWrapper = document.getElementById('clickAdBannerWrapper');
+            const msgEl = document.getElementById('clickAdMsg');
+            const uid = getUserId();
+
+            statusText.innerText = 'جاري التحقق...';
+            msgEl.style.color = '#ffcc00';
+            msgEl.innerText = 'جاري التحقق من الضغط على الإعلان...';
+
+            try {
+                let currentDiamonds = await getDiamondPoints();
+                let newDiamonds = currentDiamonds + 75;
+                await setDiamondPoints(newDiamonds, true);
+
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/click_ad_task_completed.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(true)
+                });
+                localStorage.setItem('click_ad_task_completed_' + uid, 'true');
+
+                // إخفاء الإعلان بعد التحقق وحصول المستخدم على 75 ألماس
+                bannerWrapper.style.display = 'none';
+                bannerWrapper.innerHTML = '';
+
+                if (btn) btn.disabled = true;
+                if (statusText) {
+                    statusText.innerText = 'مكتمل';
+                    statusText.style.color = '#9ca3af';
+                }
+                if (msgEl) {
+                    msgEl.style.color = '#00ff66';
+                    msgEl.innerText = '';
+                }
+                showToast('تم التحقق من الضغط على الإعلان وحصلت على +75 ألماس!');
+            } catch (e) {
+                console.error(e);
+                clickAdRewardGranted = false;
+                if (msgEl) {
+                    msgEl.style.color = '#ff4444';
+                    msgEl.innerText = 'حدث خطأ أثناء التحقق، حاول مرة أخرى.';
+                }
+            }
+        }
+
+        /* دوال المكافأة اليومية لتسجيل الدخول (25 -> 50 -> 75 -> 100 ثم يعود إلى 25 كل 24 ساعة) */
+        const DAILY_REWARD_TIERS = [25, 50, 75, 100];
+
+        function getNextDailyRewardAmount(streakIndex) {
+            const safeIndex = ((parseInt(streakIndex) || 0) % DAILY_REWARD_TIERS.length + DAILY_REWARD_TIERS.length) % DAILY_REWARD_TIERS.length;
+            return DAILY_REWARD_TIERS[safeIndex];
+        }
+
+        async function checkDailyLoginRewardStatus() {
+            const btn = document.getElementById('dailyLoginRewardBtn');
+            const labelEl = document.getElementById('dailyLoginRewardLabel');
+            const statusText = document.getElementById('dailyLoginStatusText');
+            const msgEl = document.getElementById('dailyLoginMsg');
+            if (!btn || !statusText || !msgEl) return;
+
+            const uid = getUserId();
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            let lastClaimTime = parseInt(localStorage.getItem('last_daily_claim_' + uid) || '0');
+            let streakIndex = parseInt(localStorage.getItem('daily_claim_streak_' + uid) || '0') || 0;
+
+            try {
+                let resTime = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/last_daily_claim.json`);
+                if (resTime.ok) {
+                    let dbTime = await resTime.json();
+                    if (dbTime) {
+                        let parsed = parseInt(dbTime) || 0;
+                        if (parsed > lastClaimTime) {
+                            lastClaimTime = parsed;
+                            localStorage.setItem('last_daily_claim_' + uid, lastClaimTime.toString());
+                        }
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                let resStreak = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/daily_claim_streak.json`);
+                if (resStreak.ok) {
+                    let dbStreak = await resStreak.json();
+                    if (dbStreak !== null && dbStreak !== undefined) {
+                        let parsedStreak = parseInt(dbStreak) || 0;
+                        streakIndex = parsedStreak;
+                        localStorage.setItem('daily_claim_streak_' + uid, streakIndex.toString());
+                    }
+                }
+            } catch (e) {}
+
+            const rewardAmount = getNextDailyRewardAmount(streakIndex);
+            if (labelEl) {
+                labelEl.innerText = `تسجيل الدخول اليومي`;
+            }
+
+            const now = Date.now();
+            const remaining = oneDayMs - (now - lastClaimTime);
+
+            if (lastClaimTime && remaining > 0) {
+                btn.disabled = true;
+                let hrs = Math.floor(remaining / (1000 * 60 * 60));
+                let mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                statusText.innerText = `${hrs}س ${mins}د`;
+                msgEl.innerText = '';
+            } else {
+                btn.disabled = false;
+                statusText.innerText = 'مطالبة';
+                msgEl.innerText = '';
+            }
+        }
+
+        async function claimDailyLoginPoints() {
+            const btn = document.getElementById('dailyLoginRewardBtn');
+            const labelEl = document.getElementById('dailyLoginRewardLabel');
+            const statusText = document.getElementById('dailyLoginStatusText');
+            const msgEl = document.getElementById('dailyLoginMsg');
+            if (!btn || btn.disabled) return;
+
+            const uid = getUserId();
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            let lastClaimTime = parseInt(localStorage.getItem('last_daily_claim_' + uid) || '0');
+            let streakIndex = parseInt(localStorage.getItem('daily_claim_streak_' + uid) || '0') || 0;
+
+            try {
+                let resTime = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/last_daily_claim.json`);
+                if (resTime.ok) {
+                    let dbTime = await resTime.json();
+                    if (dbTime && (parseInt(dbTime) || 0) > lastClaimTime) {
+                        lastClaimTime = parseInt(dbTime) || 0;
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                let resStreak = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/daily_claim_streak.json`);
+                if (resStreak.ok) {
+                    let dbStreak = await resStreak.json();
+                    if (dbStreak !== null && dbStreak !== undefined) {
+                        streakIndex = parseInt(dbStreak) || 0;
+                    }
+                }
+            } catch (e) {}
+
+            const now = Date.now();
+            if (lastClaimTime && (now - lastClaimTime) < oneDayMs) {
+                checkDailyLoginRewardStatus();
+                return;
+            }
+
+            const rewardAmount = getNextDailyRewardAmount(streakIndex);
+            const nextStreakIndex = (streakIndex + 1) % DAILY_REWARD_TIERS.length;
+
+            btn.disabled = true;
+            statusText.innerText = 'جاري...';
+
+            try {
+                let currentPts = await getPoints();
+                let newPts = currentPts + rewardAmount;
+                await setPoints(newPts, true);
+
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/last_daily_claim.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(now)
+                });
+                await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/daily_claim_streak.json`, {
+                    method: 'PUT',
+                    body: JSON.stringify(nextStreakIndex)
+                });
+
+                localStorage.setItem('last_daily_claim_' + uid, now.toString());
+                localStorage.setItem('daily_claim_streak_' + uid, nextStreakIndex.toString());
+
+                if (labelEl) {
+                    labelEl.innerText = `تسجيل الدخول اليومي`;
+                }
+
+                msgEl.style.color = '#00ff66';
+                msgEl.innerText = `تم إضافة +${rewardAmount} نقطة إلى رصيدك بنجاح!`;
+                showToast(`تم إضافة +${rewardAmount} نقطة لتسجيل الدخول اليومي!`);
+                checkDailyLoginRewardStatus();
+            } catch (e) {
+                console.error(e);
+                msgEl.style.color = '#ff4444';
+                msgEl.innerText = 'حدث خطأ أثناء الاتصال بقاعدة البيانات.';
+                btn.disabled = false;
+                statusText.innerText = 'مطالبة';
+            }
+        }
+
         async function toggleAccountDetailsModal(show) {
             const modal = document.getElementById('accountDetailsModal');
             modal.style.display = show ? 'flex' : 'none';
             if (show) {
-                let username = localStorage.getItem('firebase_current_username') || 'غير معروف';
-                document.getElementById('acc-modal-username').innerText = username;
-                
-                try {
-                    let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${username}.json`);
-                    let userData = await res.json();
-                    if (userData) {
-                        document.getElementById('acc-modal-password').innerText = userData.password || '****';
-                        document.getElementById('acc-modal-token').innerText = userData.token_account || localStorage.getItem('user_token_account_' + username) || 'غير متوفر';
-                        document.getElementById('acc-modal-downloads').innerText = userData.downloads_count || 0;
-                        document.getElementById('acc-modal-login-date').innerText = userData.login_date || localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
-                    } else {
-                        document.getElementById('acc-modal-password').innerText = '****';
-                        document.getElementById('acc-modal-token').innerText = 'غير متوفر';
-                        document.getElementById('acc-modal-downloads').innerText = '0';
-                        document.getElementById('acc-modal-login-date').innerText = 'غير متوفر';
-                    }
-                } catch(e) {
-                    document.getElementById('acc-modal-password').innerText = '****';
-                    document.getElementById('acc-modal-token').innerText = localStorage.getItem('user_token_account_' + username) || 'غير متوفر';
-                    document.getElementById('acc-modal-downloads').innerText = localStorage.getItem('user_downloads_count_' + username) || '0';
-                    document.getElementById('acc-modal-login-date').innerText = localStorage.getItem('user_login_date_' + username) || 'غير متوفر';
-                }
-
-                let passSpan = document.getElementById('acc-modal-password');
-                let toggleBtnImg = document.querySelector('#acc-pass-toggle-btn img');
-                passSpan.style.filter = 'blur(5px)';
-                toggleBtnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png';
-                document.getElementById('acc-pass-toggle-btn').title = 'إظهار كلمة المرور';
-
-                let pts = await getPoints();
-                let diam = await getDiamondPoints();
-                document.getElementById('acc-modal-points').innerText = formatLargeNumber(pts);
-                document.getElementById('acc-modal-diamonds').innerText = formatLargeNumber(diam);
-            }
-        }
-
-        function toggleAccModalPassword() {
-            let span = document.getElementById('acc-modal-password');
-            let btnImg = document.querySelector('#acc-pass-toggle-btn img');
-            let btn = document.getElementById('acc-pass-toggle-btn');
-
-            if (span.style.filter === 'blur(5px)' || span.style.filter === '') {
-                span.style.filter = 'none';
-                btnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_hide_icon_124813.png';
-                btn.title = 'إخفاء كلمة المرور';
-            } else {
-                span.style.filter = 'blur(5px)';
-                btnImg.src = 'https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png';
-                btn.title = 'إظهار كلمة المرور';
+                await checkDailyLoginRewardStatus();
+                await checkFollowAccountTaskStatus();
+                await checkClickAdTaskStatus();
             }
         }
 
@@ -1640,8 +2149,7 @@
                     passRow.innerHTML = `
                         <span>كلمة المرور: <span id="${passId}" style="filter: blur(5px); transition: filter 0.3s; user-select: none;">${password}</span></span>
                         <div style="display: flex; gap: 6px; align-items: center;">
-                            <button class="action-icon-btn" onclick="togglePasswordVisibility('${passId}', this, '${line}')" title="إظهار كلمة المرور"><img src="https://images.icon-icons.com/2065/PNG/96/view_show_icon_124811.png" alt="إظهار"></button>
-                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://images.icon-icons.com/1580/PNG/96/2849824-basket-buy-market-multimedia-shop-shopping-store_107977.png" alt="شراء"></button>
+                            <button class="action-icon-btn" onclick="buyAccount('${line}')" title="شراء الحساب"><img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Profile_AddFriend.png" alt="شراء"></button>
                         </div>
                     `;
 
@@ -1686,6 +2194,7 @@
                 await setPoints(currentPts - 150);
                 let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 150;
                 localStorage.setItem('user_total_spent_points', spent);
+                await recordPurchasedAccountForUser(accountLine);
                 showToast('تم خصم 150 نقطة وإظهار كلمة المرور');
 
                 span.style.filter = 'none';
@@ -1706,25 +2215,24 @@
         }
 
         async function buyAccount(accountLine) {
-            let currentPts = await getPoints();
-            if (currentPts >= 150) {
-                if (confirm('هل تريد خصم 150 نقطة لشراء هذا الحساب وإخفائه عن باقي المستخدمين؟')) {
-                    await setPoints(currentPts - 150);
-                    let spent = parseInt(localStorage.getItem('user_total_spent_points') || '0') + 150;
-                    localStorage.setItem('user_total_spent_points', spent);
+            let currentDiamonds = await getDiamondPoints();
+            if (currentDiamonds >= 75) {
+                if (confirm('هل تريد شراء الحساب وخصم 75 ألماس؟')) {
+                    await setDiamondPoints(currentDiamonds - 75);
                     await markAccountAsPurchased(accountLine);
+                    await recordPurchasedAccountForUser(accountLine);
                     
                     navigator.clipboard.writeText(accountLine).then(() => {
-                        showToast('تم شراء الحساب ونسخ معلوماته بنجاح وإخفاؤه للجميع!');
+                        showToast('تم شراء الحساب ونقله إلى الحسابات المشتراة!');
                     }).catch(err => {
                         console.error('فشل النسخ', err);
-                        showToast('تم شراء الحساب وإخفاؤه للجميع بنجاح!');
+                        showToast('تم شراء الحساب ونقله إلى الحسابات المشتراة!');
                     });
                     
                     fetchAndDisplayAccounts();
                 }
             } else {
-                alert('رصيدك غير كافٍ! تحتاج إلى 150 نقطة لشراء حساب.');
+                alert('رصيدك من الألماس غير كافٍ! تحتاج إلى 75 ألماس لشراء هذا الحساب.');
             }
         }
 
@@ -1928,6 +2436,7 @@
                 if (modalId === 'diamondPointsModal') toggleDiamondPointsModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
+                if (modalId === 'purchasedAccountsModal') togglePurchasedAccountsModal(false);
                 if (modalId === 'accountDetailsModal') toggleAccountDetailsModal(false);
                 if (modalId === 'chatModal') toggleChatModal(false);
             }
