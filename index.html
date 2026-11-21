@@ -352,6 +352,34 @@
             font-size: 12px;
         }
 
+        /* أزرار التمرير للأعلى والأسفل بين صفحات الأزرار (6 أزرار لكل واجهة) */
+        .page-nav-btn {
+            width: 100%;
+            background-color: #111111;
+            border: 1px solid #262626;
+            border-radius: 10px;
+            padding: 6px 12px;
+            color: #ffcc00;
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .page-nav-btn:hover:not(:disabled) {
+            border-color: #ffcc00;
+            background-color: #181818;
+        }
+        .page-nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            color: #737373;
+        }
+
         .ad-container {
             display: flex;
             justify-content: center;
@@ -407,7 +435,7 @@
             margin-top: 2px;
         }
 
-        #venom-progress-container, #aimbot-progress-container, #skin-progress-container, #help-progress-container-1, #help-progress-container-2 {
+        #venom-progress-container, #aimbot-progress-container, #skin-progress-container, #hack-progress-container, #help-progress-container-1, #help-progress-container-2 {
             display: none;
             margin-bottom: 15px;
             background-color: #141414;
@@ -416,7 +444,7 @@
             padding: 12px;
             text-align: right;
         }
-        #venom-progress-bar-bg, #aimbot-progress-bar-bg, #skin-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
+        #venom-progress-bar-bg, #aimbot-progress-bar-bg, #skin-progress-bar-bg, #hack-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
             width: 100%;
             height: 8px;
             background-color: #262626;
@@ -424,13 +452,13 @@
             overflow: hidden;
             margin-top: 8px;
         }
-        #venom-progress-bar, #aimbot-progress-bar, #skin-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
+        #venom-progress-bar, #aimbot-progress-bar, #skin-progress-bar, #hack-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
             width: 0%;
             height: 100%;
             background-color: #ff0000;
             transition: width 0.1s linear;
         }
-        #venom-progress-text, #aimbot-progress-text, #skin-progress-text, #help-progress-text-1, #help-progress-text-2 {
+        #venom-progress-text, #aimbot-progress-text, #skin-progress-text, #hack-progress-text, #help-progress-text-1, #help-progress-text-2 {
             font-size: 11px;
             color: #9ca3af;
         }
@@ -772,7 +800,7 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار (زر المهام، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
+        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
         <div class="top-left-group">
             <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="المهام">
                 <i class="fas fa-tasks" style="color: #ffffff; font-size: 13px;"></i>
@@ -805,114 +833,154 @@
             <img src="https://i.ibb.co/xtSgjDXB/Picsart-26-11-18-08-16-16-398.png" alt="Profile Picture" class="profile-pic">
         </div>
 
-        <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn">
-            <div class="link-content">
-                <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
-                <div class="link-text">
-                    <h3 id="download-title" style="font-weight: 900;">
-                        𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 FREE FIRE
-                        <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                            <span style="font-weight: 900;">100</span>
-                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
-                        </span>
-                    </h3>
-                    <p id="download-sub"></p>
+        <!-- زر تمرير للأعلى (الواجهة السابقة) -->
+        <button id="scrollUpPageBtn" class="page-nav-btn" onclick="changeButtonPage(-1)" disabled title="الواجهة السابقة">
+            <i class="fas fa-chevron-up"></i>
+        </button>
+
+        <!-- حاوية الأزرار (6 أزرار لكل واجهة) -->
+        <div id="buttons-page-wrapper">
+            <div onclick="handleDownloadClick(event)" class="link-card" id="download-ff-btn" data-page="1">
+                <div class="link-content">
+                    <img src="https://images.icon-icons.com/1946/PNG/96/1904659-arrow-backup-down-download-save-storage-transfer_122509.png" alt="Icon" class="custom-icon">
+                    <div class="link-text">
+                        <h3 id="download-title" style="font-weight: 900;">
+                            𝐃𝐎𝐖𝐍𝐋𝐎𝐀𝐃 𝐅𝐅 𝟐𝟎𝟐𝟐
+                            <span style="font-size: 11px; color: #ffcc00; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                                <span style="font-weight: 900;">100</span>
+                                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png" alt="Point" class="inline-point-icon">
+                            </span>
+                        </h3>
+                        <p id="download-sub"></p>
+                    </div>
+                </div>
+                <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
+            </div>
+
+            <a href="https://register.samosasmobiles.dpdns.org/" target="_blank" class="link-card" data-page="1">
+                <div class="link-content">
+                    <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
+                    <div class="link-text">
+                        <h3 style="font-weight: 900;">𝐎𝐏𝐄𝐍 𝐀𝐍 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
+                        <p></p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-left arrow-icon"></i>
+            </a>
+
+            <!-- تم إضافة id="free-account-btn" هنا لربط إعلان الفيديو بالمنصة -->
+            <div class="link-card" id="free-account-btn" onclick="openFreeAccountModal()" data-page="1">
+                <div class="link-content">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" class="venom-icon">
+                    <div class="link-text">
+                        <h3 style="font-weight: 900;">𝐆𝐄𝐓 𝐀𝐍 𝐅𝐑𝐄𝐄 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
+                        <p></p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-left arrow-icon"></i>
+            </div>
+
+            <div id="venom-btn" class="link-card" onclick="startVenomProcess()" data-page="1">
+                <div class="link-content">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
+                    <div class="link-text">
+                        <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃SH𝐎Տ</h3>
+                        <p></p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-left arrow-icon"></i>
+            </div>
+
+            <div id="venom-progress-container">
+                <div style="text-align: center; margin-bottom: 6px;">
+                    <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                </div>
+                <div id="venom-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
+                <div id="venom-progress-bar-bg">
+                    <div id="venom-progress-bar"></div>
                 </div>
             </div>
-            <i class="fas fa-lock arrow-icon" id="download-icon-status" style="color: #ff4444;"></i>
-        </div>
 
-        <a href="https://register.samosasmobiles.dpdns.org/" target="_blank" class="link-card">
-            <div class="link-content">
-                <img src="https://images.icon-icons.com/1369/PNG/96/-account-circle_89831.png" alt="Icon" class="custom-icon">
-                <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐎𝐏𝐄𝐍 𝐀𝐍 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
-                    <p></p>
+            <div id="aimbot-btn" class="link-card" onclick="startAimbotProcess()" data-page="1">
+                <div class="link-content">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Ingame_CS_Level_Killed.png" alt="Icon" class="venom-icon">
+                    <div class="link-text">
+                        <h3 style="font-weight: 900;">٪𝐀𝐈𝐌 𝐁𝐎𝐓 𝐅𝐅𝟐𝟎𝟐𝟐 𝟏𝟎𝟎</h3>
+                        <p></p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-left arrow-icon"></i>
+            </div>
+
+            <div id="aimbot-progress-container">
+                <div style="text-align: center; margin-bottom: 6px;">
+                    <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                </div>
+                <div id="aimbot-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
+                <div id="aimbot-progress-bar-bg">
+                    <div id="aimbot-progress-bar"></div>
                 </div>
             </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
-        </a>
 
-        <!-- تم إضافة id="free-account-btn" هنا لربط إعلان الفيديو بالمنصة -->
-        <div class="link-card" id="free-account-btn" onclick="openFreeAccountModal()">
-            <div class="link-content">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_ui_Gift_box02.png" alt="Icon" class="venom-icon">
-                <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐆𝐄𝐓 𝐀𝐍 𝐅𝐑𝐄𝐄 𝐀𝐂𝐂𝐎𝐔𝐍𝐓</h3>
-                    <p></p>
+            <div id="skin-btn" class="link-card" onclick="startSkinProcess()" data-page="1">
+                <div class="link-content">
+                    <img src="https://i.ibb.co/RTTzmNJc/Picsart-26-05-31-10-21-22-114.png" alt="Icon" class="venom-icon">
+                    <div class="link-text">
+                        <h3 style="font-weight: 900;">
+                            𝐒𝐊𝐈𝐍 𝐅𝐅 𝟐𝟎𝟐𝟔 𝐍𝐎 𝐁𝐀𝐍
+                            <span style="font-size: 11px; color: #00ccff; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                                <span style="font-weight: 900;">100</span>
+                                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png" alt="Diamond" class="inline-point-icon">
+                            </span>
+                        </h3>
+                        <p></p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-left arrow-icon"></i>
+            </div>
+
+            <div id="skin-progress-container">
+                <div style="text-align: center; margin-bottom: 6px;">
+                    <i class="fas fa-hourglass-half" style="color: #00ccff; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                </div>
+                <div id="skin-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
+                <div id="skin-progress-bar-bg">
+                    <div id="skin-progress-bar" style="background-color: #00ccff;"></div>
                 </div>
             </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
-        </div>
 
-        <div id="venom-btn" class="link-card" onclick="startVenomProcess()">
-            <div class="link-content">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
-                <div class="link-text">
-                    <h3 style="font-weight: 900;">𝐒𝐂𝐑𝐈𝐏𝐓 𝐇𝐄𝐀𝐃SH𝐎Տ</h3>
-                    <p></p>
+            <div id="hack-btn" class="link-card" onclick="startHackProcess()" data-page="2">
+                <div class="link-content">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
+                    <div class="link-text">
+                        <h3 style="font-weight: 900;">
+                            𝐇𝐀𝐂𝐊 𝐅𝐅𝟐𝟎𝟐𝟐
+                            <span style="font-size: 11px; color: #00ccff; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
+                                <span style="font-weight: 900;">100</span>
+                                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png" alt="Diamond" class="inline-point-icon">
+                            </span>
+                        </h3>
+                        <p></p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-left arrow-icon"></i>
+            </div>
+
+            <div id="hack-progress-container">
+                <div style="text-align: center; margin-bottom: 6px;">
+                    <i class="fas fa-hourglass-half" style="color: #00ccff; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                </div>
+                <div id="hack-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
+                <div id="hack-progress-bar-bg">
+                    <div id="hack-progress-bar" style="background-color: #00ccff;"></div>
                 </div>
             </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
         </div>
 
-        <div id="venom-progress-container">
-            <div style="text-align: center; margin-bottom: 6px;">
-                <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
-            </div>
-            <div id="venom-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
-            <div id="venom-progress-bar-bg">
-                <div id="venom-progress-bar"></div>
-            </div>
-        </div>
-
-        <div id="aimbot-btn" class="link-card" onclick="startAimbotProcess()">
-            <div class="link-content">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Ingame_CS_Level_Killed.png" alt="Icon" class="venom-icon">
-                <div class="link-text">
-                    <h3 style="font-weight: 900;">٪𝐀𝐈𝐌 𝐁𝐎𝐓 𝐅𝐅𝟐𝟎𝟐𝟐 𝟏𝟎𝟎</h3>
-                    <p></p>
-                </div>
-            </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
-        </div>
-
-        <div id="aimbot-progress-container">
-            <div style="text-align: center; margin-bottom: 6px;">
-                <i class="fas fa-hourglass-half" style="color: #ff0000; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
-            </div>
-            <div id="aimbot-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
-            <div id="aimbot-progress-bar-bg">
-                <div id="aimbot-progress-bar"></div>
-            </div>
-        </div>
-
-        <div id="skin-btn" class="link-card" onclick="startSkinProcess()">
-            <div class="link-content">
-                <img src="https://i.ibb.co/RTTzmNJc/Picsart-26-05-31-10-21-22-114.png" alt="Icon" class="venom-icon">
-                <div class="link-text">
-                    <h3 style="font-weight: 900;">
-                        𝐒𝐊𝐈𝐍 𝐅𝐅 𝟐𝟎𝟐𝟔 𝐍𝐎 𝐁𝐀𝐍
-                        <span style="font-size: 11px; color: #00ccff; display: inline-flex; align-items: center; gap: 3px; margin-right: 5px; font-weight: 900;">
-                            <span style="font-weight: 900;">100</span>
-                            <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png" alt="Diamond" class="inline-point-icon">
-                        </span>
-                    </h3>
-                    <p></p>
-                </div>
-            </div>
-            <i class="fas fa-arrow-left arrow-icon"></i>
-        </div>
-
-        <div id="skin-progress-container">
-            <div style="text-align: center; margin-bottom: 6px;">
-                <i class="fas fa-hourglass-half" style="color: #00ccff; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
-            </div>
-            <div id="skin-progress-text" style="font-weight: 900;">جاري تجهيز التحميل...</div>
-            <div id="skin-progress-bar-bg">
-                <div id="skin-progress-bar" style="background-color: #00ccff;"></div>
-            </div>
-        </div>
+        <!-- زر تمرير للأسفل (الواجهة التالية) -->
+        <button id="scrollDownPageBtn" class="page-nav-btn" onclick="changeButtonPage(1)" title="الواجهة التالية">
+            <i class="fas fa-chevron-down"></i>
+        </button>
 
         <div class="ad-container" id="ad-banner-box">
             <script>
@@ -1189,10 +1257,49 @@
         let venomStarted = false;
         let aimbotStarted = false;
         let skinStarted = false;
+        let hackStarted = false;
         let helpRunning1 = false;
         let helpRunning2 = false;
 
+        /* إدارة التمرير بين واجهات الأزرار (6 أزرار لكل واجهة) */
+        const BUTTONS_PER_PAGE = 6;
+        let currentButtonPage = 1;
+
+        function getMainActionCards() {
+            return Array.from(document.querySelectorAll('#buttons-page-wrapper > .link-card'));
+        }
+
+        function updateButtonPages() {
+            const cards = getMainActionCards();
+            const totalPages = Math.max(1, Math.ceil(cards.length / BUTTONS_PER_PAGE));
+            if (currentButtonPage < 1) currentButtonPage = 1;
+            if (currentButtonPage > totalPages) currentButtonPage = totalPages;
+
+            const startIdx = (currentButtonPage - 1) * BUTTONS_PER_PAGE;
+            const endIdx = startIdx + BUTTONS_PER_PAGE;
+
+            cards.forEach((card, idx) => {
+                card.style.display = (idx >= startIdx && idx < endIdx) ? 'flex' : 'none';
+            });
+
+            const upBtn = document.getElementById('scrollUpPageBtn');
+            const downBtn = document.getElementById('scrollDownPageBtn');
+            if (upBtn) upBtn.disabled = (currentButtonPage <= 1);
+            if (downBtn) downBtn.disabled = (currentButtonPage >= totalPages);
+        }
+
+        function changeButtonPage(delta) {
+            const cards = getMainActionCards();
+            const totalPages = Math.max(1, Math.ceil(cards.length / BUTTONS_PER_PAGE));
+            const nextPage = currentButtonPage + delta;
+            if (nextPage >= 1 && nextPage <= totalPages) {
+                currentButtonPage = nextPage;
+                updateButtonPages();
+            }
+        }
+
         window.onload = async function() {
+            updateButtonPages();
             await checkMaintenanceStatus();
             checkExistingAuth();
             checkAdBlocker();
@@ -2640,6 +2747,55 @@
                     setTimeout(() => {
                         progressContainer.style.display = 'none';
                         window.open('https://www.mediafire.com/file/uu5956twai2w8p9/𝐒𝐂𝐑𝐈𝐏𝐓+𝐒𝐊𝐈𝐍+𝐅𝐅𝟐𝟎𝟐𝟔+𝐍𝐎+𝐁𝐀𝐍.zip/file', '_blank');
+                    }, 500);
+                }
+            }, 50);
+        }
+
+        async function startHackProcess() {
+            if (hackStarted) return;
+            
+            let currentDiamonds = await getDiamondPoints();
+            if (currentDiamonds < 100) {
+                alert('رصيدك من الألماس غير كافٍ! تحتاج إلى 100 ألماس لتنفيذ هذا السكريبت. يمكنك شحن الألماس عبر إدخال الكود في نافذة VIP DIAMOND CODES.');
+                return;
+            }
+
+            if (!confirm('هل تريد خصم 100 ألماس لفتح وتحميل HACK FF2022؟')) {
+                return;
+            }
+
+            await setDiamondPoints(currentDiamonds - 100);
+            hackStarted = true;
+
+            const btn = document.getElementById('hack-btn');
+            const progressContainer = document.getElementById('hack-progress-container');
+            const progressBar = document.getElementById('hack-progress-bar');
+            const progressText = document.getElementById('hack-progress-text');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let duration = 10000;
+
+            let timer = setInterval(async () => {
+                let elapsed = Date.now() - startTime;
+
+                if (elapsed <= duration) {
+                    let percent = (elapsed / duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((duration - elapsed) / 1000);
+                    progressText.innerText = `جاري تجهيز التحميل... متبقي ${remainingSecs} ثوانٍ`;
+                } else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
+                    clearInterval(timer);
+                    await incrementDownloadCount();
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                        window.open('https://www.mediafire.com/file/6wwry1b606ii3wm/𝐇𝐀𝐂𝐊+𝐅𝐅𝟐𝟎𝟐𝟐.zip/file', '_blank');
                     }, 500);
                 }
             }, 50);
