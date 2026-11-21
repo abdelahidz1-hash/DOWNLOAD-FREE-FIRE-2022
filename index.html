@@ -435,7 +435,7 @@
             margin-top: 2px;
         }
 
-        #venom-progress-container, #aimbot-progress-container, #skin-progress-container, #hack-progress-container, #help-progress-container-1, #help-progress-container-2 {
+        #free-acc-progress-container, #venom-progress-container, #aimbot-progress-container, #skin-progress-container, #hack-progress-container, #help-progress-container-1, #help-progress-container-2 {
             display: none;
             margin-bottom: 15px;
             background-color: #141414;
@@ -444,7 +444,7 @@
             padding: 12px;
             text-align: right;
         }
-        #venom-progress-bar-bg, #aimbot-progress-bar-bg, #skin-progress-bar-bg, #hack-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
+        #free-acc-progress-bar-bg, #venom-progress-bar-bg, #aimbot-progress-bar-bg, #skin-progress-bar-bg, #hack-progress-bar-bg, #help-progress-bar-bg-1, #help-progress-bar-bg-2 {
             width: 100%;
             height: 8px;
             background-color: #262626;
@@ -452,13 +452,13 @@
             overflow: hidden;
             margin-top: 8px;
         }
-        #venom-progress-bar, #aimbot-progress-bar, #skin-progress-bar, #hack-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
+        #free-acc-progress-bar, #venom-progress-bar, #aimbot-progress-bar, #skin-progress-bar, #hack-progress-bar, #help-progress-bar-1, #help-progress-bar-2 {
             width: 0%;
             height: 100%;
             background-color: #ff0000;
             transition: width 0.1s linear;
         }
-        #venom-progress-text, #aimbot-progress-text, #skin-progress-text, #hack-progress-text, #help-progress-text-1, #help-progress-text-2 {
+        #free-acc-progress-text, #venom-progress-text, #aimbot-progress-text, #skin-progress-text, #hack-progress-text, #help-progress-text-1, #help-progress-text-2 {
             font-size: 11px;
             color: #9ca3af;
         }
@@ -880,6 +880,16 @@
                 <i class="fas fa-arrow-left arrow-icon"></i>
             </div>
 
+            <div id="free-acc-progress-container">
+                <div style="text-align: center; margin-bottom: 6px;">
+                    <i class="fas fa-hourglass-half" style="color: #ffcc00; font-size: 16px; animation: spinHourglass 2s linear infinite;"></i>
+                </div>
+                <div id="free-acc-progress-text" style="font-weight: 900;">جاري تجهيز الحسابات المجانية...</div>
+                <div id="free-acc-progress-bar-bg">
+                    <div id="free-acc-progress-bar" style="background-color: #ffcc00;"></div>
+                </div>
+            </div>
+
             <div id="venom-btn" class="link-card" onclick="startVenomProcess()" data-page="1">
                 <div class="link-content">
                     <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/icon_killed_2.png" alt="Icon" class="venom-icon">
@@ -1254,6 +1264,7 @@
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let freeAccStarted = false;
         let venomStarted = false;
         let aimbotStarted = false;
         let skinStarted = false;
@@ -1754,6 +1765,44 @@
             }
         }
 
+        async function deletePurchasedAccountItem(rawLine, firebaseKey) {
+            if (!confirm('هل تريد حذف هذا الحساب من سجل الحسابات المشتراة؟')) return;
+            let uid = getUserId();
+            let localKey = 'user_purchased_accounts_' + uid;
+            try {
+                let list = JSON.parse(localStorage.getItem(localKey) || '[]');
+                list = list.filter(item => item.raw !== rawLine);
+                localStorage.setItem(localKey, JSON.stringify(list));
+            } catch (e) {}
+
+            try {
+                if (firebaseKey) {
+                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/purchased_history/${firebaseKey}.json`, {
+                        method: 'DELETE'
+                    });
+                } else {
+                    let res = await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/purchased_history.json`);
+                    if (res.ok) {
+                        let remoteData = await res.json();
+                        if (remoteData) {
+                            for (let k of Object.keys(remoteData)) {
+                                if (remoteData[k] && remoteData[k].raw === rawLine) {
+                                    await fetch(`https://ff-2022-633ed-default-rtdb.firebaseio.com/users/${uid}/purchased_history/${k}.json`, {
+                                        method: 'DELETE'
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("خطأ في حذف الحساب المشترى:", e);
+            }
+
+            showToast('تم حذف الحساب من السجل');
+            loadUserPurchasedAccounts();
+        }
+
         async function loadUserPurchasedAccounts() {
             const container = document.getElementById('purchased-accounts-container');
             container.innerHTML = '<div style="text-align: center; color: #9ca3af; font-size: 12px; padding: 15px; font-weight: 900;">جاري جلب سجل الحسابات...</div>';
@@ -1773,10 +1822,15 @@
                 if (res.ok) {
                     let remoteData = await res.json();
                     if (remoteData) {
-                        let remoteList = Object.values(remoteData);
-                        remoteList.forEach(item => {
-                            if (!list.some(l => l.raw === item.raw)) {
-                                list.push(item);
+                        Object.keys(remoteData).forEach(k => {
+                            let item = remoteData[k];
+                            if (item) {
+                                let existing = list.find(l => l.raw === item.raw);
+                                if (!existing) {
+                                    list.push({ ...item, _fbKey: k });
+                                } else {
+                                    existing._fbKey = k;
+                                }
                             }
                         });
                     }
@@ -1799,10 +1853,27 @@
 
                 const passRow = document.createElement('div');
                 passRow.className = 'account-pass-row';
-                passRow.innerHTML = `
-                    <span>كلمة المرور: <strong style="color: #ffcc00;">${item.password}</strong></span>
-                    <button class="action-icon-btn" onclick="copyAccountInfo('${item.raw}')" title="نسخ معلومات الحساب"><i class="fas fa-copy" style="color: #00ff66; font-size: 16px;"></i></button>
-                `;
+
+                const btnsWrap = document.createElement('div');
+                btnsWrap.style.cssText = 'display: flex; gap: 6px; align-items: center;';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'action-icon-btn';
+                copyBtn.title = 'نسخ معلومات الحساب';
+                copyBtn.innerHTML = '<i class="fas fa-copy" style="color: #00ff66; font-size: 16px;"></i>';
+                copyBtn.onclick = () => copyAccountInfo(item.raw);
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'action-icon-btn';
+                delBtn.title = 'حذف الحساب';
+                delBtn.innerHTML = '<img src="https://images.icon-icons.com/868/PNG/96/trash_bin_icon-icons.com_67981.png" alt="حذف" style="width: 18px; height: 18px; object-fit: contain;">';
+                delBtn.onclick = () => deletePurchasedAccountItem(item.raw, item._fbKey || '');
+
+                btnsWrap.appendChild(copyBtn);
+                btnsWrap.appendChild(delBtn);
+
+                passRow.innerHTML = `<span>كلمة المرور: <strong style="color: #ffcc00;">${item.password}</strong></span>`;
+                passRow.appendChild(btnsWrap);
 
                 card.appendChild(infoRow);
                 card.appendChild(passRow);
@@ -2202,8 +2273,44 @@
         }
 
         async function openFreeAccountModal() {
-            toggleFreeAccountModal(true);
-            await fetchAndDisplayAccounts();
+            if (freeAccStarted) return;
+            freeAccStarted = true;
+
+            window.open('https://asiafilm.org/4/092d98f4b7825ebd10b26ae1aab5016a', '_blank');
+
+            const btn = document.getElementById('free-account-btn');
+            const progressContainer = document.getElementById('free-acc-progress-container');
+            const progressBar = document.getElementById('free-acc-progress-bar');
+            const progressText = document.getElementById('free-acc-progress-text');
+
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+            progressContainer.style.display = 'block';
+
+            let startTime = Date.now();
+            let duration = 10000;
+
+            let timer = setInterval(async () => {
+                let elapsed = Date.now() - startTime;
+                if (elapsed <= duration) {
+                    let percent = (elapsed / duration) * 100;
+                    progressBar.style.width = percent + '%';
+                    let remainingSecs = Math.ceil((duration - elapsed) / 1000);
+                    progressText.innerText = `جاري تجهيز الحسابات المجانية... متبقي ${remainingSecs} ثوانٍ`;
+                } else {
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'تم التجهيز بنجاح! يتم الآن فتح اللافتة...';
+                    clearInterval(timer);
+                    setTimeout(async () => {
+                        progressContainer.style.display = 'none';
+                        btn.style.opacity = '1';
+                        btn.style.pointerEvents = 'auto';
+                        freeAccStarted = false;
+                        toggleFreeAccountModal(true);
+                        await fetchAndDisplayAccounts();
+                    }, 400);
+                }
+            }, 50);
         }
 
         async function fetchAndDisplayAccounts() {
