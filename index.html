@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> download FF </title>
+    <title> download ff </title>
     <!-- استدعاء خط Cairo بوزن 300 من Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300&display=swap" rel="stylesheet">
     <!-- استدعاء FontAwesome للأيقونات -->
@@ -3458,8 +3458,6 @@
             if (aimbotStarted) return;
             aimbotStarted = true;
 
-            window.open('https://asiafilm.org/4/092d98f4b7825ebd10b26ae1aab5016a', '_blank');
-
             const btn = document.getElementById('aimbot-btn');
             const progressContainer = document.getElementById('aimbot-progress-container');
             const progressBar = document.getElementById('aimbot-progress-bar');
@@ -3482,16 +3480,13 @@
                     progressText.innerText = `جاري التحميل... متبقي ${remainingSecs} ثوانٍ`;
                 } else {
                     progressBar.style.width = '100%';
-                    progressText.innerText = 'تم التجهيز بنجاح!';
+                    progressText.innerText = 'تم التجهيز بنجاح! يتم الآن توجيهك للرابط...';
                     clearInterval(timer);
                     await incrementDownloadCount();
                     setTimeout(() => {
                         progressContainer.style.display = 'none';
-                        btn.style.opacity = '1';
-                        btn.style.pointerEvents = 'auto';
-                        aimbotStarted = false;
-                        openFreeAccountModal();
-                    }, 300);
+                        window.open('https://www.mediafire.com/file/g3z6igd16a9acxz/%25%F0%9D%90%80%F0%9D%90%88%F0%9D%90%8C+%F0%9D%90%81%F0%9D%90%8E%F0%9D%90%93+%F0%9D%90%85%F0%9D%90%85%F0%9D%97%AF%F0%9D%97%A2%F0%9D%97%9F+%F0%9D%97%AE%F0%9D%97%BD%F0%9D%97%BD.zip/file', '_blank');
+                    }, 500);
                 }
             }, 50);
         }
