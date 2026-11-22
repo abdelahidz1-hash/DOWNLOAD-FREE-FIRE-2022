@@ -41,15 +41,22 @@
             position: relative;
         }
 
-        /* مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) */
+        /* مجموعة الأزرار في أعلى اليسار: (دردشة + إعدادات) في الأعلى و(مهام + إشعارات + عجلة الحظ) تحتهما */
         .top-left-group {
             position: absolute;
             top: 15px;
             left: 15px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             gap: 6px;
             z-index: 10;
+        }
+
+        .top-left-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* زر الحساب الشخصي الجديد في أعلى اليسار */
@@ -136,6 +143,34 @@
             background-color: #1c1c1c;
         }
         .msg-top-btn:hover img {
+            transform: scale(1.1);
+        }
+
+        /* زر عجلة الحظ في الأزرار العلوية */
+        .lucky-wheel-top-btn {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            background-color: #141414;
+            border: 1px solid #262626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lucky-wheel-top-btn img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .lucky-wheel-top-btn:hover {
+            border-color: #ffcc00;
+            background-color: #1c1c1c;
+        }
+        .lucky-wheel-top-btn:hover img {
             transform: scale(1.1);
         }
 
@@ -239,6 +274,177 @@
             color: #ffffff;
         }
 
+        /* تنسيقات عجلة الحظ الاحترافية داخل اللافتة */
+        .wheel-card {
+            width: 100%;
+            max-width: 400px;
+            background: #0d0d0d;
+            border: 1px solid #222222;
+            border-radius: 24px;
+            padding: 22px 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85);
+            text-align: center;
+            color: #ffffff;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .wheel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 10px;
+            padding-left: 24px;
+        }
+
+        .wheel-title {
+            font-size: 16px;
+            font-weight: 300;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cards-badge {
+            background: #151515;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 300;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .cards-badge:hover {
+            border-color: #ffcc00;
+            background: #1d1d1d;
+        }
+
+        .wheel-stage {
+            position: relative;
+            width: 290px;
+            height: 290px;
+            margin: 0 auto 18px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 26px solid #ff2e4c;
+            filter: drop-shadow(0 4px 8px rgba(255, 46, 76, 0.55));
+        }
+
+        #fortuneWheelCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 0 6px #181818, 0 0 0 8px #2e2e2e, 0 12px 30px rgba(0, 0, 0, 0.9);
+            transition: transform 4.5s cubic-bezier(0.14, 0.82, 0.22, 1);
+            will-change: transform;
+        }
+
+        .wheel-center-cap {
+            position: absolute;
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2a2a2a, #0b0b0b);
+            border: 2px solid #ffcc00;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .wheel-center-cap img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .spin-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #ffffff;
+            font-weight: 300;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 18px rgba(255, 204, 0, 0.25);
+        }
+
+        .spin-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(255, 204, 0, 0.35);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-box {
+            margin-top: 14px;
+            min-height: 42px;
+            background: #131313;
+            border: 1px solid #222222;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 300;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .history-list {
+            margin-top: 12px;
+            text-align: right;
+            max-height: 110px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .history-item {
+            background: #121212;
+            border: 1px solid #1f1f1f;
+            border-radius: 9px;
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 300;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         /* زر الحسابات المشتراة داخل لافتة GET AN FREE ACCOUNT */
         .purchased-acc-btn-top {
             position: absolute;
@@ -279,11 +485,18 @@
             box-shadow: none;
         }
 
+        /* تثبيت ارتفاع حاوية الأزرار حتى لا يتغير حجم لافتة الصفحة الرئيسية عند التمرير */
+        #buttons-page-wrapper {
+            height: 356px;
+            overflow: hidden;
+        }
+
         .link-card {
             background-color: #141414;
             border: 1px solid #262626;
             border-radius: 12px;
             padding: 10px 14px;
+            height: 51px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -292,6 +505,10 @@
             color: white;
             transition: all 0.3s ease;
             cursor: pointer;
+        }
+
+        .link-card:last-child {
+            margin-bottom: 0;
         }
 
         .link-card:hover {
@@ -503,7 +720,7 @@
             object-fit: contain;
         }
 
-        #promo-msg, #promo-diamond-msg {
+        #promo-msg, #promo-diamond-msg, #promo-token-msg {
             font-size: 10px;
             margin-top: 6px;
             text-align: center;
@@ -520,7 +737,7 @@
             border-radius: 12px;
             padding: 12px;
             position: fixed;
-            z-index: 200000;
+            z-index: 2000;
             left: 50%;
             bottom: 30px;
             transform: translateX(-50%);
@@ -740,22 +957,6 @@
             align-items: center;
             gap: 15px;
         }
-        .maintenance-login-btn {
-            width: 100%;
-            background-color: #ffcc00;
-            color: #000000;
-            border: none;
-            border-radius: 12px;
-            padding: 11px 16px;
-            font-size: 14px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 4px;
-        }
-        .maintenance-login-btn:hover {
-            background-color: #e6b800;
-        }
 
         /* زر المطالبة اليومية داخل نافذة الحساب */
         .daily-login-btn {
@@ -792,7 +993,6 @@
             <i class="fas fa-tools" style="font-size: 40px; color: #ffcc00;"></i>
             <div style="font-size: 16px; color: #ffcc00; font-weight: 900;">الموقع قيد التطوير</div>
             <div style="font-size: 12px; color: #9ca3af; font-weight: 900; line-height: 1.6;">نعتذر منك، الموقع قيد الصيانة والتطوير حالياً. يرجى العودة لاحقاً.</div>
-            <button type="button" class="maintenance-login-btn" onclick="enterOfflineDevMode()">LOG IN</button>
         </div>
     </div>
 
@@ -817,20 +1017,27 @@
     <div id="custom-toast">تم فتح قفل زر صالح لمدة يوم</div>
 
     <div class="container">
-        <!-- مجموعة الأزرار في أعلى اليسار (زر الحساب، زر الدردشة، زر الإشعارات وزر الإعدادات بجانبه) -->
+        <!-- مجموعة الأزرار في أعلى اليسار: (دردشة + إعدادات) في الأعلى و(مهام + إشعارات + عجلة الحظ) تحتهما -->
         <div class="top-left-group">
-            <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="المهام">
-                <i class="fas fa-tasks" style="color: #ffffff; font-size: 13px;"></i>
+            <div class="top-left-row">
+                <div class="chat-top-btn" onclick="toggleChatModal(true)" title="الدردشة">
+                    <img src="https://images.icon-icons.com/1744/PNG/96/3643728-balloon-chat-conversation-speak-word_113413.png" alt="Chat">
+                </div>
+                <div class="help-btn" onclick="toggleModal(true)" title="الإعدادات">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Prime_Btn_Setting.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain;">
+                </div>
             </div>
-            <div class="chat-top-btn" onclick="toggleChatModal(true)" title="الدردشة">
-                <img src="https://images.icon-icons.com/1744/PNG/96/3643728-balloon-chat-conversation-speak-word_113413.png" alt="Chat">
-            </div>
-            <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
-                <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
-                <div id="msgNotificationDot" class="msg-dot"></div>
-            </div>
-            <div class="help-btn" onclick="toggleModal(true)" title="الإعدادات">
-                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UI_Prime_Btn_Setting.png" alt="Settings" style="width: 14px; height: 14px; object-fit: contain;">
+            <div class="top-left-row">
+                <div class="account-top-btn" onclick="toggleAccountDetailsModal(true)" title="المهام">
+                    <i class="fas fa-tasks" style="color: #ffffff; font-size: 13px;"></i>
+                </div>
+                <div class="msg-top-btn" onclick="toggleMsgModal(true)" title="الإشعارات">
+                    <img src="https://images.icon-icons.com/1744/PNG/96/3643784-bell-notification-notify-reminder-ring_113451.png" alt="Notifications">
+                    <div id="msgNotificationDot" class="msg-dot"></div>
+                </div>
+                <div class="lucky-wheel-top-btn" onclick="openLuckyWheel()" title="عجلة الحظ">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UILuckyWheel_enter01.png" alt="عجلة الحظ">
+                </div>
             </div>
         </div>
 
@@ -1014,6 +1221,63 @@
         
         <div style="font-weight: 900; font-size: 12px; color: #ffffff; margin-top: 8px; text-align: center;">
             دعمك يفرق معنا! اضغط على الإعلان للمساهمة في تطوير الموقع مجاناً
+        </div>
+    </div>
+
+    <!-- لافتة عجلة الحظ المنبثقة -->
+    <div id="luckyWheelModal" class="modal-overlay" onclick="handleModalClick(event, 'luckyWheelModal')">
+        <div class="wheel-card" onclick="event.stopPropagation()">
+            <div class="close-modal" onclick="toggleLuckyWheelModal(false)">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="wheel-header">
+                <div class="wheel-title">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_UILuckyWheel_enter01.png" alt="عجلة الحظ" style="width: 24px; height: 24px; object-fit: contain;">
+                </div>
+                <div class="cards-badge" title="استبدال كود للحصول على بطاقات" onclick="toggleTokenCodeModal(true)">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_Lottery_Special_Ring_Voucher.png" alt="بطاقة" style="width: 18px; height: 18px; object-fit: contain;">
+                    <span id="spinCardsCount">0</span>
+                </div>
+            </div>
+
+            <div class="wheel-stage">
+                <div class="wheel-pointer"></div>
+                <canvas id="fortuneWheelCanvas" width="580" height="580"></canvas>
+                <div class="wheel-center-cap">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UI_BDBR_CrownIcon_01.png" alt="تاج">
+                </div>
+            </div>
+
+            <button id="spinWheelBtn" class="spin-btn" onclick="spinFortuneWheel()">
+                <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_Lottery_Special_Ring_Voucher.png" alt="بطاقة" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle; display: inline-block;"> 1
+            </button>
+
+            <div id="wheelResultBox" class="result-box"></div>
+
+            <div id="wheelHistoryBox" class="history-list"></div>
+        </div>
+    </div>
+
+    <!-- لافتة استبدال كود البطاقات (code.token.txt) -->
+    <div id="tokenCodeModal" class="modal-overlay" onclick="handleModalClick(event, 'tokenCodeModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="instructions-box" style="margin-top: 0; position: relative;">
+                <div class="close-modal" onclick="toggleTokenCodeModal(false)">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="instructions-title" style="font-weight: 900;">
+                    <img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_Lottery_Special_Ring_Voucher.png" alt="Token Gift Icon" style="width: 18px; height: 18px; object-fit: contain;">
+                    <span style="font-weight: 900;">SPIN TOKEN CODES</span>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; margin-bottom: 12px; font-weight: 900;">
+                    أدخل الكود للحصول على بطاقات عجلة الحظ:
+                </div>
+                <input type="text" id="promoTokenCodeInput" class="promo-input" placeholder="أدخل كود البطاقات هنا..." style="font-weight: 900;">
+                <button class="promo-submit-btn" onclick="submitTokenPromoCode()" style="font-weight: 900;">
+                    <img src="https://images.icon-icons.com/5232/PNG/96/294060_paper-plane-icon.png" alt="Send">
+                </button>
+                <div id="promo-token-msg" style="font-weight: 900;"></div>
+            </div>
         </div>
     </div>
 
@@ -1277,27 +1541,6 @@
         let hackStarted = false;
         let helpRunning1 = false;
         let helpRunning2 = false;
-        let offlineDevMode = false;
-
-        function enterOfflineDevMode() {
-            offlineDevMode = true;
-            document.getElementById('maintenanceScreen').style.display = 'none';
-            document.getElementById('authModal').style.display = 'none';
-            updatePointsDisplayDirect(0);
-            updateDiamondPointsDisplayDirect(0);
-            showToast('تم الدخول بدون إنترنت - وضع التطوير');
-
-            document.addEventListener('click', function(e) {
-                if (!offlineDevMode) return;
-                if (e.target.closest('#custom-toast')) return;
-                const interactive = e.target.closest('button, .link-card, .account-top-btn, .chat-top-btn, .msg-top-btn, .help-btn, .points-badge, .close-modal, a');
-                if (interactive) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    showToast('يتم تطويره');
-                }
-            }, true);
-        }
 
         /* إدارة التمرير بين واجهات الأزرار (6 أزرار لكل واجهة) */
         const BUTTONS_PER_PAGE = 6;
@@ -1342,6 +1585,8 @@
             checkExistingAuth();
             checkAdBlocker();
             loadChatMessages();
+            drawFortuneWheel();
+            renderWheelUI();
         };
 
         // دالة لتوليد توكن فريد يتكون من 20 حرفاً بالشكل المطلوب (FF-NEW-YEA-R-XXXX)
@@ -1371,7 +1616,6 @@
         }
 
         function checkExistingAuth() {
-            if (offlineDevMode) return;
             let savedUser = localStorage.getItem('firebase_current_username');
             if (savedUser) {
                 document.getElementById('authModal').style.display = 'none';
@@ -1380,6 +1624,7 @@
                 loadDiamondPointsFromDatabase();
                 checkDownloadUnlockStatus();
                 checkMessagesNotification();
+                renderWheelUI();
             } else {
                 document.getElementById('authModal').style.display = 'flex';
             }
@@ -1451,6 +1696,7 @@
                         loadDiamondPointsFromDatabase();
                         checkDownloadUnlockStatus();
                         checkMessagesNotification();
+                        renderWheelUI();
                     } else {
                         errorMsg.style.color = '#ff4444';
                         errorMsg.innerText = 'كلمة المرور غير صحيحة لهذا المستخدم!';
@@ -1491,6 +1737,7 @@
                     loadDiamondPointsFromDatabase();
                     checkDownloadUnlockStatus();
                     checkMessagesNotification();
+                    renderWheelUI();
                 }
             } catch (err) {
                 console.error(err);
@@ -1637,6 +1884,286 @@
             setTimeout(() => {
                 toast.className = toast.className.replace('show', '');
             }, 3000);
+        }
+
+        function toggleLuckyWheelModal(show) {
+            const modal = document.getElementById('luckyWheelModal');
+            modal.style.display = show ? 'flex' : 'none';
+            if (show) {
+                drawFortuneWheel();
+                renderWheelUI();
+            }
+        }
+
+        function toggleTokenCodeModal(show) {
+            const modal = document.getElementById('tokenCodeModal');
+            modal.style.display = show ? 'flex' : 'none';
+            if (show) {
+                document.getElementById('promoTokenCodeInput').value = '';
+                document.getElementById('promo-token-msg').innerHTML = '';
+            }
+        }
+
+        function openLuckyWheel() {
+            toggleLuckyWheelModal(true);
+        }
+
+        /* منطق عجلة الحظ الاحترافية (3 بطاقات مجانية لكل مستخدم) */
+        const DIAMOND_ICON_URL = 'https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/Icon_exchange_Diamond.png';
+        const POINTS_ICON_URL = 'https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/UIFX_Goldcoin_A.png';
+        const CARD_ICON_URL = 'https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_Lottery_Special_Ring_Voucher.png';
+
+        const diamondImg = new Image();
+        diamondImg.crossOrigin = 'anonymous';
+        diamondImg.src = DIAMOND_ICON_URL;
+        diamondImg.onload = () => drawFortuneWheel();
+
+        const pointsImg = new Image();
+        pointsImg.crossOrigin = 'anonymous';
+        pointsImg.src = POINTS_ICON_URL;
+        pointsImg.onload = () => drawFortuneWheel();
+
+        const cardImg = new Image();
+        cardImg.crossOrigin = 'anonymous';
+        cardImg.src = CARD_ICON_URL;
+        cardImg.onload = () => drawFortuneWheel();
+
+        const WHEEL_PRIZES = [
+            { label: '+25', icon: POINTS_ICON_URL, canvasImg: pointsImg, type: 'points', value: 25, color: '#222222', textColor: '#ffffff' },
+            { label: '+25', icon: DIAMOND_ICON_URL, canvasImg: diamondImg, type: 'diamonds', value: 25, color: '#2a2a2a', textColor: '#ffffff' },
+            { label: '+1', icon: CARD_ICON_URL, canvasImg: cardImg, type: 'card', value: 1, color: '#222222', textColor: '#ffffff' },
+            { label: '+50', icon: POINTS_ICON_URL, canvasImg: pointsImg, type: 'points', value: 50, color: '#2a2a2a', textColor: '#ffffff' },
+            { label: 'حظ أوفر', type: 'none', value: 0, color: '#222222', textColor: '#ffffff' },
+            { label: '+50', icon: DIAMOND_ICON_URL, canvasImg: diamondImg, type: 'diamonds', value: 50, color: '#2a2a2a', textColor: '#ffffff' },
+            { label: '+100', icon: POINTS_ICON_URL, canvasImg: pointsImg, type: 'points', value: 100, color: '#222222', textColor: '#ffffff' },
+            { label: '+2', icon: CARD_ICON_URL, canvasImg: cardImg, type: 'card', value: 2, color: '#2a2a2a', textColor: '#ffffff' }
+        ];
+
+        const FREE_STARTER_CARDS = 3;
+        let isSpinning = false;
+        let currentRotationDeg = 0;
+
+        function getUserCardsStorageKey() {
+            const uid = localStorage.getItem('firebase_current_username') || 'guest';
+            return 'user_spin_cards_' + uid;
+        }
+
+        function getSpinCards() {
+            const key = getUserCardsStorageKey();
+            const raw = localStorage.getItem(key);
+            if (raw === null) {
+                localStorage.setItem(key, String(FREE_STARTER_CARDS));
+                return FREE_STARTER_CARDS;
+            }
+            return Math.max(0, parseInt(raw, 10) || 0);
+        }
+
+        function setSpinCards(count) {
+            const key = getUserCardsStorageKey();
+            const safeCount = Math.max(0, parseInt(count, 10) || 0);
+            localStorage.setItem(key, String(safeCount));
+            renderWheelUI();
+        }
+
+        async function submitTokenPromoCode() {
+            const codeInput = document.getElementById('promoTokenCodeInput').value.trim();
+            const msgDiv = document.getElementById('promo-token-msg');
+
+            if (!codeInput) {
+                msgDiv.style.color = '#ff4444';
+                msgDiv.style.fontSize = '9px';
+                msgDiv.innerText = 'الرجاء إدخال الكود أولاً.';
+                return;
+            }
+
+            msgDiv.innerHTML = '<img src="https://images.icon-icons.com/390/PNG/96/clockwise-rotation_38553.png" alt="Checking..." style="width: 18px; height: 18px; object-fit: contain; animation: spinImage 1s linear infinite; vertical-align: middle;">';
+
+            try {
+                const response = await fetch('code.token.txt?' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error('فشل في جلب ملف أكواد البطاقات');
+                }
+
+                const fileText = await response.text();
+                const lines = fileText.split(/\r?\n/);
+                let foundCards = 0;
+                let isValid = false;
+
+                for (let line of lines) {
+                    let cleanLine = line.trim();
+                    if (!cleanLine) continue;
+                    let parts = cleanLine.split(':');
+                    let fileCode = parts[0].trim();
+                    let cardsToAdd = parts[1] ? parseInt(parts[1].trim(), 10) : 1;
+                    if (isNaN(cardsToAdd) || cardsToAdd < 1) cardsToAdd = 1;
+
+                    if (fileCode === codeInput) {
+                        isValid = true;
+                        foundCards = cardsToAdd;
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    const uid = getUserId();
+                    const redeemedKey = `redeemed_token_code_${uid}_${codeInput}`;
+                    if (localStorage.getItem(redeemedKey) === 'true') {
+                        msgDiv.style.color = '#ff4444';
+                        msgDiv.style.fontSize = '9px';
+                        msgDiv.innerText = 'لقد استخدمت هذا الكود مسبقاً!';
+                        return;
+                    }
+
+                    const currentCards = getSpinCards();
+                    setSpinCards(currentCards + foundCards);
+                    localStorage.setItem(redeemedKey, 'true');
+
+                    msgDiv.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; gap: 4px;"><img src="https://images.icon-icons.com/1904/PNG/96/correct_121331.png" alt="Success" style="width: 16px; height: 16px; object-fit: contain;"><span style="color: #00ff66; font-weight: 900;">+${foundCards} CARDS</span></div>`;
+                    setTimeout(() => {
+                        toggleTokenCodeModal(false);
+                    }, 1500);
+                } else {
+                    msgDiv.style.color = '#ff4444';
+                    msgDiv.style.fontSize = '9px';
+                    msgDiv.innerText = 'الكود غير صحيح أو انتهت صلاحيته.';
+                }
+            } catch (err) {
+                console.error(err);
+                msgDiv.style.color = '#ff4444';
+                msgDiv.style.fontSize = '9px';
+                msgDiv.innerText = 'حدث خطأ أثناء الاتصال، تأكد من وجود ملف code.token.txt.';
+            }
+        }
+
+        function renderWheelUI() {
+            const cards = getSpinCards();
+            const countEl = document.getElementById('spinCardsCount');
+            if (countEl) countEl.innerText = cards;
+            const spinBtn = document.getElementById('spinWheelBtn');
+            if (spinBtn) {
+                spinBtn.disabled = isSpinning || cards < 1;
+                spinBtn.innerHTML = isSpinning
+                    ? 'جاري الدوران...'
+                    : (cards < 1 ? 'لا توجد بطاقات لف كافية' : '<img src="https://raw.githubusercontent.com/0xme/ff-resources/refs/heads/main/pngs/300x300/FF_Lottery_Special_Ring_Voucher.png" alt="بطاقة" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle; display: inline-block;"> 1');
+            }
+        }
+
+        function drawFortuneWheel() {
+            const canvas = document.getElementById('fortuneWheelCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const total = WHEEL_PRIZES.length;
+            const arc = (Math.PI * 2) / total;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 8;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < total; i++) {
+                const startAngle = i * arc - Math.PI / 2;
+                const endAngle = startAngle + arc;
+                const prize = WHEEL_PRIZES[i];
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = prize.color;
+                ctx.fill();
+
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#2d2d2d';
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + arc / 2);
+                ctx.textAlign = 'right';
+                ctx.fillStyle = prize.textColor;
+                ctx.font = '300 22px Cairo, sans-serif';
+                ctx.fillText(prize.label, radius - 26, 8);
+
+                if (prize.canvasImg && prize.canvasImg.complete && prize.canvasImg.naturalWidth > 0) {
+                    const textWidth = ctx.measureText(prize.label).width;
+                    const iconSize = 26;
+                    ctx.drawImage(prize.canvasImg, radius - 26 - textWidth - iconSize - 6, -13, iconSize, iconSize);
+                }
+                ctx.restore();
+            }
+        }
+
+        function formatPrizeHtml(prize) {
+            if (prize.icon) {
+                return `${prize.label} <img src="${prize.icon}" alt="" style="width:16px;height:16px;vertical-align:middle;display:inline-block;">`;
+            }
+            return prize.label;
+        }
+
+        function appendHistory(prize) {
+            const box = document.getElementById('wheelHistoryBox');
+            if (!box) return;
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            item.innerHTML = `<span>${formatPrizeHtml(prize)}</span><span style="color:#ffffff;">${time}</span>`;
+            box.prepend(item);
+        }
+
+        function spinFortuneWheel() {
+            if (isSpinning) return;
+            const currentCards = getSpinCards();
+            if (currentCards < 1) {
+                document.getElementById('wheelResultBox').innerText = 'تحتاج إلى بطاقة لف واحدة على الأقل!';
+                return;
+            }
+
+            isSpinning = true;
+            setSpinCards(currentCards - 1);
+            document.getElementById('wheelResultBox').innerText = 'حظاً موفقاً... العجلة تدور';
+
+            const total = WHEEL_PRIZES.length;
+            const sliceDeg = 360 / total;
+            const winningIndex = Math.floor(Math.random() * total);
+
+            const sliceCenterDeg = winningIndex * sliceDeg + sliceDeg / 2;
+            const targetMod = (360 - sliceCenterDeg) % 360;
+            const currentMod = currentRotationDeg % 360;
+            let deltaDeg = (targetMod - currentMod + 360) % 360;
+            if (deltaDeg < 15) deltaDeg += 360;
+
+            const extraSpins = 6 * 360;
+            currentRotationDeg += extraSpins + deltaDeg;
+
+            const canvas = document.getElementById('fortuneWheelCanvas');
+            canvas.style.transform = `rotate(${currentRotationDeg}deg)`;
+
+            setTimeout(async () => {
+                const prize = WHEEL_PRIZES[winningIndex];
+                const resultBox = document.getElementById('wheelResultBox');
+
+                if (prize.type === 'card') {
+                    setSpinCards(getSpinCards() + prize.value);
+                } else if (prize.type === 'points') {
+                    let pts = await getPoints();
+                    await setPoints(pts + prize.value);
+                } else if (prize.type === 'diamonds') {
+                    let dm = await getDiamondPoints();
+                    await setDiamondPoints(dm + prize.value);
+                }
+
+                if (prize.type === 'none') {
+                    resultBox.style.color = '#ffffff';
+                    resultBox.innerText = 'حظ أوفر في المرة القادمة!';
+                } else {
+                    resultBox.style.color = '#ffffff';
+                    resultBox.innerHTML = `مبروك! ربحت: ${formatPrizeHtml(prize)}`;
+                }
+
+                appendHistory(prize);
+                isSpinning = false;
+                renderWheelUI();
+            }, 4550);
         }
 
         function checkDownloadUnlockStatus() {
@@ -2046,7 +2573,6 @@
                 </html>
             `;
 
-            // طبقة شفافة لرصد النقرة والتحقق من ضغط المستخدم على الإعلان
             const clickDetector = document.createElement('div');
             clickDetector.style.cssText = 'position: absolute; inset: 0; cursor: pointer; z-index: 5; background: transparent;';
             clickDetector.addEventListener('pointerdown', async function() {
@@ -2058,7 +2584,6 @@
             adFrameBox.appendChild(clickDetector);
             bannerWrapper.appendChild(adFrameBox);
 
-            // رصد خروج التركيز من نافذة الصفحة (دليل على فتح رابط الإعلان)
             window.addEventListener('blur', onAdWindowBlurOnce, { once: true });
 
             statusText.innerText = 'اضغط على الإعلان';
@@ -2097,7 +2622,6 @@
                 });
                 localStorage.setItem('click_ad_task_completed_' + uid, 'true');
 
-                // إخفاء الإعلان بعد التحقق وحصول المستخدم على 75 ألماس
                 bannerWrapper.style.display = 'none';
                 bannerWrapper.innerHTML = '';
 
@@ -2616,11 +3140,13 @@
                 if (modalId === 'helpModal') toggleModal(false);
                 if (modalId === 'pointsModal') togglePointsModal(false);
                 if (modalId === 'diamondPointsModal') toggleDiamondPointsModal(false);
+                if (modalId === 'tokenCodeModal') toggleTokenCodeModal(false);
                 if (modalId === 'msgModal') toggleMsgModal(false);
                 if (modalId === 'freeAccountModal') toggleFreeAccountModal(false);
                 if (modalId === 'purchasedAccountsModal') togglePurchasedAccountsModal(false);
                 if (modalId === 'accountDetailsModal') toggleAccountDetailsModal(false);
                 if (modalId === 'chatModal') toggleChatModal(false);
+                if (modalId === 'luckyWheelModal') toggleLuckyWheelModal(false);
             }
         }
 
