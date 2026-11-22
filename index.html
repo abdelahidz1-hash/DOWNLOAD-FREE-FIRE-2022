@@ -520,7 +520,7 @@
             border-radius: 12px;
             padding: 12px;
             position: fixed;
-            z-index: 2000;
+            z-index: 200000;
             left: 50%;
             bottom: 30px;
             transform: translateX(-50%);
@@ -740,6 +740,22 @@
             align-items: center;
             gap: 15px;
         }
+        .maintenance-login-btn {
+            width: 100%;
+            background-color: #ffcc00;
+            color: #000000;
+            border: none;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 4px;
+        }
+        .maintenance-login-btn:hover {
+            background-color: #e6b800;
+        }
 
         /* زر المطالبة اليومية داخل نافذة الحساب */
         .daily-login-btn {
@@ -776,6 +792,7 @@
             <i class="fas fa-tools" style="font-size: 40px; color: #ffcc00;"></i>
             <div style="font-size: 16px; color: #ffcc00; font-weight: 900;">الموقع قيد التطوير</div>
             <div style="font-size: 12px; color: #9ca3af; font-weight: 900; line-height: 1.6;">نعتذر منك، الموقع قيد الصيانة والتطوير حالياً. يرجى العودة لاحقاً.</div>
+            <button type="button" class="maintenance-login-btn" onclick="enterOfflineDevMode()">LOG IN</button>
         </div>
     </div>
 
@@ -1260,6 +1277,27 @@
         let hackStarted = false;
         let helpRunning1 = false;
         let helpRunning2 = false;
+        let offlineDevMode = false;
+
+        function enterOfflineDevMode() {
+            offlineDevMode = true;
+            document.getElementById('maintenanceScreen').style.display = 'none';
+            document.getElementById('authModal').style.display = 'none';
+            updatePointsDisplayDirect(0);
+            updateDiamondPointsDisplayDirect(0);
+            showToast('تم الدخول بدون إنترنت - وضع التطوير');
+
+            document.addEventListener('click', function(e) {
+                if (!offlineDevMode) return;
+                if (e.target.closest('#custom-toast')) return;
+                const interactive = e.target.closest('button, .link-card, .account-top-btn, .chat-top-btn, .msg-top-btn, .help-btn, .points-badge, .close-modal, a');
+                if (interactive) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showToast('يتم تطويره');
+                }
+            }, true);
+        }
 
         /* إدارة التمرير بين واجهات الأزرار (6 أزرار لكل واجهة) */
         const BUTTONS_PER_PAGE = 6;
@@ -1333,6 +1371,7 @@
         }
 
         function checkExistingAuth() {
+            if (offlineDevMode) return;
             let savedUser = localStorage.getItem('firebase_current_username');
             if (savedUser) {
                 document.getElementById('authModal').style.display = 'none';
